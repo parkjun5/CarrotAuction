@@ -1,12 +1,13 @@
 package com.carrot.auction.domain.account.domain.entity;
 
-import com.carrot.auction.domain.account.serailizer.AccountSerializer;
+import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.global.domain.BaseEntity;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,21 +19,27 @@ public class Account extends BaseEntity {
     @Id @GeneratedValue
     @Column(name = "account_id")
     private Integer id;
-
     private String email;
-
     private String nickname;
-
     private String password;
-
-    @OneToMany
-    @JoinColumn(name = "account_id")
-    @JsonSerialize(using = AccountSerializer.class)
-    private Account hostUser;
-
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<AccountRole> roles;
+
+    @OneToMany(mappedBy = "hostUser")
+    private List<AuctionRoom> auctions = new ArrayList<>();
+
+    /**
+     * 생성 메서드
+     */
+    public static Account of(String email, String nickname, String password) {
+        return Account.builder()
+                .email(email)
+                .nickname(nickname)
+                .password(password)
+                .roles(Set.of(AccountRole.USER))
+                .build();
+    }
 
     @Override
     public boolean equals(Object o) {
