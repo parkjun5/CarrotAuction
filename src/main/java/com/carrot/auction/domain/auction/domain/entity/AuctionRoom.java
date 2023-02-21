@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @Entity
 @Getter
-public class Auction extends BaseEntity {
+public class AuctionRoom extends BaseEntity implements ChatRoom {
 
     @Id @GeneratedValue
     @Column(name="auction_id")
@@ -32,7 +32,7 @@ public class Auction extends BaseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Auction auction = (Auction) o;
+        AuctionRoom auction = (AuctionRoom) o;
         return id != null && Objects.equals(id, auction.id);
     }
 
