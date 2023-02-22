@@ -27,6 +27,7 @@ public class Account extends BaseEntity {
     private Set<AccountRole> roles;
 
     @OneToMany(mappedBy = "hostUser")
+    @Builder.Default
     private List<AuctionRoom> auctions = new ArrayList<>();
 
     /**

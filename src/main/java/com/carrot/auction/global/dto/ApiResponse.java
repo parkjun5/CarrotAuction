@@ -1,13 +1,8 @@
 package com.carrot.auction.global.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
-@RequiredArgsConstructor
 public record ApiResponse<T>(ApiResponseHeader header, Map<String, T> body) {
 
     private static final int SUCCESS = 200;

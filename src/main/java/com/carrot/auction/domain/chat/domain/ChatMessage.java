@@ -9,12 +9,12 @@ import lombok.*;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED) @AllArgsConstructor
-public class ChatMessage {
+public class ChatMessage implements Message {
 
     private String message;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private ChatRoom chatRoom;
+    private BaseChatRoom chatRoom;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
@@ -25,7 +25,7 @@ public class ChatMessage {
      * 메시지 생성
      */
 
-    public static ChatMessage of(Long senderId, String chatMessage, ChatRoom chatRoom) {
+    public static ChatMessage of(Long senderId, String chatMessage, BaseChatRoom chatRoom) {
         //TODO : 전달자 아이디로 전달자 찾고 연결
         //        Account senderId = AccountService.findById(senderId);
         return ChatMessage.builder()
