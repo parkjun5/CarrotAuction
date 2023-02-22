@@ -1,6 +1,13 @@
 package com.carrot.auction.domain.chat.domain;
 
-public interface ChatRoom {
-    Long sendChat(Long senderId, String message);
-    Long readChat(Long readerId);
+public class ChatRoom implements BaseChatRoom {
+    @Override
+    public Long sendChat(Long senderId, String message) {
+        return null;
+    }
+
+    @Override
+    public Long readChat(Long readerId) {
+        return null;
+    }
 }

@@ -2,7 +2,7 @@ package com.carrot.auction.domain.auction.domain.entity;
 
 import com.carrot.auction.domain.account.domain.entity.Account;
 import com.carrot.auction.domain.account.serailizer.AccountSerializer;
-import com.carrot.auction.domain.chat.domain.ChatRoom;
+import com.carrot.auction.domain.chat.domain.BaseChatRoom;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.carrot.auction.global.domain.BaseEntity;
@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @Entity
 @Getter
-public class AuctionRoom extends BaseEntity implements ChatRoom {
+public class AuctionRoom extends BaseEntity implements BaseChatRoom {
 
     @Id @GeneratedValue
     @Column(name="auction_room_id")
