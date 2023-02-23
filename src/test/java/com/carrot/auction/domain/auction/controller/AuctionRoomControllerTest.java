@@ -46,7 +46,7 @@ class AuctionRoomControllerTest {
         CreateAuctionRequest testCreateRequest = getCreateAuctionRequest();
         User testUser = getAccount();
         AuctionRoom room = AuctionRoom
-                .createByRequest()
+                .createByRequestBuilder()
                 .hostUser(testUser)
                 .createAuctionRequest(testCreateRequest)
                 .build();

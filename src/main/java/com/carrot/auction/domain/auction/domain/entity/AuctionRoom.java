@@ -48,7 +48,7 @@ public class AuctionRoom extends BaseEntity implements BaseChatRoom {
     @Enumerated(EnumType.STRING)
     private AuctionStatus auctionStatus = AuctionStatus.DRAFT;
 
-    @Builder(builderClassName = "createByRequest", builderMethodName = "createByRequest")
+    @Builder(builderClassName = "createByRequestBuilder", builderMethodName = "createByRequestBuilder")
     public AuctionRoom(User hostUser, CreateAuctionRequest createAuctionRequest) {
         Assert.notNull(hostUser, () -> "유저는 널일 수 없습니다.");
         Assert.notNull(createAuctionRequest, () -> "생성 요청은 널일 수 없습니다.");

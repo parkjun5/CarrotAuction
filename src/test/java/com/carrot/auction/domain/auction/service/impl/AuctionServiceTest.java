@@ -50,7 +50,7 @@ class AuctionServiceTest {
     }
 
     private AuctionRoom getAuctionRoom() {
-        return AuctionRoom.createByRequest()
+        return AuctionRoom.createByRequestBuilder()
                 .hostUser(getUser())
                 .createAuctionRequest(getCreateAuctionRequest())
                 .build();

@@ -32,7 +32,10 @@ public class AuctionRoomServiceImpl implements AuctionRoomService {
     public ApiResponse<Object> createAuctionRoom(CreateAuctionRequest createAuctionRequest) {
         User hostUser = userService.findUserById(createAuctionRequest.userId())
                 .orElseThrow(() -> new NoSuchElementException(createAuctionRequest.userId() + "계정이 존재하지 않습니다."));
-        AuctionRoom auctionRoom = new AuctionRoom(hostUser, createAuctionRequest);
+        AuctionRoom auctionRoom = AuctionRoom.createByRequestBuilder()
+                .hostUser(hostUser)
+                .createAuctionRequest(createAuctionRequest)
+                .build();
         AuctionRoom save = auctionRepository.save(auctionRoom);
         return ApiResponse.success("data", save);
     }
