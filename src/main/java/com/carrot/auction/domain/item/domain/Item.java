@@ -14,11 +14,12 @@ public class Item {
     private Integer price;
     private String content;
 
-    public Item of(String title, Integer price, String content) {
-        this.title = title;
-        this.price = price;
-        this.content = content;
-        return this;
+    public static Item of(String title, Integer price, String content) {
+        Item item = new Item();
+        item.title = title;
+        item.price = price;
+        item.content = content;
+        return item;
     }
 
     private Item changeInfo(Item item) {

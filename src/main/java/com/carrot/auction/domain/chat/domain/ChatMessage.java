@@ -1,6 +1,6 @@
 package com.carrot.auction.domain.chat.domain;
 
-import com.carrot.auction.domain.account.domain.entity.Account;
+import com.carrot.auction.domain.user.domain.entity.User;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -17,8 +17,8 @@ public class ChatMessage implements Message {
     private BaseChatRoom chatRoom;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
-    private Account sender;
+    @JoinColumn(name = "user_id")
+    private User sender;
 
 
     /**
