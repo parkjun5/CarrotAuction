@@ -76,7 +76,7 @@ public class AuctionRoom extends BaseEntity implements BaseChatRoom {
     @Override
     public void addParticipants(User user) {
         //TODO 발리데이트 추가 필요
-        // 유저한테도 추가 필요
+        user.getAuctionRooms().add(this);
         this.participants.add(user);
     }
 
