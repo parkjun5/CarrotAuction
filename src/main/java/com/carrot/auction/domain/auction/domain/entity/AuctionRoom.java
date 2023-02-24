@@ -14,12 +14,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
-import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static org.springframework.util.Assert.*;
 
 @Entity
 @Getter
@@ -50,8 +51,8 @@ public class AuctionRoom extends BaseEntity implements BaseChatRoom {
 
     @Builder(builderClassName = "createByRequestBuilder", builderMethodName = "createByRequestBuilder")
     public AuctionRoom(User hostUser, CreateAuctionRequest createAuctionRequest) {
-        Assert.notNull(hostUser, () -> "유저는 널일 수 없습니다.");
-        Assert.notNull(createAuctionRequest, () -> "생성 요청은 널일 수 없습니다.");
+        notNull(hostUser,  "유저는 널일 수 없습니다.");
+        notNull(createAuctionRequest, "생성 요청은 널일 수 없습니다.");
 
         this.hostUser = hostUser;
         this.password = createAuctionRequest.password();
@@ -75,7 +76,8 @@ public class AuctionRoom extends BaseEntity implements BaseChatRoom {
 
     @Override
     public void addParticipants(User user) {
-        //TODO 발리데이트 추가 필요
+        notNull(user,  "유저는 널일 수 없습니다.");
+
         user.getAuctionRooms().add(this);
         this.participants.add(user);
     }

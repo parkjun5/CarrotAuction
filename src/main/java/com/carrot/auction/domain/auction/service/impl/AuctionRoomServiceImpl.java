@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,15 +22,16 @@ public class AuctionRoomServiceImpl implements AuctionRoomService {
     private final UserService userService;
 
     @Override
-    public Optional<AuctionRoom> findAuctionInfoById(Long auctionRoomId) {
-        return auctionRepository.findById(auctionRoomId);
+    public AuctionRoom findAuctionInfoById(Long auctionRoomId) {
+        return auctionRepository.findById(auctionRoomId)
+                .orElseThrow(() -> new NoSuchElementException(auctionRoomId + " 아이디가 존재하지 않습니다."));
     }
 
     @Override
     @Transactional
     public ApiResponse<Object> createAuctionRoom(CreateAuctionRequest createAuctionRequest) {
         User hostUser = userService.findUserById(createAuctionRequest.userId())
-                .orElseThrow(() -> new NoSuchElementException(createAuctionRequest.userId() + "계정이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
         AuctionRoom auctionRoom = AuctionRoom.createByRequestBuilder()
                 .hostUser(hostUser)
                 .createAuctionRequest(createAuctionRequest)
