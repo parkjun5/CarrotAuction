@@ -15,11 +15,12 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "users")
 public class User extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "user_id")
-    private Integer id;
+    private Long id;
     private String email;
     private String nickname;
     private String password;
