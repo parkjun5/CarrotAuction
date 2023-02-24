@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -29,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AuctionRoomController.class)
 @AutoConfigureMockMvc
+@MockBean(JpaMetamodelMappingContext.class)
 class AuctionRoomControllerTest {
 
     @MockBean
@@ -39,6 +41,7 @@ class AuctionRoomControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
     @Test
     @DisplayName("post /api/auctionRoom 경매장 생성 리퀘스트 매핑")
     void createAuctionRoomTest() throws Exception {
@@ -65,7 +68,7 @@ class AuctionRoomControllerTest {
         ).andDo(print());
 
         //then
-        resultActions.andExpect(status().isOk())
+        resultActions.andExpect(status().isCreated())
                 .andExpect(jsonPath("body").exists())
                 .andExpect(jsonPath("body.data").exists());
     }

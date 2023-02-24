@@ -19,6 +19,6 @@ public record CreateAuctionRequest(
         @Min(value=0, message = "value must higher than 0" ) int limitOfEnrollment,
         @Embedded Item item,
         @Enumerated(EnumType.STRING) Category category,
-        @NotBlank @JsonFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime beginAuctionDateTime,
-        @NotBlank @JsonFormat(pattern = "yyyy-MM-dd HH:mm")  LocalDateTime closeAuctionDateTime) {
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime beginAuctionDateTime,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")  LocalDateTime closeAuctionDateTime) {
 }

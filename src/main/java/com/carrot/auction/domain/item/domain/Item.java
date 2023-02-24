@@ -2,6 +2,7 @@ package com.carrot.auction.domain.item.domain;
 
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Item {
 
     @NotBlank private String title;
-    @NotBlank private Integer price;
+    @NotNull private Integer price;
     @NotBlank private String content;
 
     public static Item of(String title, Integer price, String content) {
