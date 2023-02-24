@@ -70,6 +70,32 @@ class AuctionRoomControllerTest {
                 .andExpect(jsonPath("body.data").exists());
     }
 
+    @Test
+    @DisplayName("post /api/auctionRoom 널갑 전송")
+    void createAuctionRoomWithNullValue() throws Exception {
+        //given
+        CreateAuctionRequest userIdNull = CreateAuctionRequest
+                .builder()
+                .name("테스트 경매장")
+                .item(Item.of("맥북", 500_000, "신형 맥북 급처"))
+                .password(null)
+                .category(Category.DIGITAL)
+                .limitOfEnrollment(100)
+                .beginAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 10, 30))
+                .closeAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 12, 30))
+                .build();
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/auctionRoom")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userIdNull))
+        ).andDo(print());
+
+        //then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
     private User getAccount() {
         return User.createUser()
                 .email("tester@gmail.com")
