@@ -1,6 +1,6 @@
 package com.carrot.auction.domain.auction.controller;
 
-import com.carrot.auction.domain.auction.dto.CreateAuctionRequest;
+import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.auction.service.AuctionRoomService;
 import com.carrot.auction.global.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,19 +21,15 @@ public class AuctionRoomController {
     @GetMapping("/{auctionRoomId}")
     public ResponseEntity<ApiResponse<Object>> getAuctionRoom
             (@PathVariable("auctionRoomId") Long auctionRoomId) {
-
-        return ResponseEntity
-                .ok()
+        return ResponseEntity.ok()
                 .body(ApiResponse.success("AuctionRoom", auctionService.findAuctionInfoById(auctionRoomId)));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<Object>> createAuctionRoom
-            (@RequestBody @Valid CreateAuctionRequest createAuctionRequest) {
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(auctionService.createAuctionRoom(createAuctionRequest));
+            (@RequestBody @Valid AuctionRequest auctionRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("AuctionRoom", auctionService.createAuctionRoom(auctionRequest)));
     }
 
 }

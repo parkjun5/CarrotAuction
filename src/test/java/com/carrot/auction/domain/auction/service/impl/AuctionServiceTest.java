@@ -4,7 +4,7 @@ import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.domain.user.service.UserService;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.domain.repository.AuctionRoomRepository;
-import com.carrot.auction.domain.auction.dto.CreateAuctionRequest;
+import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import org.junit.jupiter.api.DisplayName;
@@ -36,11 +36,11 @@ class AuctionServiceTest {
 
     @Test
     @DisplayName("경매장 생성 및 저장 비지니스 로직 테스트")
-    void createAuctionRoomTest() throws Exception {
+    void createAuctionRoomTest() {
         //given
         given(userService.findUserById(anyLong())).willReturn(Optional.of(getUser()));
         given(auctionRoomRepository.save(any())).willReturn(getAuctionRoom());
-        CreateAuctionRequest createRequest = getCreateAuctionRequest();
+        AuctionRequest createRequest = getAuctionRequest();
         //when
         auctionRoomService.createAuctionRoom(createRequest);
 
@@ -52,7 +52,7 @@ class AuctionServiceTest {
     private AuctionRoom getAuctionRoom() {
         return AuctionRoom.createByRequestBuilder()
                 .hostUser(getUser())
-                .createAuctionRequest(getCreateAuctionRequest())
+                .auctionRequest(getAuctionRequest())
                 .build();
     }
 
@@ -64,8 +64,8 @@ class AuctionServiceTest {
                 .build();
     }
 
-    private CreateAuctionRequest getCreateAuctionRequest() {
-        return CreateAuctionRequest
+    private AuctionRequest getAuctionRequest() {
+        return AuctionRequest
                 .builder()
                 .userId(1L)
                 .name("테스트 경매장")

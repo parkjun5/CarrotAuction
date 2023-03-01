@@ -1,12 +1,12 @@
 package com.carrot.auction.domain.auction.controller;
 
+import com.carrot.auction.domain.auction.dto.AuctionResponse;
 import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
-import com.carrot.auction.domain.auction.dto.CreateAuctionRequest;
+import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.auction.service.AuctionRoomService;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
-import com.carrot.auction.global.dto.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,12 +46,12 @@ class AuctionRoomControllerTest {
     @DisplayName("post /api/auctionRoom 경매장 생성 리퀘스트 매핑")
     void createAuctionRoomTest() throws Exception {
         //given
-        CreateAuctionRequest testCreateRequest = getCreateAuctionRequest();
+        AuctionRequest testRequest = getAuctionRequest();
         User testUser = getAccount();
         AuctionRoom room = AuctionRoom
                 .createByRequestBuilder()
                 .hostUser(testUser)
-                .createAuctionRequest(testCreateRequest)
+                .auctionRequest(testRequest)
                 .build();
 
         room.addParticipants(testUser);
@@ -64,20 +64,20 @@ class AuctionRoomControllerTest {
         ResultActions resultActions = mockMvc.perform(
                 post("/api/auctionRoom")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testCreateRequest))
+                        .content(objectMapper.writeValueAsString(testRequest))
         ).andDo(print());
 
         //then
         resultActions.andExpect(status().isCreated())
                 .andExpect(jsonPath("body").exists())
-                .andExpect(jsonPath("body.data").exists());
+                .andExpect(jsonPath("body.AuctionRoom").exists());
     }
 
     @Test
     @DisplayName("post /api/auctionRoom 널갑 전송")
     void createAuctionRoomWithNullValue() throws Exception {
         //given
-        CreateAuctionRequest userIdNull = CreateAuctionRequest
+        AuctionRequest userIdNull = AuctionRequest
                 .builder()
                 .name("테스트 경매장")
                 .item(Item.of("맥북", 500_000, "신형 맥북 급처"))

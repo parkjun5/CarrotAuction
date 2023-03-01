@@ -1,12 +1,12 @@
 package com.carrot.auction.domain.auction.service.impl;
 
+import com.carrot.auction.domain.auction.dto.AuctionResponse;
 import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.domain.user.service.UserService;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.domain.repository.AuctionRoomRepository;
-import com.carrot.auction.domain.auction.dto.CreateAuctionRequest;
+import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.auction.service.AuctionRoomService;
-import com.carrot.auction.global.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,19 +22,20 @@ public class AuctionRoomServiceImpl implements AuctionRoomService {
     private final UserService userService;
 
     @Override
-    public AuctionRoom findAuctionInfoById(Long auctionRoomId) {
-        return auctionRepository.findById(auctionRoomId)
+    public AuctionResponse findAuctionInfoById(Long auctionRoomId) {
+        AuctionRoom findAuction = auctionRepository.findById(auctionRoomId)
                 .orElseThrow(() -> new NoSuchElementException(auctionRoomId + " 아이디가 존재하지 않습니다."));
+        return auctionRoomToResponse(findAuction);
     }
 
     @Override
     @Transactional
-    public ApiResponse<Object> createAuctionRoom(CreateAuctionRequest createAuctionRequest) {
-        User hostUser = userService.findUserById(createAuctionRequest.userId())
+    public AuctionResponse createAuctionRoom(AuctionRequest auctionRequest) {
+        User hostUser = userService.findUserById(auctionRequest.userId())
                 .orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
         AuctionRoom auctionRoom = AuctionRoom.createByRequestBuilder()
                 .hostUser(hostUser)
-                .createAuctionRequest(createAuctionRequest)
+                .auctionRequest(auctionRequest)
                 .build();
         AuctionRoom save = auctionRepository.save(auctionRoom);
         return ApiResponse.success("data", save);

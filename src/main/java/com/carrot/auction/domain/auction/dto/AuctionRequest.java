@@ -12,7 +12,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record CreateAuctionRequest(
+public record AuctionRequest(
         @NotNull Long userId,
         @NotBlank String name,
         String password,

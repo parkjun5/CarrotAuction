@@ -1,11 +1,12 @@
 package com.carrot.auction.domain.auction.service;
 
-import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
-import com.carrot.auction.domain.auction.dto.CreateAuctionRequest;
-import com.carrot.auction.global.dto.ApiResponse;
+import com.carrot.auction.domain.auction.dto.AuctionRequest;
+import com.carrot.auction.domain.auction.dto.AuctionResponse;
 
 public interface AuctionRoomService {
-    AuctionRoom findAuctionInfoById(Long auctionRoomId);
+    AuctionResponse findAuctionInfoById(Long auctionRoomId);
+
+    AuctionResponse createAuctionRoom(AuctionRequest auctionRequest);
 
     ApiResponse<Object> createAuctionRoom(CreateAuctionRequest createAuctionRequest);
 }
