@@ -32,4 +32,18 @@ public class AuctionRoomController {
                 .body(ApiResponse.success("AuctionRoom", auctionService.createAuctionRoom(auctionRequest)));
     }
 
+    @PostMapping("/{auctionRoomId}")
+    public ResponseEntity<ApiResponse<Object>> updateAuctionRoom
+            (@PathVariable("auctionRoomId") Long auctionRoomId, @RequestBody @Valid AuctionRequest auctionRequest) {
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.success("AuctionRoom", auctionService.updateAuctionRoom(auctionRoomId, auctionRequest)));
+    }
+
+    @DeleteMapping("/{auctionRoomId}")
+    public ResponseEntity<ApiResponse<Object>> deleteAuctionRoom
+            (@PathVariable("auctionRoomId") Long auctionRoomId) {
+        return ResponseEntity.ok().body(ApiResponse.success("deletedRoomId", auctionService.deleteAuctionRoom(auctionRoomId)));
+    }
+
 }

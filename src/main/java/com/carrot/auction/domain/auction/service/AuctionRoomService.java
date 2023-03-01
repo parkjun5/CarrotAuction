@@ -8,5 +8,7 @@ public interface AuctionRoomService {
 
     AuctionResponse createAuctionRoom(AuctionRequest auctionRequest);
 
-    ApiResponse<Object> createAuctionRoom(CreateAuctionRequest createAuctionRequest);
+    AuctionResponse updateAuctionRoom(Long auctionRoomId, AuctionRequest auctionRequest);
+
+    Long deleteAuctionRoom(Long auctionRoomId);
 }

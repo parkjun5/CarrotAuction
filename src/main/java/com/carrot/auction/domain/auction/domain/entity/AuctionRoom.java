@@ -83,6 +83,30 @@ public class AuctionRoom extends BaseEntity implements BaseChatRoom {
         participants.add(user);
     }
 
+    public void changeInfoByRequest(AuctionRequest request) {
+        if (StringUtils.hasText(request.name()) && !name.equals(request.name())) {
+            name = request.name();
+        }
+        if (!password.equals(request.password())) {
+            password = request.password();
+        }
+        if (request.limitOfEnrollment() > 0 && limitOfEnrollment != request.limitOfEnrollment()) {
+            limitOfEnrollment = request.limitOfEnrollment();
+        }
+        if (!beginAuctionDateTime.equals(request.beginAuctionDateTime())) {
+            name = request.name();
+        }
+        if (!closeAuctionDateTime.equals(request.closeAuctionDateTime())) {
+            closeAuctionDateTime = request.closeAuctionDateTime();
+        }
+        if (!item.equals(request.item())) {
+            item.changeInfo(request.item());
+        }
+        if (!category.equals(request.category())) {
+            category = request.category();
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
