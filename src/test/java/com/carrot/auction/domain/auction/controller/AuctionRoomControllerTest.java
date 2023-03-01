@@ -57,8 +57,7 @@ class AuctionRoomControllerTest {
         room.addParticipants(testUser);
         room.addParticipants(testUser);
 
-        ApiResponse<Object> response = ApiResponse.success("data", room);
-        given(auctionService.createAuctionRoom(any())).willReturn(response);
+        given(auctionService.createAuctionRoom(any())).willReturn(auctionRoomToResponse(room));
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -107,8 +106,23 @@ class AuctionRoomControllerTest {
                 .build();
     }
 
-    private CreateAuctionRequest getCreateAuctionRequest() {
-        return CreateAuctionRequest
+    private AuctionResponse auctionRoomToResponse(AuctionRoom auctionRoom) {
+        return AuctionResponse.builder()
+                .name(auctionRoom.getName())
+                .item(auctionRoom.getItem())
+                .password(auctionRoom.getPassword())
+                .category(auctionRoom.getCategory())
+                .limitOfEnrollment(auctionRoom.getLimitOfEnrollment())
+                .beginAuctionDateTime(auctionRoom.getBeginAuctionDateTime())
+                .closeAuctionDateTime(auctionRoom.getCloseAuctionDateTime())
+                .auctionStatus(auctionRoom.getAuctionStatus())
+                .hostUser(auctionRoom.getHostUser())
+                .participants(auctionRoom.getParticipants())
+                .build();
+    }
+
+    private AuctionRequest getAuctionRequest() {
+        return AuctionRequest
                 .builder()
                 .userId(1L)
                 .name("테스트 경매장")
