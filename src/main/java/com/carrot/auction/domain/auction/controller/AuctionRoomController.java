@@ -17,27 +17,27 @@ import org.springframework.web.bind.annotation.*;
 public class AuctionRoomController {
 
     private final AuctionRoomService auctionService;
+    private static final String AUCTION_RESULT_NAME ="AuctionRoom";
 
     @GetMapping("/{auctionRoomId}")
     public ResponseEntity<ApiResponse<Object>> getAuctionRoom
             (@PathVariable("auctionRoomId") Long auctionRoomId) {
         return ResponseEntity.ok()
-                .body(ApiResponse.success("AuctionRoom", auctionService.findAuctionInfoById(auctionRoomId)));
+                .body(ApiResponse.success(AUCTION_RESULT_NAME, auctionService.findAuctionInfoById(auctionRoomId)));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<Object>> createAuctionRoom
             (@RequestBody @Valid AuctionRequest auctionRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("AuctionRoom", auctionService.createAuctionRoom(auctionRequest)));
+                .body(ApiResponse.success(AUCTION_RESULT_NAME, auctionService.createAuctionRoom(auctionRequest)));
     }
 
     @PostMapping("/{auctionRoomId}")
     public ResponseEntity<ApiResponse<Object>> updateAuctionRoom
             (@PathVariable("auctionRoomId") Long auctionRoomId, @RequestBody @Valid AuctionRequest auctionRequest) {
-
         return ResponseEntity.ok()
-                .body(ApiResponse.success("AuctionRoom", auctionService.updateAuctionRoom(auctionRoomId, auctionRequest)));
+                .body(ApiResponse.success(AUCTION_RESULT_NAME, auctionService.updateAuctionRoom(auctionRoomId, auctionRequest)));
     }
 
     @DeleteMapping("/{auctionRoomId}")
