@@ -81,6 +81,29 @@ class AuctionRoomControllerTest implements TestAuctionUtils {
     }
 
     @Test
+    @DisplayName("날짜가 널인 요청")
+    void dateNullRequest() throws Exception {
+        //given
+        Item item = Item.of("임시", 100, "임시 컨텐츠");
+        AuctionRequest dateNullRequest = AuctionRequest.builder()
+                .userId(1L)
+                .name("날씨가 널인 요청")
+                .limitOfEnrollment(10)
+                .item(item)
+                .category(Category.HOBBY_GAME_MUSIC)
+                .build();
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/auctionRoom")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dateNullRequest))
+        ).andDo(print());
+
+        //then
+        resultActions.andExpect(status().isBadRequest());
+    }
+    
+    @Test
     @DisplayName("post /api/auctionRoom/{auctionRoomId}")
     void updateAuctionRoom() throws Exception {
         //given
