@@ -21,10 +21,12 @@ public class AuctionRoomServiceImpl implements AuctionRoomService {
     private final AuctionRoomRepository auctionRepository;
     private final UserService userService;
 
+    private static final String AUCTION_NOT_FOUND = " 경매장을 찾지 못했습니다.";
+
     @Override
     public AuctionResponse findAuctionInfoById(Long auctionRoomId) {
         AuctionRoom findAuction = auctionRepository.findById(auctionRoomId)
-                .orElseThrow(() -> new NoSuchElementException(auctionRoomId + " 아이디가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(auctionRoomId + AUCTION_NOT_FOUND));
         return auctionRoomToResponse(findAuction);
     }
 
@@ -42,17 +44,17 @@ public class AuctionRoomServiceImpl implements AuctionRoomService {
 
     @Override
     public AuctionResponse updateAuctionRoom(Long auctionRoomId, AuctionRequest auctionRequest) {
-        AuctionRoom auctionRoom = auctionRepository.findById(auctionRoomId)
-                .orElseThrow(() -> new NoSuchElementException(auctionRoomId + " 경매장을 찾지 못했습니다."));
-        auctionRoom.changeInfoByRequest(auctionRequest);
+        AuctionRoom findAuction = auctionRepository.findById(auctionRoomId)
+                .orElseThrow(() -> new NoSuchElementException(auctionRoomId + AUCTION_NOT_FOUND));
+        findAuction.changeInfoByRequest(auctionRequest);
 
-        return auctionRoomToResponse(auctionRoom);
+        return auctionRoomToResponse(findAuction);
     }
 
     @Override
     public Long deleteAuctionRoom(Long auctionRoomId) {
         AuctionRoom findAuction = auctionRepository.findById(auctionRoomId)
-                .orElseThrow(() -> new NoSuchElementException(auctionRoomId + " 아이디가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(auctionRoomId + AUCTION_NOT_FOUND));
         auctionRepository.delete(findAuction);
         return auctionRoomId;
     }
