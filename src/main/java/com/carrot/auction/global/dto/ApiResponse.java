@@ -20,4 +20,8 @@ public record ApiResponse<T>(ApiResponseHeader header, Map<String, T> body) {
     public static <T> ApiResponse<T> fail() {
         return new ApiResponse<>(new ApiResponseHeader(FAILED, FAILED_MESSAGE), null);
     }
+
+    public static <T> ApiResponse<T>  fail(int errorCode, String errorMessage, Map<String, T> body) {
+        return new ApiResponse<>(new ApiResponseHeader(errorCode, errorMessage), body);
+    }
 }

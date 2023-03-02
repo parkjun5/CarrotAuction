@@ -1,6 +1,6 @@
 package com.carrot.auction.domain.auction.controller;
 
-import com.carrot.auction.domain.auction.dto.CreateAuctionRequest;
+import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.auction.service.AuctionRoomService;
 import com.carrot.auction.global.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,23 +17,33 @@ import org.springframework.web.bind.annotation.*;
 public class AuctionRoomController {
 
     private final AuctionRoomService auctionService;
+    private static final String AUCTION_RESULT_NAME ="AuctionRoom";
 
     @GetMapping("/{auctionRoomId}")
     public ResponseEntity<ApiResponse<Object>> getAuctionRoom
             (@PathVariable("auctionRoomId") Long auctionRoomId) {
-
-        return ResponseEntity
-                .ok()
-                .body(ApiResponse.success("AuctionRoom", auctionService.findAuctionInfoById(auctionRoomId)));
+        return ResponseEntity.ok()
+                .body(ApiResponse.success(AUCTION_RESULT_NAME, auctionService.findAuctionInfoById(auctionRoomId)));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<Object>> createAuctionRoom
-            (@RequestBody @Valid CreateAuctionRequest createAuctionRequest) {
+            (@RequestBody @Valid AuctionRequest auctionRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(AUCTION_RESULT_NAME, auctionService.createAuctionRoom(auctionRequest)));
+    }
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(auctionService.createAuctionRoom(createAuctionRequest));
+    @PostMapping("/{auctionRoomId}")
+    public ResponseEntity<ApiResponse<Object>> updateAuctionRoom
+            (@PathVariable("auctionRoomId") Long auctionRoomId, @RequestBody @Valid AuctionRequest auctionRequest) {
+        return ResponseEntity.ok()
+                .body(ApiResponse.success(AUCTION_RESULT_NAME, auctionService.updateAuctionRoom(auctionRoomId, auctionRequest)));
+    }
+
+    @DeleteMapping("/{auctionRoomId}")
+    public ResponseEntity<ApiResponse<Object>> deleteAuctionRoom
+            (@PathVariable("auctionRoomId") Long auctionRoomId) {
+        return ResponseEntity.ok().body(ApiResponse.success("deletedRoomId", auctionService.deleteAuctionRoom(auctionRoomId)));
     }
 
 }

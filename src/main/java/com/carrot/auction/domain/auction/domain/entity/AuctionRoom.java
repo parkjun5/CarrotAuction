@@ -2,7 +2,7 @@ package com.carrot.auction.domain.auction.domain.entity;
 
 import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.domain.user.serailizer.UserSerializer;
-import com.carrot.auction.domain.auction.dto.CreateAuctionRequest;
+import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.chat.domain.BaseChatRoom;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,18 +51,18 @@ public class AuctionRoom extends BaseEntity implements BaseChatRoom {
     private AuctionStatus auctionStatus = AuctionStatus.DRAFT;
 
     @Builder(builderClassName = "createByRequestBuilder", builderMethodName = "createByRequestBuilder")
-    public AuctionRoom(User hostUser, CreateAuctionRequest createAuctionRequest) {
+    public AuctionRoom(User hostUser, AuctionRequest auctionRequest) {
         notNull(hostUser,  "유저는 널일 수 없습니다.");
-        notNull(createAuctionRequest, "생성 요청은 널일 수 없습니다.");
+        notNull(auctionRequest, "생성 요청은 널일 수 없습니다.");
 
         this.hostUser = hostUser;
-        this.password = createAuctionRequest.password();
-        this.name = createAuctionRequest.name();
-        this.item = createAuctionRequest.item();
-        this.category = createAuctionRequest.category();
-        this.limitOfEnrollment = createAuctionRequest.limitOfEnrollment();
-        this.beginAuctionDateTime = createAuctionRequest.beginAuctionDateTime();
-        this.closeAuctionDateTime = createAuctionRequest.closeAuctionDateTime();
+        this.password = auctionRequest.password();
+        this.name = auctionRequest.name();
+        this.item = auctionRequest.item();
+        this.category = auctionRequest.category();
+        this.limitOfEnrollment = auctionRequest.limitOfEnrollment();
+        this.beginAuctionDateTime = auctionRequest.beginAuctionDateTime();
+        this.closeAuctionDateTime = auctionRequest.closeAuctionDateTime();
     }
 
     @Override
@@ -77,9 +78,32 @@ public class AuctionRoom extends BaseEntity implements BaseChatRoom {
     @Override
     public void addParticipants(User user) {
         notNull(user,  "유저는 널일 수 없습니다.");
-
         user.getAuctionRooms().add(this);
-        this.participants.add(user);
+        participants.add(user);
+    }
+
+    public void changeInfoByRequest(AuctionRequest request) {
+        if (StringUtils.hasText(request.name()) && !name.equals(request.name())) {
+            name = request.name();
+        }
+        if (StringUtils.hasText(request.password()) && !request.password().equals(password)) {
+            password = request.password();
+        }
+        if (request.limitOfEnrollment() > 0 && limitOfEnrollment != request.limitOfEnrollment()) {
+            limitOfEnrollment = request.limitOfEnrollment();
+        }
+        if (request.beginAuctionDateTime() != null && !request.beginAuctionDateTime().equals(beginAuctionDateTime)) {
+            name = request.name();
+        }
+        if (request.closeAuctionDateTime() != null && !request.closeAuctionDateTime().equals(closeAuctionDateTime)) {
+            closeAuctionDateTime = request.closeAuctionDateTime();
+        }
+        if (request.item() != null && !request.item().equals(item)) {
+            item.changeInfo(request.item());
+        }
+        if (request.category() != null && !request.category().equals(category)) {
+            category = request.category();
+        }
     }
 
     @Override

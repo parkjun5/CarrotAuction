@@ -1,12 +1,11 @@
 package com.carrot.auction.domain.auction.controller;
 
-import com.carrot.auction.domain.user.domain.entity.User;
+import com.carrot.auction.domain.auction.TestAuctionUtils;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
-import com.carrot.auction.domain.auction.dto.CreateAuctionRequest;
+import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.auction.service.AuctionRoomService;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
-import com.carrot.auction.global.dto.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,10 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.time.LocalDateTime;
-import java.time.Month;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -31,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AuctionRoomController.class)
 @AutoConfigureMockMvc
 @MockBean(JpaMetamodelMappingContext.class)
-class AuctionRoomControllerTest {
+class AuctionRoomControllerTest implements TestAuctionUtils {
 
     @MockBean
     private AuctionRoomService auctionService;
@@ -46,46 +43,30 @@ class AuctionRoomControllerTest {
     @DisplayName("post /api/auctionRoom 경매장 생성 리퀘스트 매핑")
     void createAuctionRoomTest() throws Exception {
         //given
-        CreateAuctionRequest testCreateRequest = getCreateAuctionRequest();
-        User testUser = getAccount();
-        AuctionRoom room = AuctionRoom
-                .createByRequestBuilder()
-                .hostUser(testUser)
-                .createAuctionRequest(testCreateRequest)
-                .build();
-
-        room.addParticipants(testUser);
-        room.addParticipants(testUser);
-
-        ApiResponse<Object> response = ApiResponse.success("data", room);
-        given(auctionService.createAuctionRoom(any())).willReturn(response);
+        AuctionRoom room = getTestAuctionRoom();
+        given(auctionService.createAuctionRoom(any())).willReturn(auctionRoomToResponse(room));
 
         //when
         ResultActions resultActions = mockMvc.perform(
                 post("/api/auctionRoom")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testCreateRequest))
+                        .content(objectMapper.writeValueAsString(getTestAuctionRequest()))
         ).andDo(print());
 
         //then
         resultActions.andExpect(status().isCreated())
                 .andExpect(jsonPath("body").exists())
-                .andExpect(jsonPath("body.data").exists());
+                .andExpect(jsonPath("body.AuctionRoom").exists());
     }
 
     @Test
     @DisplayName("post /api/auctionRoom 널갑 전송")
     void createAuctionRoomWithNullValue() throws Exception {
         //given
-        CreateAuctionRequest userIdNull = CreateAuctionRequest
-                .builder()
-                .name("테스트 경매장")
+        AuctionRequest userIdNull = AuctionRequest.builder()
                 .item(Item.of("맥북", 500_000, "신형 맥북 급처"))
-                .password(null)
                 .category(Category.DIGITAL)
                 .limitOfEnrollment(100)
-                .beginAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 10, 30))
-                .closeAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 12, 30))
                 .build();
 
         //when
@@ -99,25 +80,46 @@ class AuctionRoomControllerTest {
         resultActions.andExpect(status().isBadRequest());
     }
 
-    private User getAccount() {
-        return User.createUser()
-                .email("tester@gmail.com")
-                .nickname("tester")
-                .password("testPw")
+    @Test
+    @DisplayName("날짜가 널일 경우 400에러 발생")
+    void dateNullRequest() throws Exception {
+        //given
+        AuctionRequest dateNullRequest = AuctionRequest.builder()
+                .userId(1L)
+                .name("날씨가 널인 요청")
+                .limitOfEnrollment(10)
+                .item(Item.of("임시", 100, "임시 컨텐츠"))
+                .category(Category.HOBBY_GAME_MUSIC)
                 .build();
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/auctionRoom")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dateNullRequest))
+        ).andDo(print());
+
+        //then
+        resultActions.andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    @DisplayName("post /api/auctionRoom/{auctionRoomId}")
+    void updateAuctionRoom() throws Exception {
+        //given
+        AuctionRoom room = getTestAuctionRoom();
+        given(auctionService.updateAuctionRoom(anyLong(), any(AuctionRequest.class))).willReturn(auctionRoomToResponse(room));
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/auctionRoom/"+ 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(getTestAuctionRequest()))
+        ).andDo(print());
+
+        //then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("body").exists())
+                .andExpect(jsonPath("body.AuctionRoom").exists());
     }
 
-    private CreateAuctionRequest getCreateAuctionRequest() {
-        return CreateAuctionRequest
-                .builder()
-                .userId(1L)
-                .name("테스트 경매장")
-                .item(Item.of("맥북", 500_000, "신형 맥북 급처"))
-                .password(null)
-                .category(Category.DIGITAL)
-                .limitOfEnrollment(100)
-                .beginAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 10, 30))
-                .closeAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 12, 30))
-                .build();
-    }
 }

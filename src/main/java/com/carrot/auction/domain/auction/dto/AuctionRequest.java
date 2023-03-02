@@ -12,13 +12,13 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record CreateAuctionRequest(
+public record AuctionRequest(
         @NotNull Long userId,
         @NotBlank String name,
         String password,
         @Min(value=0, message = "value must higher than 0" ) int limitOfEnrollment,
         @Embedded Item item,
         @Enumerated(EnumType.STRING) Category category,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime beginAuctionDateTime,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")  LocalDateTime closeAuctionDateTime) {
+        @NotNull @JsonFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime beginAuctionDateTime,
+        @NotNull @JsonFormat(pattern = "yyyy-MM-dd HH:mm")  LocalDateTime closeAuctionDateTime) {
 }
