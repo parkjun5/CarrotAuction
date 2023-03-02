@@ -78,7 +78,6 @@ public class AuctionRoom extends BaseEntity implements BaseChatRoom {
     @Override
     public void addParticipants(User user) {
         notNull(user,  "유저는 널일 수 없습니다.");
-
         user.getAuctionRooms().add(this);
         participants.add(user);
     }
@@ -87,22 +86,22 @@ public class AuctionRoom extends BaseEntity implements BaseChatRoom {
         if (StringUtils.hasText(request.name()) && !name.equals(request.name())) {
             name = request.name();
         }
-        if (!password.equals(request.password())) {
+        if (StringUtils.hasText(request.password()) && !request.password().equals(password)) {
             password = request.password();
         }
         if (request.limitOfEnrollment() > 0 && limitOfEnrollment != request.limitOfEnrollment()) {
             limitOfEnrollment = request.limitOfEnrollment();
         }
-        if (!beginAuctionDateTime.equals(request.beginAuctionDateTime())) {
+        if (request.beginAuctionDateTime() != null && !request.beginAuctionDateTime().equals(beginAuctionDateTime)) {
             name = request.name();
         }
-        if (!closeAuctionDateTime.equals(request.closeAuctionDateTime())) {
+        if (request.closeAuctionDateTime() != null && !request.closeAuctionDateTime().equals(closeAuctionDateTime)) {
             closeAuctionDateTime = request.closeAuctionDateTime();
         }
-        if (!item.equals(request.item())) {
+        if (request.item() != null && !request.item().equals(item)) {
             item.changeInfo(request.item());
         }
-        if (!category.equals(request.category())) {
+        if (request.category() != null && !request.category().equals(category)) {
             category = request.category();
         }
     }
