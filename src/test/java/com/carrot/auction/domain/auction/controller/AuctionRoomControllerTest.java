@@ -81,15 +81,14 @@ class AuctionRoomControllerTest implements TestAuctionUtils {
     }
 
     @Test
-    @DisplayName("날짜가 널인 요청")
+    @DisplayName("날짜가 널일 경우 400에러 발생")
     void dateNullRequest() throws Exception {
         //given
-        Item item = Item.of("임시", 100, "임시 컨텐츠");
         AuctionRequest dateNullRequest = AuctionRequest.builder()
                 .userId(1L)
                 .name("날씨가 널인 요청")
                 .limitOfEnrollment(10)
-                .item(item)
+                .item(Item.of("임시", 100, "임시 컨텐츠"))
                 .category(Category.HOBBY_GAME_MUSIC)
                 .build();
         //when
