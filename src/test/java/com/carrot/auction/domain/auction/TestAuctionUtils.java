@@ -53,7 +53,7 @@ public interface TestAuctionUtils {
                 .category(Category.DIGITAL)
                 .limitOfEnrollment(100)
                 .beginAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 10, 30))
-                .closeAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 12, 30))
+                .closeAuctionDateTime(LocalDateTime.of(2999, Month.of(2), 23, 12, 30))
                 .build();
     }
 }
