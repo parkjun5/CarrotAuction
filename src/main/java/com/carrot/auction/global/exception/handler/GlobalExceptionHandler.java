@@ -1,6 +1,6 @@
 package com.carrot.auction.global.exception.handler;
 
-import com.carrot.auction.global.dto.ApiResponse;
+import com.carrot.auction.global.dto.ApiCommonResponse;
 import com.carrot.auction.global.exception.BusinessException;
 import com.carrot.auction.global.exception.code.ExceptionCode;
 import com.carrot.auction.global.exception.custom.ExceptionDto;
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     public Object processValidationError(MethodArgumentNotValidException ex) {
         ExceptionCode exceptionCode = ExceptionCode.findByClass(ex.getClass());
         return ResponseEntity.badRequest()
-                .body(ApiResponse.fail(
+                .body(ApiCommonResponse.fail(
                         exceptionCode.getCode(),
                         exceptionCode.getMessage(),
                         geInfoByException(ex)));
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Object> runtimeExceptionHandler(RuntimeException e) {
         log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.fail());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiCommonResponse.fail());
     }
 
     private Map<String, String> geInfoByException(BindException ex) {
