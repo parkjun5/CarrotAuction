@@ -35,6 +35,7 @@ public class AuctionRoomServiceImpl implements AuctionRoomService {
     public AuctionResponse createAuctionRoom(AuctionRequest auctionRequest) {
         User hostUser = userService.findUserById(auctionRequest.userId())
                 .orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
+        auctionRequestValidate(auctionRequest);
         AuctionRoom auctionRoom = AuctionRoom.createByRequestBuilder()
                 .hostUser(hostUser)
                 .auctionRequest(auctionRequest)
@@ -46,6 +47,9 @@ public class AuctionRoomServiceImpl implements AuctionRoomService {
     public AuctionResponse updateAuctionRoom(Long auctionRoomId, AuctionRequest auctionRequest) {
         AuctionRoom findAuction = auctionRepository.findById(auctionRoomId)
                 .orElseThrow(() -> new NoSuchElementException(auctionRoomId + AUCTION_NOT_FOUND));
+
+        auctionRequestValidate(auctionRequest);
+
         findAuction.changeInfoByRequest(auctionRequest);
 
         return auctionRoomToResponse(findAuction);
@@ -72,6 +76,10 @@ public class AuctionRoomServiceImpl implements AuctionRoomService {
                 .hostUser(auctionRoom.getHostUser())
                 .participants(auctionRoom.getParticipants())
                 .build();
+    }
+
+    private void auctionRequestValidate(AuctionRequest auctionRequest) {
+        auctionRequest.validateDateTime();
     }
 
 }

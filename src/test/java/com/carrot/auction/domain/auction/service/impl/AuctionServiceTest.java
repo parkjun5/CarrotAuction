@@ -29,6 +29,8 @@ class AuctionServiceTest implements TestAuctionUtils {
     private AuctionRoomRepository auctionRoomRepository;
     @Mock
     private AuctionRoom auctionRoom;
+    @Mock
+    private AuctionRequest auctionRequest;
 
     @Test
     @DisplayName("경매장 생성 및 저장 비지니스 로직 테스트")
@@ -61,10 +63,11 @@ class AuctionServiceTest implements TestAuctionUtils {
     void updateAuction() {
         //given
         given(auctionRoomRepository.findById(anyLong())).willReturn(Optional.of(auctionRoom));
-        willDoNothing().given(auctionRoom).changeInfoByRequest(any());
+        willDoNothing().given(auctionRoom).changeInfoByRequest(auctionRequest);
+        willDoNothing().given(auctionRequest).validateDateTime();
 
         //when
-        assertThatCode(() -> auctionRoomService.updateAuctionRoom(1L, any(AuctionRequest.class))).doesNotThrowAnyException();
+        assertThatCode(() -> auctionRoomService.updateAuctionRoom(1L, auctionRequest)).doesNotThrowAnyException();
 
         //then
         then(auctionRoomRepository).should(times(1)).findById(anyLong());

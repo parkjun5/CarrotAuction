@@ -21,4 +21,12 @@ public record AuctionRequest(
         @Enumerated(EnumType.STRING) Category category,
         @NotNull @JsonFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime beginAuctionDateTime,
         @NotNull @JsonFormat(pattern = "yyyy-MM-dd HH:mm")  LocalDateTime closeAuctionDateTime) {
+    public void validateDateTime() {
+        if (beginAuctionDateTime.isAfter(closeAuctionDateTime)) {
+            throw new IllegalArgumentException("시작 날짜: " + beginAuctionDateTime + ", 종료 날짜: " + closeAuctionDateTime + "종료 날짜보다 시작 날짜가 이릅니다.");
+        }
+        if (LocalDateTime.now().isAfter(closeAuctionDateTime)) {
+            throw new IllegalArgumentException("종료 날짜: " + closeAuctionDateTime + "이미 종료된 날짜입니다.");
+        }
+    }
 }
