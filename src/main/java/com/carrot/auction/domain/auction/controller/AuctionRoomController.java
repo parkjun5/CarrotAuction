@@ -24,7 +24,7 @@ public class AuctionRoomController {
     @GetMapping("/{auctionRoomId}")
     @Operation(summary = "경매장 조회", description = "id를 이용하여 경매장을 조회한다.")
     public ResponseEntity<ApiCommonResponse<AuctionResponse>> getAuctionRoom
-            (@PathVariable("auctionRoomId") Long auctionRoomId) {
+            (@PathVariable("auctionRoomId") final Long auctionRoomId) {
         return ResponseEntity.ok()
                 .body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.findAuctionInfoById(auctionRoomId)));
     }
@@ -40,7 +40,7 @@ public class AuctionRoomController {
     @PostMapping("/{auctionRoomId}")
     @Operation(summary = "경매장 수정", description = "id와 AuctionRequest 이용하여 경매장을 수정한다.")
     public ResponseEntity<ApiCommonResponse<AuctionResponse>> updateAuctionRoom
-            (@PathVariable("auctionRoomId") Long auctionRoomId, @RequestBody @Valid AuctionRequest auctionRequest) {
+            (@PathVariable("auctionRoomId") final Long auctionRoomId, @RequestBody @Valid AuctionRequest auctionRequest) {
         return ResponseEntity.ok()
                 .body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.updateAuctionRoom(auctionRoomId, auctionRequest)));
     }
@@ -48,7 +48,7 @@ public class AuctionRoomController {
     @DeleteMapping("/{auctionRoomId}")
     @Operation(summary = "경매장 삭제", description = "id를 이용하여 경매장을 삭제한다.")
     public ResponseEntity<ApiCommonResponse<Object>> deleteAuctionRoom
-            (@PathVariable("auctionRoomId") Long auctionRoomId) {
+            (@PathVariable("auctionRoomId") final Long auctionRoomId) {
         return ResponseEntity.ok().body(ApiCommonResponse.success("deletedRoomId", auctionService.deleteAuctionRoom(auctionRoomId)));
     }
 
