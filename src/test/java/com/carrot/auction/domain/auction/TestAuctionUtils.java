@@ -2,7 +2,6 @@ package com.carrot.auction.domain.auction;
 
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
-import com.carrot.auction.domain.auction.dto.AuctionResponse;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.carrot.auction.domain.user.domain.entity.User;
@@ -13,9 +12,16 @@ import java.time.Month;
 public interface TestAuctionUtils {
 
     default AuctionRoom getTestAuctionRoom() {
-        AuctionRoom auctionRoom = AuctionRoom.createByRequestBuilder()
+        AuctionRequest testAuctionRequest = getTestAuctionRequest();
+        AuctionRoom auctionRoom = AuctionRoom.builder()
                 .hostUser(getTestUser())
-                .auctionRequest(getTestAuctionRequest())
+                .name(testAuctionRequest.name())
+                .password(testAuctionRequest.password())
+                .item(testAuctionRequest.item())
+                .category(testAuctionRequest.category())
+                .beginAuctionDateTime(testAuctionRequest.beginAuctionDateTime())
+                .closeAuctionDateTime(testAuctionRequest.closeAuctionDateTime())
+                .limitOfEnrollment(testAuctionRequest.limitOfEnrollment())
                 .build();
         auctionRoom.addParticipants(getTestUser());
         return auctionRoom;
@@ -26,21 +32,6 @@ public interface TestAuctionUtils {
                 .email("tester@gmail.com")
                 .nickname("tester")
                 .password("testPw")
-                .build();
-    }
-
-    default AuctionResponse auctionRoomToResponse(AuctionRoom auctionRoom) {
-        return AuctionResponse.builder()
-                .name(auctionRoom.getName())
-                .item(auctionRoom.getItem())
-                .password(auctionRoom.getPassword())
-                .category(auctionRoom.getCategory())
-                .limitOfEnrollment(auctionRoom.getLimitOfEnrollment())
-                .beginAuctionDateTime(auctionRoom.getBeginAuctionDateTime())
-                .closeAuctionDateTime(auctionRoom.getCloseAuctionDateTime())
-                .auctionStatus(auctionRoom.getAuctionStatus())
-                .hostUser(auctionRoom.getHostUser())
-                .participants(auctionRoom.getParticipants())
                 .build();
     }
 
