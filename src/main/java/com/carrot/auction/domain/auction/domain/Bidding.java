@@ -12,8 +12,8 @@ import java.math.BigDecimal;
 
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class Bidding  implements Message {
 
     private static final BigDecimal MINIMUM_BIDDING_PERCENT = BigDecimal.valueOf(0.05);

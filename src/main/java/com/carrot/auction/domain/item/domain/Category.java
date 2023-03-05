@@ -1,12 +1,10 @@
 package com.carrot.auction.domain.item.domain;
 
 
-import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-@Getter
 public enum Category {
     DIGITAL("디지털기기"),
     HOUSEHOLD_APPLIANCES("생활가전"),

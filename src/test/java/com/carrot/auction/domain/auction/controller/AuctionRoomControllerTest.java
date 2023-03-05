@@ -3,6 +3,7 @@ package com.carrot.auction.domain.auction.controller;
 import com.carrot.auction.domain.auction.TestAuctionUtils;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
+import com.carrot.auction.domain.auction.dto.AuctionResponse;
 import com.carrot.auction.domain.auction.service.AuctionRoomService;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
@@ -44,7 +45,7 @@ class AuctionRoomControllerTest implements TestAuctionUtils {
     void createAuctionRoomTest() throws Exception {
         //given
         AuctionRoom room = getTestAuctionRoom();
-        given(auctionService.createAuctionRoom(any())).willReturn(auctionRoomToResponse(room));
+        given(auctionService.createAuctionRoom(any())).willReturn(AuctionResponse.of(room));
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -107,7 +108,7 @@ class AuctionRoomControllerTest implements TestAuctionUtils {
     void updateAuctionRoom() throws Exception {
         //given
         AuctionRoom room = getTestAuctionRoom();
-        given(auctionService.updateAuctionRoom(anyLong(), any(AuctionRequest.class))).willReturn(auctionRoomToResponse(room));
+        given(auctionService.updateAuctionRoom(anyLong(), any(AuctionRequest.class))).willReturn(AuctionResponse.of(room));
 
         //when
         ResultActions resultActions = mockMvc.perform(
