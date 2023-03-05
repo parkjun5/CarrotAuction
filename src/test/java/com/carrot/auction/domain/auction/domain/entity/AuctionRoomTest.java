@@ -14,30 +14,6 @@ import static org.assertj.core.api.Assertions.*;
 class AuctionRoomTest implements TestAuctionUtils {
 
     @Test
-    @DisplayName("경매장 생성 파라미터가 널일 경우 IllegalArgumentException 발생")
-    void auctionRoomNullCheck() {
-        AuctionRoom.createByRequestBuilder noArgs = AuctionRoom.createByRequestBuilder();
-        assertThatThrownBy(noArgs::build)
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("유저는 널일 수 없습니다.");
-    }
-
-    @Test
-    @DisplayName("경매장 호스트 유저 널일 경우 IllegalArgumentException 발생")
-    void auctionUserNull() {
-        AuctionRoom.createByRequestBuilder noUserArg = AuctionRoom.createByRequestBuilder().auctionRequest(getTestAuctionRequest());
-        assertThatThrownBy(noUserArg::build).isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    @DisplayName("경매장 요청이 전부 널일 경우 IllegalArgumentException 발생")
-    void auctionNoRequest() {
-        User testUser = getTestUser();
-        AuctionRoom.createByRequestBuilder noCreateAuctionRequest = AuctionRoom.createByRequestBuilder().hostUser(testUser);
-        assertThatThrownBy(noCreateAuctionRequest::build).isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
     @DisplayName("경매장 참가자 추가 테스트")
     void testAddParticipants() {
         AuctionRoom auctionRoom = getTestAuctionRoom();
@@ -61,10 +37,10 @@ class AuctionRoomTest implements TestAuctionUtils {
         String oldName = auctionRoom.getName();
         Category notChangeCategory = auctionRoom.getCategory();
         Item galaxyBook = Item.of("갤럭시 북", 100_000, "맥북보다 훨씬 싼 갤럭시 북 안드로이드 개발에 좋아요");
-        AuctionRequest changeRequest = AuctionRequest.builder().name("이름 변경").item(galaxyBook).build();
+        AuctionRequest changeRequest = AuctionRequest.builder().name("이름 변경").item(galaxyBook).category(Category.DIGITAL).build();
         //when 
-        auctionRoom.changeInfoByRequest(changeRequest);
-
+        auctionRoom.updateAuctionInfo(changeRequest.name(), changeRequest.password(), changeRequest.limitOfEnrollment(), changeRequest.beginAuctionDateTime(), changeRequest.closeAuctionDateTime());
+        auctionRoom.updateItem(changeRequest.item().getTitle(), changeRequest.item().getPrice(), changeRequest.item().getContent(), changeRequest.category());
         //then
         assertThat(auctionRoom.getName()).isNotEqualTo(oldName);
         assertThat(auctionRoom.getName()).isEqualTo("이름 변경");

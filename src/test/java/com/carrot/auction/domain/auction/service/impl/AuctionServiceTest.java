@@ -3,6 +3,9 @@ package com.carrot.auction.domain.auction.service.impl;
 import com.carrot.auction.domain.auction.TestAuctionUtils;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
+import com.carrot.auction.domain.auction.service.AuctionRoomService;
+import com.carrot.auction.domain.item.domain.Category;
+import com.carrot.auction.domain.item.domain.Item;
 import com.carrot.auction.domain.user.service.UserService;
 import com.carrot.auction.domain.auction.domain.repository.AuctionRoomRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -22,7 +26,7 @@ import static org.mockito.BDDMockito.*;
 class AuctionServiceTest implements TestAuctionUtils {
 
     @InjectMocks
-    private AuctionRoomServiceImpl auctionRoomService;
+    private AuctionRoomService auctionRoomService;
     @Mock
     private UserService userService;
     @Mock
@@ -63,7 +67,14 @@ class AuctionServiceTest implements TestAuctionUtils {
     void updateAuction() {
         //given
         given(auctionRoomRepository.findById(anyLong())).willReturn(Optional.of(auctionRoom));
-        willDoNothing().given(auctionRoom).changeInfoByRequest(auctionRequest);
+        given(auctionRequest.name()).willReturn("testRequest");
+        given(auctionRequest.beginAuctionDateTime()).willReturn(LocalDateTime.MIN);
+        given(auctionRequest.closeAuctionDateTime()).willReturn(LocalDateTime.MAX);
+        given(auctionRequest.item()).willReturn(Item.of("test", 10_000, "test data"));
+        given(auctionRequest.category()).willReturn(Category.WTB);
+
+        willDoNothing().given(auctionRoom).updateAuctionInfo(anyString(), any(), anyInt(), any(LocalDateTime.class), any(LocalDateTime.class));
+        willDoNothing().given(auctionRoom).updateItem(anyString(), anyInt(), anyString(), any(Category.class));
         willDoNothing().given(auctionRequest).validateDateTime();
 
         //when
@@ -71,7 +82,8 @@ class AuctionServiceTest implements TestAuctionUtils {
 
         //then
         then(auctionRoomRepository).should(times(1)).findById(anyLong());
-        then(auctionRoom).should(times(1)).changeInfoByRequest(any());
+        then(auctionRoom).should(times(1)).updateAuctionInfo(anyString(), any(), anyInt(), any(LocalDateTime.class), any(LocalDateTime.class));
+        then(auctionRoom).should(times(1)).updateItem(anyString(), anyInt(), anyString(), any(Category.class));
     }
 
     @Test
