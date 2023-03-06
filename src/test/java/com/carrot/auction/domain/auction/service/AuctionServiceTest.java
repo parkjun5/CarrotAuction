@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
@@ -70,8 +70,8 @@ class AuctionServiceTest implements TestAuctionUtils {
         //given
         given(auctionRoomRepository.findById(anyLong())).willReturn(Optional.of(auctionRoom));
         given(auctionRequest.name()).willReturn("testRequest");
-        given(auctionRequest.beginAuctionDateTime()).willReturn(LocalDateTime.MIN.atZone(ZoneOffset.UTC));
-        given(auctionRequest.closeAuctionDateTime()).willReturn(LocalDateTime.MAX.atZone(ZoneOffset.UTC));
+        given(auctionRequest.beginAuctionDateTime()).willReturn(LocalDateTime.MIN.atZone(ZoneId.of("Asia/Seoul")));
+        given(auctionRequest.closeAuctionDateTime()).willReturn(LocalDateTime.MAX.atZone(ZoneId.of("Asia/Seoul")));
         given(auctionRequest.item()).willReturn(Item.of("test", 10_000, "test data"));
         given(auctionRequest.category()).willReturn(Category.WTB);
 
