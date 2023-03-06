@@ -11,9 +11,8 @@ import jakarta.persistence.ManyToOne;
 import java.math.BigDecimal;
 
 @Getter
-@Builder
+@Builder @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor
 public class Bidding  implements Message {
 
     private static final BigDecimal MINIMUM_BIDDING_PERCENT = BigDecimal.valueOf(0.05);
@@ -27,21 +26,10 @@ public class Bidding  implements Message {
 
     private int price;
 
-    /**
-     * 생성 편의 메소드
-     */
-    public static Bidding of(BaseChatRoom chatRoom, User sender, int price) {
-        return Bidding.builder()
-                .chatRoom(chatRoom)
-                .sender(sender)
-                .price(price)
-                .build();
-    }
-    public static boolean isCorrectSuggest(int existingPrice, int suggestPrice) {
+    public static boolean validatePrice(int existingPrice, int suggestPrice) {
         if (suggestPrice < 0 || existingPrice < 0) {
             throw new IllegalArgumentException("잘못된 가격 설정: " + suggestPrice);
         }
-
         int minimumPrice = existingPrice + MINIMUM_BIDDING_PERCENT.multiply(BigDecimal.valueOf(existingPrice)).intValue();
         return minimumPrice <= suggestPrice;
     }

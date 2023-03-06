@@ -17,9 +17,9 @@ class BiddingTest {
         int suggestPriceTwo = 5250;
         int suggestPriceThree = 5500;
         //then
-        assertThat(Bidding.isCorrectSuggest(existPrice, suggestPriceOne)).isFalse();
-        assertThat(Bidding.isCorrectSuggest(existPrice, suggestPriceTwo)).isTrue();
-        assertThat(Bidding.isCorrectSuggest(existPrice, suggestPriceThree)).isTrue();
+        assertThat(Bidding.validatePrice(existPrice, suggestPriceOne)).isFalse();
+        assertThat(Bidding.validatePrice(existPrice, suggestPriceTwo)).isTrue();
+        assertThat(Bidding.validatePrice(existPrice, suggestPriceThree)).isTrue();
     }
 
 }

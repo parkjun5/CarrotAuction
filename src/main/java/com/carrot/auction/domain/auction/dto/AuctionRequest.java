@@ -14,9 +14,11 @@ import java.time.ZonedDateTime;
 @Builder
 public record AuctionRequest(
         @NotNull Long userId,
-        @NotBlank String name,
+        @NotBlank @Size(max= 10) String name,
         String password,
-        @Min(value=0, message = "value must higher than 0" ) int limitOfEnrollment,
+        @Min(value= 0) @Max(value= 100)int limitOfEnrollment,
+        @Min(value= 1_000) int biddingPrice,
+
         @Embedded Item item,
         @Enumerated(EnumType.STRING) Category category,
         @NotNull @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ssZ")
