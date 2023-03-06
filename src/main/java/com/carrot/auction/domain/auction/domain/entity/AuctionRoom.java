@@ -7,7 +7,7 @@ import com.carrot.auction.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +15,9 @@ import static org.springframework.util.Assert.*;
 
 @Entity
 @Getter
+@Builder @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @EqualsAndHashCode
-@AllArgsConstructor
 public class AuctionRoom extends BaseEntity {
 
     @Id @GeneratedValue
@@ -27,8 +26,9 @@ public class AuctionRoom extends BaseEntity {
     private String name;
     private String password;
     private int limitOfEnrollment;
-    private LocalDateTime beginAuctionDateTime;
-    private LocalDateTime closeAuctionDateTime;
+    private int biddingPrice;
+    private ZonedDateTime beginAuctionDateTime;
+    private ZonedDateTime closeAuctionDateTime;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User hostUser;

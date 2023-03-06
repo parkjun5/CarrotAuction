@@ -8,6 +8,7 @@ import com.carrot.auction.domain.user.domain.entity.User;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.ZoneOffset;
 
 public interface TestAuctionUtils {
 
@@ -43,8 +44,9 @@ public interface TestAuctionUtils {
                 .password(null)
                 .category(Category.DIGITAL)
                 .limitOfEnrollment(100)
-                .beginAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 10, 30))
-                .closeAuctionDateTime(LocalDateTime.of(2999, Month.of(2), 23, 12, 30))
+                .biddingPrice(10_000)
+                .beginAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 10, 30, 0).atZone(ZoneOffset.UTC))
+                .closeAuctionDateTime(LocalDateTime.of(2999, Month.of(2), 23, 12, 30).atZone(ZoneOffset.UTC))
                 .build();
     }
 }
