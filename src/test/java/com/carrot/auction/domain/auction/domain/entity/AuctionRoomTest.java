@@ -39,7 +39,8 @@ class AuctionRoomTest implements TestAuctionUtils {
         Item galaxyBook = Item.of("갤럭시 북", 100_000, "맥북보다 훨씬 싼 갤럭시 북 안드로이드 개발에 좋아요");
         AuctionRequest changeRequest = AuctionRequest.builder().name("이름 변경").item(galaxyBook).category(Category.DIGITAL).build();
         //when 
-        auctionRoom.updateAuctionInfo(changeRequest.name(), changeRequest.password(), changeRequest.limitOfEnrollment(), changeRequest.beginAuctionDateTime(), changeRequest.closeAuctionDateTime());
+        auctionRoom.updateAuctionInfo(changeRequest.name(), changeRequest.password(), changeRequest.limitOfEnrollment(),
+                changeRequest.biddingPrice(), changeRequest.beginAuctionDateTime(), changeRequest.closeAuctionDateTime());
         auctionRoom.updateItem(changeRequest.item().getTitle(), changeRequest.item().getPrice(), changeRequest.item().getContent(), changeRequest.category());
         //then
         assertThat(auctionRoom.getName()).isNotEqualTo(oldName);

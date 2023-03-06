@@ -46,10 +46,11 @@ public class AuctionRoom extends BaseEntity {
         participants.add(user);
     }
     
-    public void updateAuctionInfo(String name, String password, int limitOfEnrollment, LocalDateTime beginAuctionDateTime, LocalDateTime closeAuctionDateTime) {
+    public void updateAuctionInfo(String name, String password, int limitOfEnrollment, int biddingPrice, ZonedDateTime beginAuctionDateTime, ZonedDateTime closeAuctionDateTime) {
         this.name = name;
         this.password = password;
         this.limitOfEnrollment = limitOfEnrollment;
+        this.biddingPrice = biddingPrice;
         this.beginAuctionDateTime = beginAuctionDateTime;
         this.closeAuctionDateTime = closeAuctionDateTime;
     }
