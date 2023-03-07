@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record PostRequest(
         @NotNull Long userId,
-        @NotBlank String title,
+        @NotBlank String postTitle,
         @NotBlank String postContent,
         @Embedded Item item,
         @Enumerated(EnumType.STRING) Category category) {

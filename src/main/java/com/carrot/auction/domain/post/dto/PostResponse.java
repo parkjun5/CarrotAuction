@@ -14,7 +14,7 @@ import jakarta.persistence.Enumerated;
 public record PostResponse(
         @Schema(description = "작성자")
         @JsonSerialize(using = UserSerializer.class) User user,
-        String title,
+        String postTitle,
         String postContent,
         @Embedded Item item,
         @Enumerated(EnumType.STRING) Category category,
