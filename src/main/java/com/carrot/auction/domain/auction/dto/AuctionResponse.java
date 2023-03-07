@@ -1,6 +1,5 @@
 package com.carrot.auction.domain.auction.dto;
 
-import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.domain.entity.AuctionStatus;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
@@ -40,20 +39,4 @@ public record AuctionResponse (
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") ZonedDateTime closeAuctionDateTime,
         @Schema(description = "경매장 상태")
         @Enumerated(EnumType.STRING) AuctionStatus auctionStatus) {
-
-        public static AuctionResponse of(AuctionRoom auctionRoom) {
-                return builder()
-                        .name(auctionRoom.getName())
-                        .item(auctionRoom.getItem())
-                        .password(auctionRoom.getPassword())
-                        .category(auctionRoom.getCategory())
-                        .limitOfEnrollment(auctionRoom.getLimitOfEnrollment())
-                        .beginAuctionDateTime(auctionRoom.getBeginAuctionDateTime())
-                        .closeAuctionDateTime(auctionRoom.getCloseAuctionDateTime())
-                        .auctionStatus(auctionRoom.getAuctionStatus())
-                        .hostUser(auctionRoom.getHostUser())
-                        .participants(auctionRoom.getParticipants())
-                        .build();
-        }
-
 }

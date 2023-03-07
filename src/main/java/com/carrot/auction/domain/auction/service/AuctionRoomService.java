@@ -1,5 +1,6 @@
 package com.carrot.auction.domain.auction.service;
 
+import com.carrot.auction.domain.auction.dto.AuctionMapper;
 import com.carrot.auction.domain.auction.dto.AuctionResponse;
 import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.domain.user.service.UserService;
@@ -19,50 +20,40 @@ public class AuctionRoomService {
 
     private final AuctionRoomRepository auctionRepository;
     private final UserService userService;
-
+    private final AuctionMapper auctionMapper;
     private static final String AUCTION_NOT_FOUND = " 경매장을 찾지 못했습니다.";
 
     public AuctionResponse findAuctionInfoById(final Long roomId) {
-        AuctionRoom findAuction = auctionRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException(roomId + AUCTION_NOT_FOUND));
-        return AuctionResponse.of(findAuction);
+        AuctionRoom findAuction = auctionRepository.findById(roomId)
+                .orElseThrow(() -> new NoSuchElementException(roomId + AUCTION_NOT_FOUND));
+        return auctionMapper.toResponseByEntity(findAuction);
     }
 
     @Transactional
     public AuctionResponse createAuctionRoom(AuctionRequest request) {
-        User hostUser = userService.findUserById(request.userId()).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
-        auctionRequestValidate(request);
-        AuctionRoom auctionRoom = AuctionRoom.builder()
-                .hostUser(hostUser)
-                .name(request.name())
-                .password(request.password())
-                .item(request.item())
-                .category(request.category())
-                .beginAuctionDateTime(request.beginAuctionDateTime())
-                .closeAuctionDateTime(request.closeAuctionDateTime())
-                .limitOfEnrollment(request.limitOfEnrollment())
-                .build();
-        return AuctionResponse.of(auctionRepository.save(auctionRoom));
+        request.validateDateTime();
+        User hostUser = userService.findUserById(request.userId())
+                .orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
+        AuctionRoom auctionRoom = auctionMapper.toEntityByRequest(hostUser, request);
+        return auctionMapper.toResponseByEntity(auctionRepository.save(auctionRoom));
     }
 
     @Transactional
     public AuctionResponse updateAuctionRoom(final Long roodId, AuctionRequest request) {
-        AuctionRoom findAuction = auctionRepository.findById(roodId).orElseThrow(() -> new NoSuchElementException(roodId + AUCTION_NOT_FOUND));
-        auctionRequestValidate(request);
+        request.validateDateTime();
+        AuctionRoom findAuction = auctionRepository.findById(roodId)
+                .orElseThrow(() -> new NoSuchElementException(roodId + AUCTION_NOT_FOUND));
         findAuction.updateAuctionInfo(request.name(), request.password(), request.limitOfEnrollment()
                 ,request.biddingPrice(), request.beginAuctionDateTime(),  request.closeAuctionDateTime());
         findAuction.updateItem(request.item().getTitle(), request.item().getPrice(), request.item().getContent(), request.category());
-        return AuctionResponse.of(findAuction);
+        return auctionMapper.toResponseByEntity(findAuction);
     }
 
     @Transactional
     public Long deleteAuctionRoom(final Long roomId) {
-        AuctionRoom findAuction = auctionRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException(roomId + AUCTION_NOT_FOUND));
+        AuctionRoom findAuction = auctionRepository.findById(roomId)
+                .orElseThrow(() -> new NoSuchElementException(roomId + AUCTION_NOT_FOUND));
         auctionRepository.delete(findAuction);
         return roomId;
     }
-
-    private void auctionRequestValidate(AuctionRequest auctionRequest) {
-        auctionRequest.validateDateTime();
-    }
-
 }
