@@ -6,6 +6,7 @@ import com.carrot.auction.domain.post.service.PostService;
 import com.carrot.auction.global.dto.ApiCommonResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +20,28 @@ public class PostController {
     @GetMapping("/{postId}")
     public ResponseEntity<ApiCommonResponse<PostResponse>> getPostById
             (@PathVariable(value = "postId") final Long postId) {
-        return ResponseEntity.ok(ApiCommonResponse.success("post", postService.findById(postId)));
+        return ResponseEntity
+                .ok(ApiCommonResponse.success("post", postService.findById(postId)));
     }
 
     @PostMapping
     public ResponseEntity<ApiCommonResponse<PostResponse>> createPost
             (@RequestBody @Valid PostRequest request) {
-        return ResponseEntity.ok(ApiCommonResponse.success("post", postService.createPost(request)));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiCommonResponse.success("post", postService.createPost(request)));
     }
 
+    @PostMapping("/{postId}")
+    public ResponseEntity<ApiCommonResponse<PostResponse>> updatePost
+            (@PathVariable(value = "postId") final Long postId, @RequestBody @Valid PostRequest request) {
+        return ResponseEntity
+                .ok(ApiCommonResponse.success("post", postService.updatePost(postId, request)));
+    }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<ApiCommonResponse<Long>> deletePost
+            (@PathVariable(value = "postId") final Long postId) {
+        return ResponseEntity
+                .ok(ApiCommonResponse.success("post", postService.deletePost(postId)));
+    }
 }

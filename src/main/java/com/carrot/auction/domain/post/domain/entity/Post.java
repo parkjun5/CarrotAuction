@@ -12,7 +12,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper=false)
 public class Post extends BaseEntity {
 
     @Id
@@ -21,7 +21,7 @@ public class Post extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    private String title;
+    private String postTitle;
     private String postContent;
     @Embedded private Item item;
     @Enumerated(EnumType.STRING) Category category;
@@ -31,5 +31,15 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING) private PostStatus postStatus = PostStatus.IN_SALE;
     @Builder.Default
     private boolean isDeleted = false;
+
+    public void changeContent(String postTitle, String postContent) {
+        this.postTitle = postTitle;
+        this.postContent = postContent;
+    }
+
+    public void changeItem(String title, int price, String content, Category category) {
+        this.item.changeInfo(title, price, content);
+        this.category = category;
+    }
 
 }
