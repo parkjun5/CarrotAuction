@@ -9,7 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
-import static org.assertj.core.api.Assertions.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AuctionRoomTest implements TestAuctionUtils {
 
@@ -50,4 +53,27 @@ class AuctionRoomTest implements TestAuctionUtils {
         assertThat(auctionRoom.getItem().getContent()).isEqualTo(galaxyBook.getContent());
         assertThat(auctionRoom.getCategory()).isEqualTo(notChangeCategory);
     }
+
+    @Test
+    void hashTest() {
+        //given
+        AuctionRoom test1 = getTestAuctionRoom();
+        AuctionRoom test2 = getTestAuctionRoom();
+        AuctionRoom test3 = AuctionRoom.builder().build();
+
+        //then
+        System.out.println("test1.hashCode() = " + test1.hashCode() + "\ntest 1 = " + test1);
+        System.out.println("test2.hashCode() = " + test2.hashCode() + "\ntest 2 = " + test2);
+        System.out.println("test1.equals(test2) = " + test1.equals(test2));
+        assertThat(test1).hasSameHashCodeAs(test2).isNotEqualTo(test2);
+
+        System.out.println("test3.hashCode() = " + test3.hashCode() + "\ntest 3 = " + test3);
+
+        Map<AuctionRoom, String> map = new HashMap<>();
+        map.put(test1, "test1");
+        assertThat(map).hasSize(1);
+        map.put(test2, "test2");
+        assertThat(map).hasSize(2);
+    }
+
 }
