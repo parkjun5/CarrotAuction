@@ -9,6 +9,10 @@ import org.mapstruct.Mapping;
 public interface PostMapper {
     @Mapping(source = "writer", target = "user")
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "views", ignore = true)
+    @Mapping(target = "amountOfInterest", ignore = true)
+    @Mapping(target = "postStatus", ignore = true)
+    @Mapping(target = "isDeleted", ignore = true)
     Post toEntityByRequest(User writer, PostRequest request);
 
     PostResponse toResponseByEntity(Post post);

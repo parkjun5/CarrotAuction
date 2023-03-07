@@ -17,7 +17,7 @@ import static org.springframework.util.Assert.*;
 @Getter
 @Builder @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper=false)
 public class AuctionRoom extends BaseEntity {
 
     @Id @GeneratedValue
