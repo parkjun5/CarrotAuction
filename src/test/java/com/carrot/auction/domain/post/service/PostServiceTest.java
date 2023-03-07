@@ -1,5 +1,7 @@
 package com.carrot.auction.domain.post.service;
 
+import com.carrot.auction.domain.item.domain.Category;
+import com.carrot.auction.domain.item.domain.Item;
 import com.carrot.auction.domain.post.domain.entity.Post;
 import com.carrot.auction.domain.post.domain.repository.PostRepository;
 import com.carrot.auction.domain.post.dto.PostMapper;
@@ -16,9 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,7 +41,6 @@ class PostServiceTest {
     private User user;
     @Mock
     private PostRequest request;
-
     @Mock
     private PostResponse response;
 
@@ -62,4 +63,54 @@ class PostServiceTest {
         then(postMapper).should(times(1)).toResponseByEntity(any(Post.class));
     }
 
+    @Test
+    @DisplayName("글 찾기 테스트")
+    void findById() {
+        //given
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        //when
+        postService.findById(anyLong());
+        //then
+        then(postRepository).should(times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("글 변경 테스트")
+    void updatePost() {
+        //given
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        willDoNothing().given(post).changeContent(anyString(), anyString());
+        willDoNothing().given(post).changeItem(anyString(), anyInt(), anyString(), any(Category.class));
+        given(postMapper.toResponseByEntity(post)).willReturn(response);
+
+        given(request.postTitle()).willReturn("Test Title");
+        given(request.postContent()).willReturn("Test Content");
+        given(request.category()).willReturn(Category.WTB);
+        given(request.item()).willReturn(Item.of("test", 10_000, "test data"));
+
+        //when
+        assertThatCode(() -> postService.updatePost(1L, request)).doesNotThrowAnyException();
+
+        //then
+        then(postRepository).should(times(1)).findById(anyLong());
+        then(post).should(times(1)).changeContent(anyString(), anyString());
+        then(post).should(times(1)).changeItem(anyString(), anyInt(), anyString(), any(Category.class));
+        then(postMapper).should(times(1)).toResponseByEntity(any(Post.class));
+    }
+
+
+    @Test
+    @DisplayName("글 삭제 테스트")
+    void deleteById() {
+        //given
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        willDoNothing().given(postRepository).delete(any(Post.class));
+
+        //when
+        postService.deletePost(anyLong());
+
+        //then
+        then(postRepository).should(times(1)).findById(anyLong());
+        then(postRepository).should(times(1)).delete(any(Post.class));
+    }
 }
