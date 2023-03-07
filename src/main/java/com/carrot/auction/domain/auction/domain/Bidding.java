@@ -1,8 +1,6 @@
 package com.carrot.auction.domain.auction.domain;
 
 import com.carrot.auction.domain.user.domain.entity.User;
-import com.carrot.auction.domain.chat.domain.BaseChatRoom;
-import com.carrot.auction.domain.chat.domain.Message;
 import lombok.*;
 
 import jakarta.persistence.FetchType;
@@ -11,19 +9,14 @@ import jakarta.persistence.ManyToOne;
 import java.math.BigDecimal;
 
 @Getter
-@Builder @AllArgsConstructor
+@Builder @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Bidding  implements Message {
+public class Bidding {
 
     private static final BigDecimal MINIMUM_BIDDING_PERCENT = BigDecimal.valueOf(0.05);
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private BaseChatRoom chatRoom;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User sender;
-
     private int price;
 
     public static boolean validatePrice(int existingPrice, int suggestPrice) {
