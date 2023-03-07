@@ -1,9 +1,7 @@
 package com.carrot.auction.domain.auction.controller;
 
 import com.carrot.auction.domain.auction.TestAuctionUtils;
-import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
-import com.carrot.auction.domain.auction.dto.AuctionResponse;
 import com.carrot.auction.domain.auction.service.AuctionRoomService;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
@@ -44,8 +42,7 @@ class AuctionRoomControllerTest implements TestAuctionUtils {
     @DisplayName("post /api/auctionRoom 경매장 생성 리퀘스트 매핑")
     void createAuctionRoomTest() throws Exception {
         //given
-        AuctionRoom room = getTestAuctionRoom();
-        given(auctionService.createAuctionRoom(any())).willReturn(AuctionResponse.of(room));
+        given(auctionService.createAuctionRoom(any())).willReturn(getTestResponse());
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -107,8 +104,7 @@ class AuctionRoomControllerTest implements TestAuctionUtils {
     @DisplayName("post /api/auctionRoom/{auctionRoomId}")
     void updateAuctionRoom() throws Exception {
         //given
-        AuctionRoom room = getTestAuctionRoom();
-        given(auctionService.updateAuctionRoom(anyLong(), any(AuctionRequest.class))).willReturn(AuctionResponse.of(room));
+        given(auctionService.updateAuctionRoom(anyLong(), any(AuctionRequest.class))).willReturn(getTestResponse());
 
         //when
         ResultActions resultActions = mockMvc.perform(

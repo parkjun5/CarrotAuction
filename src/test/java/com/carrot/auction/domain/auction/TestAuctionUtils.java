@@ -2,6 +2,7 @@ package com.carrot.auction.domain.auction;
 
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
+import com.carrot.auction.domain.auction.dto.AuctionResponse;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.carrot.auction.domain.user.domain.entity.User;
@@ -11,6 +12,10 @@ import java.time.Month;
 import java.time.ZoneId;
 
 public interface TestAuctionUtils {
+
+    default AuctionResponse getTestResponse() {
+        return AuctionResponse.builder().build();
+    }
 
     default AuctionRoom getTestAuctionRoom() {
         AuctionRequest testAuctionRequest = getTestAuctionRequest();

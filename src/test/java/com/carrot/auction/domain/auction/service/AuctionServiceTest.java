@@ -2,6 +2,7 @@ package com.carrot.auction.domain.auction.service;
 
 import com.carrot.auction.domain.auction.TestAuctionUtils;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
+import com.carrot.auction.domain.auction.dto.AuctionMapper;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
@@ -33,6 +34,8 @@ class AuctionServiceTest implements TestAuctionUtils {
     private UserService userService;
     @Mock
     private AuctionRoomRepository auctionRoomRepository;
+    @Mock
+    private AuctionMapper auctionMapper;
     @Mock
     private AuctionRoom auctionRoom;
     @Mock
