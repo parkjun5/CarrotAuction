@@ -14,6 +14,12 @@ public class Bid {
     private int biddingPrice;
     private ZonedDateTime biddingTime;
 
+    public static Bid startPrice(int biddingPrice) {
+        Bid bid = new Bid();
+        bid.biddingPrice = biddingPrice;
+        return bid;
+    }
+
     public void changeStartPrice(int biddingPrice) {
         this.biddingPrice = biddingPrice;
     }

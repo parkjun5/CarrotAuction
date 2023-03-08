@@ -1,6 +1,7 @@
 package com.carrot.auction.domain.auction.domain.entity;
 
 import com.carrot.auction.domain.auction.TestAuctionUtils;
+import com.carrot.auction.domain.auction.domain.Bid;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
@@ -40,10 +41,10 @@ class AuctionRoomTest implements TestAuctionUtils {
         String oldName = auctionRoom.getName();
         Category notChangeCategory = auctionRoom.getCategory();
         Item galaxyBook = Item.of("갤럭시 북", 100_000, "맥북보다 훨씬 싼 갤럭시 북 안드로이드 개발에 좋아요");
-        AuctionRequest changeRequest = AuctionRequest.builder().name("이름 변경").item(galaxyBook).category(Category.DIGITAL).build();
-        //when 
+        AuctionRequest changeRequest = AuctionRequest.builder().name("이름 변경").item(galaxyBook).bid(Bid.startPrice(20_000)).category(Category.DIGITAL).build();
+        //when
         auctionRoom.updateAuctionInfo(changeRequest.name(), changeRequest.password(), changeRequest.limitOfEnrollment(),
-                changeRequest.biddingPrice(), changeRequest.beginAuctionDateTime(), changeRequest.closeAuctionDateTime());
+                changeRequest.bid().getBiddingPrice(), changeRequest.beginAuctionDateTime(), changeRequest.closeAuctionDateTime());
         auctionRoom.updateItem(changeRequest.item().getTitle(), changeRequest.item().getPrice(), changeRequest.item().getContent(), changeRequest.category());
         //then
         assertThat(auctionRoom.getName()).isNotEqualTo(oldName);
@@ -53,6 +54,7 @@ class AuctionRoomTest implements TestAuctionUtils {
         assertThat(auctionRoom.getItem().getContent()).isEqualTo(galaxyBook.getContent());
         assertThat(auctionRoom.getCategory()).isEqualTo(notChangeCategory);
     }
+
 
     @Test
     void hashTest() {

@@ -1,5 +1,6 @@
 package com.carrot.auction.domain.auction;
 
+import com.carrot.auction.domain.auction.domain.Bid;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.auction.dto.AuctionResponse;
@@ -23,6 +24,7 @@ public interface TestAuctionUtils {
                 .hostUser(getTestUser())
                 .name(testAuctionRequest.name())
                 .password(testAuctionRequest.password())
+                .bid(Bid.startPrice(10_000))
                 .item(testAuctionRequest.item())
                 .category(testAuctionRequest.category())
                 .beginAuctionDateTime(testAuctionRequest.beginAuctionDateTime())
@@ -49,7 +51,7 @@ public interface TestAuctionUtils {
                 .password(null)
                 .category(Category.DIGITAL)
                 .limitOfEnrollment(100)
-                .biddingPrice(10_000)
+                .bid(Bid.startPrice(10_000))
                 .beginAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 10, 30, 0).atZone(ZoneId.of("Asia/Seoul")))
                 .closeAuctionDateTime(LocalDateTime.of(2999, Month.of(2), 23, 12, 30).atZone(ZoneId.of("Asia/Seoul")))
                 .build();

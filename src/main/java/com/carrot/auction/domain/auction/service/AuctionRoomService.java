@@ -46,7 +46,7 @@ public class AuctionRoomService {
         AuctionRoom findAuction = findAuctionRoomById(roomId);
 
         findAuction.updateAuctionInfo(request.name(), request.password(), request.limitOfEnrollment()
-                ,request.biddingPrice(), request.beginAuctionDateTime(),  request.closeAuctionDateTime());
+                ,request.bid().getBiddingPrice(), request.beginAuctionDateTime(),  request.closeAuctionDateTime());
 
         findAuction.updateItem(request.item().getTitle(), request.item().getPrice(), request.item().getContent(), request.category());
 
