@@ -2,6 +2,8 @@ package com.carrot.auction.domain.auction.controller;
 
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.auction.dto.AuctionResponse;
+import com.carrot.auction.domain.auction.dto.BiddingRequest;
+import com.carrot.auction.domain.auction.dto.BiddingResponse;
 import com.carrot.auction.domain.auction.service.AuctionRoomService;
 import com.carrot.auction.global.dto.ApiCommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,6 +52,12 @@ public class AuctionRoomController {
     public ResponseEntity<ApiCommonResponse<Object>> deleteAuctionRoom
             (@PathVariable("auctionRoomId") final Long auctionRoomId) {
         return ResponseEntity.ok().body(ApiCommonResponse.success("deletedRoomId", auctionService.deleteAuctionRoom(auctionRoomId)));
+    }
+
+    @PostMapping("/bid/{auctionRoomId}")
+    public ResponseEntity<ApiCommonResponse<BiddingResponse>> updateBid
+            (@PathVariable("auctionRoomId") final Long auctionRoomId, @RequestBody @Valid BiddingRequest biddingRequest) {
+        return ResponseEntity.ok().body(ApiCommonResponse.success("bid", auctionService.updateBid(auctionRoomId, biddingRequest)));
     }
 
 }
