@@ -55,6 +55,7 @@ public class AuctionRoomController {
     }
 
     @PostMapping("/bid/{auctionRoomId}")
+    @Operation(summary = "가격 입찰", description = "가격을 입찰한다.")
     public ResponseEntity<ApiCommonResponse<BiddingResponse>> updateBid
             (@PathVariable("auctionRoomId") final Long auctionRoomId, @RequestBody @Valid BiddingRequest biddingRequest) {
         return ResponseEntity.ok().body(ApiCommonResponse.success("bid", auctionService.updateBid(auctionRoomId, biddingRequest)));
