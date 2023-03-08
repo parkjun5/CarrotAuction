@@ -1,5 +1,6 @@
 package com.carrot.auction.domain.auction.domain.entity;
 
+import com.carrot.auction.domain.auction.domain.Bid;
 import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
@@ -26,7 +27,7 @@ public class AuctionRoom extends BaseEntity {
     private String name;
     private String password;
     private int limitOfEnrollment;
-    private int biddingPrice;
+    @Embedded private Bid bid;
     private ZonedDateTime beginAuctionDateTime;
     private ZonedDateTime closeAuctionDateTime;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,7 +51,7 @@ public class AuctionRoom extends BaseEntity {
         this.name = name;
         this.password = password;
         this.limitOfEnrollment = limitOfEnrollment;
-        this.biddingPrice = biddingPrice;
+        this.bid.changeStartPrice(biddingPrice);
         this.beginAuctionDateTime = beginAuctionDateTime;
         this.closeAuctionDateTime = closeAuctionDateTime;
     }
