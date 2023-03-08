@@ -59,21 +59,34 @@ class AuctionRoomTest implements TestAuctionUtils {
         //given
         AuctionRoom test1 = getTestAuctionRoom();
         AuctionRoom test2 = getTestAuctionRoom();
-        AuctionRoom test3 = AuctionRoom.builder().build();
 
-        //then
+        //해쉬 코드는 같음
         System.out.println("test1.hashCode() = " + test1.hashCode() + "\ntest 1 = " + test1);
         System.out.println("test2.hashCode() = " + test2.hashCode() + "\ntest 2 = " + test2);
+        //주소는 다름
         System.out.println("test1.equals(test2) = " + test1.equals(test2));
+        System.out.println("System.identityHashCode(test1) = " + System.identityHashCode(test1));
+        System.out.println("System.identityHashCode(test2) = " + System.identityHashCode(test2));
+
+        //해쉬코드 결과가 같아도 주소값이 다르기 때문에 false가 나온다.
         assertThat(test1).hasSameHashCodeAs(test2).isNotEqualTo(test2);
 
-        System.out.println("test3.hashCode() = " + test3.hashCode() + "\ntest 3 = " + test3);
-
+        //해쉬 맵에서도 잘 들어감
         Map<AuctionRoom, String> map = new HashMap<>();
         map.put(test1, "test1");
         assertThat(map).hasSize(1);
         map.put(test2, "test2");
         assertThat(map).hasSize(2);
+    }
+
+    @Test
+    void equalsTest() {
+        //given
+        AuctionRoom test1 = AuctionRoom.builder().name("Test").item(Item.of("new", 1000, "content")).build();
+        AuctionRoom test2 = AuctionRoom.builder().name("Test").item(Item.of("new", 1000, "content")).build();
+        //when
+        assertThat(test1).hasSameHashCodeAs(test2).isEqualTo(test2);
+
     }
 
 }

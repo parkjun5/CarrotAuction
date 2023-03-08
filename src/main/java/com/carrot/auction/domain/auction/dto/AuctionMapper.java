@@ -12,7 +12,13 @@ public interface AuctionMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "participants", ignore = true)
     @Mapping(target = "auctionStatus", ignore = true)
-    AuctionRoom toEntityByRequest(User hostUser, AuctionRequest request);
+    AuctionRoom toAuctionEntityByRequest(User hostUser, AuctionRequest request);
 
-    AuctionResponse toResponseByEntity(AuctionRoom auctionRoom);
+    AuctionResponse toAuctionResponseByEntity(AuctionRoom auctionRoom);
+
+    @Mapping(source = "auctionRoom.name", target = "roomName")
+    @Mapping(source = "auctionRoom.bid.biddingPrice", target = "price")
+    @Mapping(source = "auctionRoom.bid.biddingTime", target = "biddingTime")
+    @Mapping(source = "bidder.nickname", target = "bidderName")
+    BiddingResponse toBiddingResponseByEntity(AuctionRoom auctionRoom, User bidder);
 }
