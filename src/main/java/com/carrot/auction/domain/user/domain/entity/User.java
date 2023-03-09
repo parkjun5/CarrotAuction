@@ -1,6 +1,6 @@
 package com.carrot.auction.domain.user.domain.entity;
 
-import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
+import com.carrot.auction.domain.auction.domain.entity.AuctionParticipation;
 import com.carrot.auction.global.domain.BaseEntity;
 import com.mysema.commons.lang.Assert;
 import jakarta.persistence.*;
@@ -28,8 +28,8 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles = Set.of(UserRole.USER);
 
-    @OneToMany(mappedBy = "hostUser")
-    private List<AuctionRoom> auctionRooms = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<AuctionParticipation> participatedRoom = new ArrayList<>();
 
     /**
      * 생성 메서드
@@ -43,6 +43,10 @@ public class User extends BaseEntity {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
+    }
+
+    public void addAuctionParticipation(AuctionParticipation auctionParticipation) {
+        this.participatedRoom.add(auctionParticipation);
     }
 
     @Override

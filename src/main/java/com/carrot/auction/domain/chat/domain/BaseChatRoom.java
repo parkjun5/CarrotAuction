@@ -7,6 +7,6 @@ public interface BaseChatRoom {
     Long readChat(Long readerId);
 
     default void addParticipants(User user) {
-        user.getAuctionRooms().add(null);
+//        user.getAuctionRooms().add(null);
     }
 }

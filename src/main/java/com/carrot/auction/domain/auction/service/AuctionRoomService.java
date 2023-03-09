@@ -1,6 +1,7 @@
 package com.carrot.auction.domain.auction.service;
 
 import com.carrot.auction.domain.auction.domain.AuctionValidator;
+import com.carrot.auction.domain.auction.domain.entity.AuctionParticipation;
 import com.carrot.auction.domain.auction.dto.*;
 import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.domain.user.service.UserService;
@@ -44,10 +45,10 @@ public class AuctionRoomService {
 
         AuctionRoom findAuction = findAuctionRoomById(roomId);
 
-        findAuction.updateAuctionInfo(request.name(), request.password(), request.limitOfEnrollment(),
-                request.bid().getBiddingPrice(), request.beginDateTime(), request.closeDateTime());
+//        findAuction.updateAuctionInfo(request.name(), request.password(), request.limitOfEnrollment(),
+//                request.bid().getBiddingPrice(), request.beginDateTime(), request.closeDateTime());
 
-        findAuction.updateItem(request.item().getTitle(), request.item().getPrice(), request.item().getContent(), request.category());
+//        findAuction.updateItem(request.item().getTitle(), request.item().getPrice(), request.item().getContent(), request.category());
 
         return auctionMapper.toAuctionResponseByEntity(findAuction);
     }
@@ -61,18 +62,19 @@ public class AuctionRoomService {
     @Transactional
     public BiddingResponse updateBid(Long roomId, BiddingRequest request) {
         AuctionRoom findAuction = findAuctionRoomById(roomId);
-        User bidder = findAuction.getParticipants()
+        AuctionParticipation bidder = findAuction.getParticipants()
                 .stream()
-                .filter(user -> user.getId().equals(request.bidderId()))
+                .filter(auctionParticipation -> auctionParticipation.getId().equals(request.bidderId()))
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException("참가자 중 없는 계정입니다."));
 
-        auctionValidator.bidTimeBetweenAuctionTime(request.biddingTime(), findAuction.getBeginDateTime(), findAuction.getCloseDateTime());
-        auctionValidator.bidPriceHigherThanMinimum(request.price(), findAuction.getBid().getBiddingPrice());
-
-        findAuction.getBid().changeBid(bidder.getId(), request.price(), request.biddingTime());
-
-        return auctionMapper.toBiddingResponseByEntity(findAuction, bidder);
+//        auctionValidator.bidTimeBetweenAuctionTime(request.biddingTime(), findAuction.getBeginDateTime(), findAuction.getCloseDateTime());
+//        auctionValidator.bidPriceHigherThanMinimum(request.price(), findAuction.getBid().getBiddingPrice());
+//
+//        findAuction.getBid().changeBid(bidder.getId(), request.price(), request.biddingTime());
+//
+//        return auctionMapper.toBiddingResponseByEntity(findAuction, bidder);
+        return null;
     }
 
     @Transactional
@@ -83,7 +85,7 @@ public class AuctionRoomService {
 
         User findUser = userService.findUserById(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
 
-        auctionRoom.addParticipants(findUser);
+//        auctionRoom.addParticipants(findUser);
 
         return auctionMapper.toAuctionResponseByEntity(auctionRoom);
     }
