@@ -36,7 +36,7 @@ public class AuctionRoomController {
     public ResponseEntity<ApiCommonResponse<AuctionResponse>> createAuctionRoom
             (@RequestBody @Valid AuctionRequest auctionRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.createAuctionRoom(auctionRequest)));
+                .body(ApiCommonResponse.success(201, "CREATED", AUCTION_RESULT_NAME, auctionService.createAuctionRoom(auctionRequest)));
     }
 
     @PostMapping("/{auctionRoomId}")

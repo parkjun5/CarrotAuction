@@ -33,7 +33,7 @@ public class PostController {
     public ResponseEntity<ApiCommonResponse<PostResponse>> createPost
             (@RequestBody @Valid PostRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiCommonResponse.success("post", postService.createPost(request)));
+                .body(ApiCommonResponse.success(201, "CREATED", "post", postService.createPost(request)));
     }
 
     @PostMapping("/{postId}")

@@ -62,8 +62,8 @@ public class AuctionRoomService {
     @Transactional
     public BiddingResponse updateBid(Long roomId, BiddingRequest request) {
         AuctionRoom findAuction = findAuctionRoomById(roomId);
-
-        User bidder = findAuction.getParticipants().stream()
+        User bidder = findAuction.getParticipants()
+                .stream()
                 .filter(user -> user.getId().equals(request.bidderId()))
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException("참가자 중 없는 계정입니다."));

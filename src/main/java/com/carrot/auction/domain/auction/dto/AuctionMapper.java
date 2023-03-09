@@ -14,6 +14,7 @@ public interface AuctionMapper {
     @Mapping(target = "auctionStatus", ignore = true)
     AuctionRoom toAuctionEntityByRequest(User hostUser, AuctionRequest request);
 
+    @Mapping(source = "id", target = "auctionRoomId")
     AuctionResponse toAuctionResponseByEntity(AuctionRoom auctionRoom);
 
     @Mapping(source = "auctionRoom.name", target = "roomName")

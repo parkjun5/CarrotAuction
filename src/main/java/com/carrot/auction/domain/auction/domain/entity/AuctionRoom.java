@@ -9,8 +9,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.springframework.util.Assert.*;
 
@@ -36,7 +36,7 @@ public class AuctionRoom extends BaseEntity {
     private User hostUser;
     @OneToMany
     @Builder.Default
-    private List<User> participants = new ArrayList<>();
+    private Set<User> participants = new HashSet<>();
     @Embedded private Item item;
     @Enumerated(EnumType.STRING) private Category category;
     @Builder.Default
@@ -44,7 +44,6 @@ public class AuctionRoom extends BaseEntity {
 
     public void addParticipants(User user) {
         notNull(user,  "유저는 필수입니다.");
-        user.getAuctionRooms().add(this);
         participants.add(user);
     }
     
