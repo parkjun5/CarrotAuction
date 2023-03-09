@@ -54,6 +54,14 @@ public class AuctionRoomController {
         return ResponseEntity.ok().body(ApiCommonResponse.success("deletedRoomId", auctionService.deleteAuctionRoom(auctionRoomId)));
     }
 
+    @PostMapping("/{auctionRoomId}/participant/{userId}")
+    @Operation(summary = "참가자 추가", description = "auctionRoomId와 userId를 이용하여 경매장에 참가한다.")
+    public ResponseEntity<ApiCommonResponse<AuctionResponse>> participateAuctionRoom
+            (@PathVariable("auctionRoomId") final Long auctionRoomId, @PathVariable("userId") final Long userId) {
+        return ResponseEntity.ok()
+                .body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.participateAuctionRoom(auctionRoomId, userId)));
+    }
+
     @PostMapping("/bid/{auctionRoomId}")
     @Operation(summary = "가격 입찰", description = "가격을 입찰한다.")
     public ResponseEntity<ApiCommonResponse<BiddingResponse>> updateBid
