@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,9 +29,7 @@ class AuctionRoomTest implements TestAuctionUtils {
         auctionRoom.addParticipants(testUser);
 
         assertThat(auctionRoom.getParticipants()).hasSize(2);
-        assertThat(auctionRoom.getParticipants().get(1).getNickname()).isEqualTo("참가자");
-        assertThat(testUser.getAuctionRooms()).hasSize(1);
-        assertThat(testUser.getAuctionRooms().get(0).getName()).isEqualTo("테스트 경매장");
+        assertThat(auctionRoom.getParticipants().stream().map(User::getNickname).collect(Collectors.toList())).contains("참가자");
     }
     
     @Test

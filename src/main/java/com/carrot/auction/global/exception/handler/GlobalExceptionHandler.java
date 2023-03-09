@@ -1,5 +1,6 @@
 package com.carrot.auction.global.exception.handler;
 
+import com.carrot.auction.domain.auction.exception.AuctionBusinessException;
 import com.carrot.auction.global.dto.ApiCommonResponse;
 import com.carrot.auction.global.exception.BusinessException;
 import com.carrot.auction.global.exception.code.ExceptionCode;
@@ -31,7 +32,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Object> illegalArgumentException(IllegalArgumentException e) {
         log.error(e.getMessage());
-        return ResponseEntity.badRequest().body(new ExceptionDto(403, e.getMessage()));
+        return ResponseEntity.badRequest().body(new ExceptionDto(400, e.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -42,6 +43,12 @@ public class GlobalExceptionHandler {
                         exceptionCode.getCode(),
                         exceptionCode.getMessage(),
                         geInfoByException(ex)));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> auctionBusinessException(AuctionBusinessException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiCommonResponse.fail(e.getMessage()));
     }
 
     @ExceptionHandler
