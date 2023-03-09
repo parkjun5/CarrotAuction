@@ -44,7 +44,7 @@ class AuctionRoomTest implements TestAuctionUtils {
         AuctionRequest changeRequest = AuctionRequest.builder().name("이름 변경").item(galaxyBook).bid(Bid.startPrice(20_000)).category(Category.DIGITAL).build();
         //when
         auctionRoom.updateAuctionInfo(changeRequest.name(), changeRequest.password(), changeRequest.limitOfEnrollment(),
-                changeRequest.bid().getBiddingPrice(), changeRequest.beginAuctionDateTime(), changeRequest.closeAuctionDateTime());
+                changeRequest.bid().getBiddingPrice(), changeRequest.beginDateTime(), changeRequest.closeDateTime());
         auctionRoom.updateItem(changeRequest.item().getTitle(), changeRequest.item().getPrice(), changeRequest.item().getContent(), changeRequest.category());
         //then
         assertThat(auctionRoom.getName()).isNotEqualTo(oldName);

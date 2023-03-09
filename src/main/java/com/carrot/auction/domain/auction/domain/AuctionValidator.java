@@ -12,20 +12,20 @@ import java.time.ZonedDateTime;
 @Component
 public class AuctionValidator {
 
-    public void correctAuctionTime(ZonedDateTime beginAuctionDateTime, ZonedDateTime closeAuctionDateTime) {
-        if (beginAuctionDateTime.isAfter(closeAuctionDateTime)) {
-            throw new IllegalAuctionTimeException("시작 날짜: " + beginAuctionDateTime + ", 종료 날짜: " + closeAuctionDateTime + "종료 날짜보다 시작 날짜가 이릅니다.");
+    public void correctAuctionTime(ZonedDateTime beginDateTime, ZonedDateTime closeDateTime) {
+        if (beginDateTime.isAfter(closeDateTime)) {
+            throw new IllegalAuctionTimeException("시작 날짜: " + beginDateTime + ", 종료 날짜: " + closeDateTime + "종료 날짜보다 시작 날짜가 이릅니다.");
         }
-        if (LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).isAfter(closeAuctionDateTime)) {
-            throw new IllegalAuctionTimeException("종료 날짜: " + closeAuctionDateTime + "이미 종료된 날짜입니다.");
+        if (LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).isAfter(closeDateTime)) {
+            throw new IllegalAuctionTimeException("종료 날짜: " + closeDateTime + "이미 종료된 날짜입니다.");
         }
     }
 
-    public void bidTimeBetweenAuctionTime(ZonedDateTime bidTime, ZonedDateTime beginAuctionDateTime, ZonedDateTime closeAuctionDateTime) {
-        if (bidTime.isBefore(beginAuctionDateTime)) {
+    public void bidTimeBetweenAuctionTime(ZonedDateTime bidTime, ZonedDateTime beginDateTime, ZonedDateTime closeDateTime) {
+        if (bidTime.isBefore(beginDateTime)) {
             throw new IllegalAuctionTimeException("아직 시작하지 않은 경매입니다.");
         }
-        if (bidTime.isAfter(closeAuctionDateTime)) {
+        if (bidTime.isAfter(closeDateTime)) {
             throw new IllegalAuctionTimeException("이미 종료된 경매입니다.");
         }
     }

@@ -35,9 +35,9 @@ public record AuctionResponse (
         @Schema(description = "카테고리", defaultValue = "DIGITAL")
         @Enumerated(EnumType.STRING) Category category,
         @Schema(description = "경매 시작 일자", type = "string", example = "2023-03-08T00:00:00+0900")
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") ZonedDateTime beginAuctionDateTime,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") ZonedDateTime beginDateTime,
         @Schema(description = "경매 종료 일자", type = "string", example = "2024-03-08T00:00:00+0900")
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") ZonedDateTime closeAuctionDateTime,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") ZonedDateTime closeDateTime,
         @Schema(description = "경매장 상태", defaultValue = "DRAFT")
         @Enumerated(EnumType.STRING) AuctionStatus auctionStatus) {
 }

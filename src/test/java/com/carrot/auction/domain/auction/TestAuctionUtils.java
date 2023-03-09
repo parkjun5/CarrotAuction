@@ -27,8 +27,8 @@ public interface TestAuctionUtils {
                 .bid(Bid.startPrice(10_000))
                 .item(testAuctionRequest.item())
                 .category(testAuctionRequest.category())
-                .beginAuctionDateTime(testAuctionRequest.beginAuctionDateTime())
-                .closeAuctionDateTime(testAuctionRequest.closeAuctionDateTime())
+                .beginDateTime(testAuctionRequest.beginDateTime())
+                .closeDateTime(testAuctionRequest.closeDateTime())
                 .limitOfEnrollment(testAuctionRequest.limitOfEnrollment())
                 .build();
         auctionRoom.addParticipants(getTestUser());
@@ -52,8 +52,8 @@ public interface TestAuctionUtils {
                 .category(Category.DIGITAL)
                 .limitOfEnrollment(100)
                 .bid(Bid.startPrice(10_000))
-                .beginAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 10, 30, 0).atZone(ZoneId.of("Asia/Seoul")))
-                .closeAuctionDateTime(LocalDateTime.of(2999, Month.of(2), 23, 12, 30).atZone(ZoneId.of("Asia/Seoul")))
+                .beginDateTime(LocalDateTime.of(2023, Month.of(2), 23, 10, 30, 0).atZone(ZoneId.of("Asia/Seoul")))
+                .closeDateTime(LocalDateTime.of(2999, Month.of(2), 23, 12, 30).atZone(ZoneId.of("Asia/Seoul")))
                 .build();
     }
 }

@@ -34,9 +34,9 @@ public record AuctionRequest(
         @NotNull
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssZ", timezone = "Asia/Seoul")
         @Schema(description = "경매 시작 일자", type = "string", example = "2023-03-08T00:00:00+0900")
-        ZonedDateTime beginAuctionDateTime,
+        ZonedDateTime beginDateTime,
         @NotNull
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssZ", timezone = "Asia/Seoul")
         @Schema(description = "경매 종료 일자", type = "string", example = "2024-03-08T00:00:00+0900")
-        ZonedDateTime closeAuctionDateTime) {
+        ZonedDateTime closeDateTime) {
 }

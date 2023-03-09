@@ -28,9 +28,10 @@ public class AuctionRoom extends BaseEntity {
     private String password;
     private int limitOfEnrollment;
     @Embedded private Bid bid;
-    private ZonedDateTime beginAuctionDateTime;
-    private ZonedDateTime closeAuctionDateTime;
-    @ManyToOne(fetch = FetchType.LAZY)
+    private ZonedDateTime beginDateTime;
+    private ZonedDateTime closeDateTime;
+    @ManyToOne(fetch = FetchType.EAGER)
+    //TODO UserDTO 생성이전까지만
     @JoinColumn(name = "user_id")
     private User hostUser;
     @OneToMany
@@ -47,13 +48,13 @@ public class AuctionRoom extends BaseEntity {
         participants.add(user);
     }
     
-    public void updateAuctionInfo(String name, String password, int limitOfEnrollment, int biddingPrice, ZonedDateTime beginAuctionDateTime, ZonedDateTime closeAuctionDateTime) {
+    public void updateAuctionInfo(String name, String password, int limitOfEnrollment, int biddingPrice, ZonedDateTime beginDateTime, ZonedDateTime closeDateTime) {
         this.name = name;
         this.password = password;
         this.limitOfEnrollment = limitOfEnrollment;
         this.bid.changeStartPrice(biddingPrice);
-        this.beginAuctionDateTime = beginAuctionDateTime;
-        this.closeAuctionDateTime = closeAuctionDateTime;
+        this.beginDateTime = beginDateTime;
+        this.closeDateTime = closeDateTime;
     }
 
     public void updateItem(String title, int price, String content, Category category) {

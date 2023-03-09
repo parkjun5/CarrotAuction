@@ -29,7 +29,7 @@ public class AuctionRoomService {
 
     @Transactional
     public AuctionResponse createAuctionRoom(AuctionRequest request) {
-        auctionValidator.correctAuctionTime(request.beginAuctionDateTime(), request.closeAuctionDateTime());
+        auctionValidator.correctAuctionTime(request.beginDateTime(), request.closeDateTime());
 
         User hostUser = userService.findUserById(request.userId())
                 .orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
@@ -41,12 +41,12 @@ public class AuctionRoomService {
 
     @Transactional
     public AuctionResponse updateAuctionRoom(final Long roomId, AuctionRequest request) {
-        auctionValidator.correctAuctionTime(request.beginAuctionDateTime(), request.closeAuctionDateTime());
+        auctionValidator.correctAuctionTime(request.beginDateTime(), request.closeDateTime());
 
         AuctionRoom findAuction = findAuctionRoomById(roomId);
 
-        findAuction.updateAuctionInfo(request.name(), request.password(), request.limitOfEnrollment()
-                ,request.bid().getBiddingPrice(), request.beginAuctionDateTime(),  request.closeAuctionDateTime());
+        findAuction.updateAuctionInfo(request.name(), request.password(), request.limitOfEnrollment(),
+                request.bid().getBiddingPrice(), request.beginDateTime(), request.closeDateTime());
 
         findAuction.updateItem(request.item().getTitle(), request.item().getPrice(), request.item().getContent(), request.category());
 
@@ -68,7 +68,7 @@ public class AuctionRoomService {
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException("참가자 중 없는 계정입니다."));
 
-        auctionValidator.bidTimeBetweenAuctionTime(request.biddingTime(), findAuction.getBeginAuctionDateTime(), findAuction.getCloseAuctionDateTime());
+        auctionValidator.bidTimeBetweenAuctionTime(request.biddingTime(), findAuction.getBeginDateTime(), findAuction.getCloseDateTime());
         auctionValidator.bidPriceHigherThanMinimum(request.price(), findAuction.getBid().getBiddingPrice());
 
         findAuction.getBid().changeBid(bidder.getId(), request.price(), request.biddingTime());
