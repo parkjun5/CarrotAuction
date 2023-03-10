@@ -13,6 +13,7 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -54,6 +55,14 @@ public class AuctionRoom extends BaseEntity {
     public void updateItem(String title, int price, String content, Category category) {
         item.changeInfo(title, price, content);
         this.category = category;
+    }
+
+    public Set<String> getParticipantsNicknames() {
+        return getAuctionParticipation()
+                .stream()
+                .map(AuctionParticipation::getUser)
+                .map(User::getNickname)
+                .collect(Collectors.toSet());
     }
 
     @Override

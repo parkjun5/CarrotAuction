@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,7 +33,7 @@ public class AuctionRoomService {
 
     public AuctionResponse findAuctionInfoById(final Long roomId) {
         AuctionRoom auctionRoom = findAuctionRoomById(roomId);
-        Set<String> nameOfParticipants = getParticipantsNicknames(auctionRoom);
+        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
         return auctionMapper.toAuctionResponseByEntity(auctionRoom, nameOfParticipants);
     }
 
@@ -45,7 +44,7 @@ public class AuctionRoomService {
         User hostUser = userService.findUserById(request.userId()).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
         AuctionRoom auctionRoom = auctionMapper.toAuctionEntityByRequest(hostUser, request);
         AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(hostUser, auctionRoom);
-        Set<String> nameOfParticipants = getParticipantsNicknames(auctionRoom);
+        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
 
         auctionParticipationRepository.save(auctionParticipation);
         return auctionMapper.toAuctionResponseByEntity(auctionRepository.save(auctionRoom), nameOfParticipants);
@@ -60,7 +59,7 @@ public class AuctionRoomService {
         auctionRoom.updateAuctionInfo(request.name(), request.password(), request.limitOfEnrollment(),
                 request.bid().getBiddingPrice(), request.beginDateTime(), request.closeDateTime());
         auctionRoom.updateItem(request.item().getTitle(), request.item().getPrice(), request.item().getContent(), request.category());
-        Set<String> nameOfParticipants = getParticipantsNicknames(auctionRoom);
+        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
 
         return auctionMapper.toAuctionResponseByEntity(auctionRoom, nameOfParticipants);
     }
@@ -101,7 +100,7 @@ public class AuctionRoomService {
 
         User user = userService.findUserById(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
         AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(user, auctionRoom);
-        Set<String> nameOfParticipants = getParticipantsNicknames(auctionRoom);
+        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
 
         auctionParticipationRepository.save(auctionParticipation);
         return auctionMapper.toAuctionResponseByEntity(auctionRoom, nameOfParticipants);
@@ -110,7 +109,7 @@ public class AuctionRoomService {
     public Page<AuctionResponse> getAuctionRoomsByPageable(Pageable pageable) {
         List<AuctionResponse> auctionResponseList = auctionRepository.findAll(pageable)
                 .stream()
-                .map(auctionRoom -> auctionMapper.toAuctionResponseByEntity(auctionRoom, getParticipantsNicknames(auctionRoom)))
+                .map(auctionRoom -> auctionMapper.toAuctionResponseByEntity(auctionRoom, auctionRoom.getParticipantsNicknames()))
                 .toList();
         return new PageImpl<>(auctionResponseList);
     }
@@ -119,11 +118,4 @@ public class AuctionRoomService {
         return auctionRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException(roomId + AUCTION_NOT_FOUND));
     }
 
-    private Set<String> getParticipantsNicknames(AuctionRoom auctionRoom) {
-        return auctionRoom.getAuctionParticipation()
-                .stream()
-                .map(AuctionParticipation::getUser)
-                .map(User::getNickname)
-                .collect(Collectors.toSet());
-    }
 }
