@@ -9,9 +9,13 @@ import com.carrot.auction.domain.user.service.UserService;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.domain.repository.AuctionRoomRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -91,9 +95,8 @@ public class AuctionRoomService {
     }
 
     @Transactional
-    public AuctionResponse participateAuctionRoom(Long roomId, Long userId) {
+    public AuctionResponse addParticipateAuctionRoom(Long roomId, Long userId) {
         AuctionRoom auctionRoom = findAuctionRoomById(roomId);
-
         auctionValidator.isFullEnrollment(auctionRoom.getAuctionParticipation().size(), auctionRoom.getLimitOfEnrollment());
 
         User user = userService.findUserById(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
@@ -102,6 +105,14 @@ public class AuctionRoomService {
 
         auctionParticipationRepository.save(auctionParticipation);
         return auctionMapper.toAuctionResponseByEntity(auctionRoom, nameOfParticipants);
+    }
+
+    public Page<AuctionResponse> getAuctionRoomsByPageable(Pageable pageable) {
+        List<AuctionResponse> auctionResponseList = auctionRepository.findAll(pageable)
+                .stream()
+                .map(auctionRoom -> auctionMapper.toAuctionResponseByEntity(auctionRoom, getParticipantsNicknames(auctionRoom)))
+                .toList();
+        return new PageImpl<>(auctionResponseList);
     }
 
     private AuctionRoom findAuctionRoomById(Long roomId) {

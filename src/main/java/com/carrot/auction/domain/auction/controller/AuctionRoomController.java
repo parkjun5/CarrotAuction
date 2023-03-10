@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +25,15 @@ public class AuctionRoomController {
     private final AuctionRoomService auctionService;
     private static final String AUCTION_RESULT_NAME ="AuctionRoom";
 
+    @GetMapping
+    @Operation(summary = "경매장 리스트 조회", description = "pageable 를 이용하여 경매장 리스트를 조회한다.")
+    public ResponseEntity<ApiCommonResponse<Page<AuctionResponse>>> getAuctionRooms(Pageable pageable) {
+        return ResponseEntity.ok()
+                .body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.getAuctionRoomsByPageable(pageable)));
+    }
+
     @GetMapping("/{auctionRoomId}")
-    @Operation(summary = "경매장 조회", description = "id를 이용하여 경매장을 조회한다.")
+    @Operation(summary = "경매장 하나 조회", description = "id를 이용하여 경매장을 조회한다.")
     public ResponseEntity<ApiCommonResponse<AuctionResponse>> getAuctionRoom
             (@PathVariable("auctionRoomId") final Long auctionRoomId) {
         return ResponseEntity.ok()
@@ -59,7 +68,7 @@ public class AuctionRoomController {
     public ResponseEntity<ApiCommonResponse<AuctionResponse>> participateAuctionRoom
             (@PathVariable("auctionRoomId") final Long auctionRoomId, @PathVariable("userId") final Long userId) {
         return ResponseEntity.ok()
-                .body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.participateAuctionRoom(auctionRoomId, userId)));
+                .body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.addParticipateAuctionRoom(auctionRoomId, userId)));
     }
 
     @PostMapping("/bid/{auctionRoomId}")
