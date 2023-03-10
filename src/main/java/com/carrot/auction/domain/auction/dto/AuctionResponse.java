@@ -30,7 +30,7 @@ public record AuctionResponse (
         String name,
         @Schema(description = "경매장 비밀번호", example = "q1w2e3!")
         String password,
-        @Schema(description = "경매장 최대 인원수", example = "100")
+        @Schema(description = "경매장 최대 인원수", example = "5")
         int limitOfEnrollment,
         @Embedded Bid bid,
         @Embedded Item item,
