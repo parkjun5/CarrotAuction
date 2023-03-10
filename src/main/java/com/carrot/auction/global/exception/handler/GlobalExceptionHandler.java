@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @RestControllerAdvice(basePackages = "com.carrot.auction.domain")
@@ -49,6 +50,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> auctionBusinessException(AuctionBusinessException e) {
         log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiCommonResponse.fail(e.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> noSuchElementException(NoSuchElementException e) {
+        log.error(e.getMessage());
+        Map<String, String> map = new HashMap<>();
+        map.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiCommonResponse.fail(404, "notFound", map));
     }
 
     @ExceptionHandler

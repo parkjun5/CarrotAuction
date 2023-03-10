@@ -29,7 +29,7 @@ public class AuctionRoomService {
     private final UserService userService;
     private final AuctionMapper auctionMapper;
     private final AuctionValidator auctionValidator;
-    private static final String AUCTION_NOT_FOUND = " 경매장을 찾지 못했습니다.";
+    private static final String AUCTION_NOT_FOUND = "의 경매장을 찾지 못했습니다.";
 
     public AuctionResponse findAuctionInfoById(final Long roomId) {
         AuctionRoom auctionRoom = findAuctionRoomById(roomId);
@@ -115,7 +115,7 @@ public class AuctionRoomService {
     }
 
     private AuctionRoom findAuctionRoomById(Long roomId) {
-        return auctionRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException(roomId + AUCTION_NOT_FOUND));
+        return auctionRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException("ID: " + roomId + AUCTION_NOT_FOUND));
     }
 
 }
