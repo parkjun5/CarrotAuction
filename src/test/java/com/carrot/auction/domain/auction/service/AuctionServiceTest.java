@@ -1,6 +1,8 @@
 package com.carrot.auction.domain.auction.service;
 
 import com.carrot.auction.domain.auction.TestAuctionUtils;
+import com.carrot.auction.domain.auction.domain.AuctionValidator;
+import com.carrot.auction.domain.auction.domain.Bid;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.dto.AuctionMapper;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
@@ -40,6 +42,8 @@ class AuctionServiceTest implements TestAuctionUtils {
     private AuctionRoom auctionRoom;
     @Mock
     private AuctionRequest auctionRequest;
+    @Mock
+    private AuctionValidator auctionValidator;
 
     @Test
     @DisplayName("경매장 생성 및 저장 비지니스 로직 테스트")
@@ -73,14 +77,15 @@ class AuctionServiceTest implements TestAuctionUtils {
         //given
         given(auctionRoomRepository.findById(anyLong())).willReturn(Optional.of(auctionRoom));
         given(auctionRequest.name()).willReturn("testRequest");
-        given(auctionRequest.beginAuctionDateTime()).willReturn(LocalDateTime.MIN.atZone(ZoneId.of("Asia/Seoul")));
-        given(auctionRequest.closeAuctionDateTime()).willReturn(LocalDateTime.MAX.atZone(ZoneId.of("Asia/Seoul")));
+        given(auctionRequest.beginDateTime()).willReturn(LocalDateTime.MIN.atZone(ZoneId.of("Asia/Seoul")));
+        given(auctionRequest.closeDateTime()).willReturn(LocalDateTime.MAX.atZone(ZoneId.of("Asia/Seoul")));
         given(auctionRequest.item()).willReturn(Item.of("test", 10_000, "test data"));
         given(auctionRequest.category()).willReturn(Category.WTB);
+        given(auctionRequest.bid()).willReturn(Bid.startPrice(30_000));
 
         willDoNothing().given(auctionRoom).updateAuctionInfo(anyString(), any(), anyInt(), anyInt(),  any(ZonedDateTime.class), any(ZonedDateTime.class));
         willDoNothing().given(auctionRoom).updateItem(anyString(), anyInt(), anyString(), any(Category.class));
-        willDoNothing().given(auctionRequest).validateDateTime();
+        willDoNothing().given(auctionValidator).correctAuctionTime(any(ZonedDateTime.class), any(ZonedDateTime.class));
 
         //when
         assertThatCode(() -> auctionRoomService.updateAuctionRoom(1L, auctionRequest)).doesNotThrowAnyException();

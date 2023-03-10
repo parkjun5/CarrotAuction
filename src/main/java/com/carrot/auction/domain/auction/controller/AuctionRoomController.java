@@ -2,6 +2,8 @@ package com.carrot.auction.domain.auction.controller;
 
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.auction.dto.AuctionResponse;
+import com.carrot.auction.domain.auction.dto.BiddingRequest;
+import com.carrot.auction.domain.auction.dto.BiddingResponse;
 import com.carrot.auction.domain.auction.service.AuctionRoomService;
 import com.carrot.auction.global.dto.ApiCommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +36,7 @@ public class AuctionRoomController {
     public ResponseEntity<ApiCommonResponse<AuctionResponse>> createAuctionRoom
             (@RequestBody @Valid AuctionRequest auctionRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.createAuctionRoom(auctionRequest)));
+                .body(ApiCommonResponse.success(201, "CREATED", AUCTION_RESULT_NAME, auctionService.createAuctionRoom(auctionRequest)));
     }
 
     @PostMapping("/{auctionRoomId}")
@@ -50,6 +52,21 @@ public class AuctionRoomController {
     public ResponseEntity<ApiCommonResponse<Object>> deleteAuctionRoom
             (@PathVariable("auctionRoomId") final Long auctionRoomId) {
         return ResponseEntity.ok().body(ApiCommonResponse.success("deletedRoomId", auctionService.deleteAuctionRoom(auctionRoomId)));
+    }
+
+    @PostMapping("/{auctionRoomId}/participant/{userId}")
+    @Operation(summary = "참가자 추가", description = "auctionRoomId와 userId를 이용하여 경매장에 참가한다.")
+    public ResponseEntity<ApiCommonResponse<AuctionResponse>> participateAuctionRoom
+            (@PathVariable("auctionRoomId") final Long auctionRoomId, @PathVariable("userId") final Long userId) {
+        return ResponseEntity.ok()
+                .body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.participateAuctionRoom(auctionRoomId, userId)));
+    }
+
+    @PostMapping("/bid/{auctionRoomId}")
+    @Operation(summary = "가격 입찰", description = "가격을 입찰한다.")
+    public ResponseEntity<ApiCommonResponse<BiddingResponse>> updateBid
+            (@PathVariable("auctionRoomId") final Long auctionRoomId, @RequestBody @Valid BiddingRequest biddingRequest) {
+        return ResponseEntity.ok().body(ApiCommonResponse.success("bid", auctionService.updateBid(auctionRoomId, biddingRequest)));
     }
 
 }

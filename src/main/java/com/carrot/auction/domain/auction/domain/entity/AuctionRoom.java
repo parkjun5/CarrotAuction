@@ -1,5 +1,6 @@
 package com.carrot.auction.domain.auction.domain.entity;
 
+import com.carrot.auction.domain.auction.domain.Bid;
 import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
@@ -8,16 +9,16 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.springframework.util.Assert.*;
 
 @Entity
 @Getter
-@Builder @AllArgsConstructor
+@Builder @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper=false)
 public class AuctionRoom extends BaseEntity {
 
     @Id @GeneratedValue
@@ -26,15 +27,16 @@ public class AuctionRoom extends BaseEntity {
     private String name;
     private String password;
     private int limitOfEnrollment;
-    private int biddingPrice;
-    private ZonedDateTime beginAuctionDateTime;
-    private ZonedDateTime closeAuctionDateTime;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Embedded private Bid bid;
+    private ZonedDateTime beginDateTime;
+    private ZonedDateTime closeDateTime;
+    @ManyToOne(fetch = FetchType.EAGER)
+    //TODO UserDTO 생성이전까지만
     @JoinColumn(name = "user_id")
     private User hostUser;
     @OneToMany
     @Builder.Default
-    private List<User> participants = new ArrayList<>();
+    private Set<User> participants = new HashSet<>();
     @Embedded private Item item;
     @Enumerated(EnumType.STRING) private Category category;
     @Builder.Default
@@ -42,17 +44,16 @@ public class AuctionRoom extends BaseEntity {
 
     public void addParticipants(User user) {
         notNull(user,  "유저는 필수입니다.");
-        user.getAuctionRooms().add(this);
         participants.add(user);
     }
     
-    public void updateAuctionInfo(String name, String password, int limitOfEnrollment, int biddingPrice, ZonedDateTime beginAuctionDateTime, ZonedDateTime closeAuctionDateTime) {
+    public void updateAuctionInfo(String name, String password, int limitOfEnrollment, int biddingPrice, ZonedDateTime beginDateTime, ZonedDateTime closeDateTime) {
         this.name = name;
         this.password = password;
         this.limitOfEnrollment = limitOfEnrollment;
-        this.biddingPrice = biddingPrice;
-        this.beginAuctionDateTime = beginAuctionDateTime;
-        this.closeAuctionDateTime = closeAuctionDateTime;
+        this.bid.changeStartPrice(biddingPrice);
+        this.beginDateTime = beginDateTime;
+        this.closeDateTime = closeDateTime;
     }
 
     public void updateItem(String title, int price, String content, Category category) {
