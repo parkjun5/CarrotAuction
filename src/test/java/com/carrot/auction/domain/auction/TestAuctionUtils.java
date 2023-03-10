@@ -9,13 +9,25 @@ import com.carrot.auction.domain.user.domain.entity.User;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.ZoneId;
 
 public interface TestAuctionUtils {
 
+    default AuctionResponse getTestResponse() {
+        return AuctionResponse.builder().build();
+    }
+
     default AuctionRoom getTestAuctionRoom() {
-        AuctionRoom auctionRoom = AuctionRoom.createByRequestBuilder()
+        AuctionRequest testAuctionRequest = getTestAuctionRequest();
+        AuctionRoom auctionRoom = AuctionRoom.builder()
                 .hostUser(getTestUser())
-                .auctionRequest(getTestAuctionRequest())
+                .name(testAuctionRequest.name())
+                .password(testAuctionRequest.password())
+                .item(testAuctionRequest.item())
+                .category(testAuctionRequest.category())
+                .beginAuctionDateTime(testAuctionRequest.beginAuctionDateTime())
+                .closeAuctionDateTime(testAuctionRequest.closeAuctionDateTime())
+                .limitOfEnrollment(testAuctionRequest.limitOfEnrollment())
                 .build();
         auctionRoom.addParticipants(getTestUser());
         return auctionRoom;
@@ -29,21 +41,6 @@ public interface TestAuctionUtils {
                 .build();
     }
 
-    default AuctionResponse auctionRoomToResponse(AuctionRoom auctionRoom) {
-        return AuctionResponse.builder()
-                .name(auctionRoom.getName())
-                .item(auctionRoom.getItem())
-                .password(auctionRoom.getPassword())
-                .category(auctionRoom.getCategory())
-                .limitOfEnrollment(auctionRoom.getLimitOfEnrollment())
-                .beginAuctionDateTime(auctionRoom.getBeginAuctionDateTime())
-                .closeAuctionDateTime(auctionRoom.getCloseAuctionDateTime())
-                .auctionStatus(auctionRoom.getAuctionStatus())
-                .hostUser(auctionRoom.getHostUser())
-                .participants(auctionRoom.getParticipants())
-                .build();
-    }
-
     default AuctionRequest getTestAuctionRequest() {
         return AuctionRequest.builder()
                 .userId(1L)
@@ -52,8 +49,9 @@ public interface TestAuctionUtils {
                 .password(null)
                 .category(Category.DIGITAL)
                 .limitOfEnrollment(100)
-                .beginAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 10, 30))
-                .closeAuctionDateTime(LocalDateTime.of(2999, Month.of(2), 23, 12, 30))
+                .biddingPrice(10_000)
+                .beginAuctionDateTime(LocalDateTime.of(2023, Month.of(2), 23, 10, 30, 0).atZone(ZoneId.of("Asia/Seoul")))
+                .closeAuctionDateTime(LocalDateTime.of(2999, Month.of(2), 23, 12, 30).atZone(ZoneId.of("Asia/Seoul")))
                 .build();
     }
 }

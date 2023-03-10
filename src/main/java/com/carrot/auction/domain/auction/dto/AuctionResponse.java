@@ -13,7 +13,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Builder
@@ -34,9 +34,9 @@ public record AuctionResponse (
         @Schema(description = "경매 카테고리")
         @Enumerated(EnumType.STRING) Category category,
         @Schema(description = "경매 시작 일자")
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime beginAuctionDateTime,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") ZonedDateTime beginAuctionDateTime,
         @Schema(description = "경매 종료 일자")
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")  LocalDateTime closeAuctionDateTime,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") ZonedDateTime closeAuctionDateTime,
         @Schema(description = "경매장 상태")
         @Enumerated(EnumType.STRING) AuctionStatus auctionStatus) {
 }
