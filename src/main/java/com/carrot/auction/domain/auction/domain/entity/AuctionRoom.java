@@ -1,22 +1,23 @@
 package com.carrot.auction.domain.auction.domain.entity;
 
-import com.carrot.auction.domain.user.domain.entity.User;
+import com.carrot.auction.domain.auction.domain.Bid;
 import com.carrot.auction.domain.item.domain.Category;
+import com.carrot.auction.domain.item.domain.Item;
+import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import java.time.ZonedDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
-
-import static org.springframework.util.Assert.*;
 
 @Entity
 @Getter
 @Builder @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(callSuper=false)
 public class AuctionRoom extends BaseEntity {
 
     @Id @GeneratedValue
@@ -32,25 +33,39 @@ public class AuctionRoom extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User hostUser;
     @Enumerated(EnumType.STRING) private Category category;
-
     @OneToMany(mappedBy = "auctionRoom")
     @Builder.Default
-    private Set<AuctionParticipation> participants = new HashSet<>();
+    private Set<AuctionParticipation> auctionParticipation = new HashSet<>();
+    @Embedded
+    private Bid bid;
+    @Embedded private Item item;
+    @Builder.Default
+    @Enumerated(EnumType.STRING) private AuctionStatus auctionStatus = AuctionStatus.DRAFT;
 
-    public void updateAuctionInfo(String name, String password, int limitOfEnrollment, ZonedDateTime beginDateTime, ZonedDateTime closeDateTime, Category category) {
+    public void updateAuctionInfo(String name, String password, int limitOfEnrollment, int bidPrice, ZonedDateTime beginDateTime, ZonedDateTime closeDateTime) {
         this.name = name;
         this.password = password;
+        this.bid.changeStartPrice(bidPrice);
         this.limitOfEnrollment = limitOfEnrollment;
         this.beginDateTime = beginDateTime;
         this.closeDateTime = closeDateTime;
-        this.category = category;
-    }
-        public void addParticipants(User user) {
-        notNull(user,  "유저는 필수입니다.");
-            AuctionParticipation build = AuctionParticipation.builder().user(user)
-                    .auctionRoom(this).build();
-            participants.add(build);
-        user.addAuctionParticipation(build);
     }
 
+    public void updateItem(String title, int price, String content, Category category) {
+        item.changeInfo(title, price, content);
+        this.category = category;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        AuctionRoom that = (AuctionRoom) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

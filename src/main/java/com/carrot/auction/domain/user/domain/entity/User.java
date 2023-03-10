@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) @AllArgsConstructor
 @Table(name = "users")
 public class User extends BaseEntity {
 
@@ -27,9 +27,8 @@ public class User extends BaseEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles = Set.of(UserRole.USER);
-
     @OneToMany(mappedBy = "user")
-    private List<AuctionParticipation> participatedRoom = new ArrayList<>();
+     private List<AuctionParticipation> participatedRoom = new ArrayList<>();
 
     /**
      * 생성 메서드
@@ -43,10 +42,6 @@ public class User extends BaseEntity {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
-    }
-
-    public void addAuctionParticipation(AuctionParticipation auctionParticipation) {
-        this.participatedRoom.add(auctionParticipation);
     }
 
     @Override
