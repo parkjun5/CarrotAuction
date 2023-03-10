@@ -32,8 +32,8 @@ public class AuctionRoomService {
     private static final String AUCTION_NOT_FOUND = "의 경매장을 찾지 못했습니다.";
 
     public AuctionResponse findAuctionInfoById(final Long roomId) {
-        AuctionRoom auctionRoom = findAuctionRoomById(roomId);
-        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
+        final AuctionRoom auctionRoom = findAuctionRoomById(roomId);
+        final Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
         return auctionMapper.toAuctionResponseByEntity(auctionRoom, nameOfParticipants);
     }
 
@@ -41,10 +41,10 @@ public class AuctionRoomService {
     public AuctionResponse createAuctionRoom(AuctionRequest request) {
         auctionValidator.correctAuctionTime(request.beginDateTime(), request.closeDateTime());
 
-        User hostUser = userService.findUserById(request.userId()).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
-        AuctionRoom auctionRoom = auctionMapper.toAuctionEntityByRequest(hostUser, request);
-        AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(hostUser, auctionRoom);
-        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
+        final User hostUser = userService.findUserById(request.userId()).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
+        final AuctionRoom auctionRoom = auctionMapper.toAuctionEntityByRequest(hostUser, request);
+        final AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(hostUser, auctionRoom);
+        final Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
 
         auctionParticipationRepository.save(auctionParticipation);
         return auctionMapper.toAuctionResponseByEntity(auctionRepository.save(auctionRoom), nameOfParticipants);
@@ -55,11 +55,10 @@ public class AuctionRoomService {
         auctionValidator.correctAuctionTime(request.beginDateTime(), request.closeDateTime());
 
         AuctionRoom auctionRoom = findAuctionRoomById(roomId);
-
         auctionRoom.updateAuctionInfo(request.name(), request.password(), request.limitOfEnrollment(),
                 request.bid().getBiddingPrice(), request.beginDateTime(), request.closeDateTime());
         auctionRoom.updateItem(request.item().getTitle(), request.item().getPrice(), request.item().getContent(), request.category());
-        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
+        final Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
 
         return auctionMapper.toAuctionResponseByEntity(auctionRoom, nameOfParticipants);
     }
@@ -79,7 +78,7 @@ public class AuctionRoomService {
     @Transactional
     public BiddingResponse updateBid(Long roomId, BiddingRequest request) {
         AuctionRoom findAuction = findAuctionRoomById(roomId);
-        User bidder = findAuction.getAuctionParticipation()
+        final User bidder = findAuction.getAuctionParticipation()
                 .stream()
                 .map(AuctionParticipation::getUser)
                 .filter(user -> user.getId().equals(request.bidderId()))
@@ -100,17 +99,18 @@ public class AuctionRoomService {
 
         User user = userService.findUserById(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
         AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(user, auctionRoom);
-        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
+        final Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
 
         auctionParticipationRepository.save(auctionParticipation);
         return auctionMapper.toAuctionResponseByEntity(auctionRoom, nameOfParticipants);
     }
 
     public Page<AuctionResponse> getAuctionRoomsByPageable(Pageable pageable) {
-        List<AuctionResponse> auctionResponseList = auctionRepository.findAll(pageable)
+        final List<AuctionResponse> auctionResponseList = auctionRepository.findAll(pageable)
                 .stream()
                 .map(auctionRoom -> auctionMapper.toAuctionResponseByEntity(auctionRoom, auctionRoom.getParticipantsNicknames()))
                 .toList();
+
         return new PageImpl<>(auctionResponseList);
     }
 

@@ -29,52 +29,75 @@ public class AuctionRoomController {
 
     @GetMapping
     @Operation(summary = "경매장 리스트 조회", description = "pageable 를 이용하여 경매장 리스트를 조회한다.")
-    public ResponseEntity<ApiCommonResponse<Page<AuctionResponse>>> getAuctionRooms
-            (@PageableDefault(direction = Sort.Direction.ASC, sort = "id") Pageable pageable) {
-        return ResponseEntity.ok().body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.getAuctionRoomsByPageable(pageable)));
+    public ResponseEntity<ApiCommonResponse<Page<AuctionResponse>>> getAuctionRooms(
+            @PageableDefault(direction = Sort.Direction.ASC, sort = "id") Pageable pageable
+    ) {
+        Page<AuctionResponse> responsePage = auctionService.getAuctionRoomsByPageable(pageable);
+        return ResponseEntity
+                .ok(ApiCommonResponse.success(AUCTION_RESULT_NAME, responsePage));
     }
 
     @GetMapping("/{auctionRoomId}")
     @Operation(summary = "경매장 하나 조회", description = "id를 이용하여 경매장을 조회한다.")
-    public ResponseEntity<ApiCommonResponse<AuctionResponse>> getAuctionRoom
-            (@PathVariable("auctionRoomId") final Long auctionRoomId) {
-        return ResponseEntity.ok().body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.findAuctionInfoById(auctionRoomId)));
+    public ResponseEntity<ApiCommonResponse<AuctionResponse>> getAuctionRoom(
+            @PathVariable("auctionRoomId") final Long auctionRoomId
+    ) {
+        AuctionResponse response = auctionService.findAuctionInfoById(auctionRoomId);
+        return ResponseEntity
+                .ok(ApiCommonResponse.success(AUCTION_RESULT_NAME, response));
     }
 
     @PostMapping
     @Operation(summary = "경매장 등록", description = "AuctionRequest를 이용하여 경매장을 등록한다.")
-    public ResponseEntity<ApiCommonResponse<AuctionResponse>> createAuctionRoom
-            (@RequestBody @Valid AuctionRequest auctionRequest) {
+    public ResponseEntity<ApiCommonResponse<AuctionResponse>> createAuctionRoom(
+            @RequestBody @Valid AuctionRequest auctionRequest
+    ) {
+        AuctionResponse createdResult = auctionService.createAuctionRoom(auctionRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiCommonResponse.success(201, "CREATED", AUCTION_RESULT_NAME, auctionService.createAuctionRoom(auctionRequest)));
+                .body(ApiCommonResponse.success(201, "CREATED", AUCTION_RESULT_NAME, createdResult));
     }
 
     @PostMapping("/{auctionRoomId}")
     @Operation(summary = "경매장 수정", description = "id와 AuctionRequest 이용하여 경매장을 수정한다.")
-    public ResponseEntity<ApiCommonResponse<AuctionResponse>> updateAuctionRoom
-            (@PathVariable("auctionRoomId") final Long auctionRoomId, @RequestBody @Valid AuctionRequest auctionRequest) {
-        return ResponseEntity.ok().body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.updateAuctionRoom(auctionRoomId, auctionRequest)));
+    public ResponseEntity<ApiCommonResponse<AuctionResponse>> updateAuctionRoom(
+            @PathVariable("auctionRoomId") final Long auctionRoomId,
+            @RequestBody @Valid AuctionRequest auctionRequest
+    ) {
+        AuctionResponse response = auctionService.updateAuctionRoom(auctionRoomId, auctionRequest);
+        return ResponseEntity
+                .ok(ApiCommonResponse.success(AUCTION_RESULT_NAME, response));
     }
 
     @DeleteMapping("/{auctionRoomId}")
     @Operation(summary = "경매장 삭제", description = "id를 이용하여 경매장을 삭제한다.")
-    public ResponseEntity<ApiCommonResponse<Object>> deleteAuctionRoom
-            (@PathVariable("auctionRoomId") final Long auctionRoomId) {
-        return ResponseEntity.ok().body(ApiCommonResponse.success("deletedRoomId", auctionService.deleteAuctionRoom(auctionRoomId)));
+    public ResponseEntity<ApiCommonResponse<Object>> deleteAuctionRoom(
+            @PathVariable("auctionRoomId") final Long auctionRoomId
+    ) {
+        Long response = auctionService.deleteAuctionRoom(auctionRoomId);
+        return ResponseEntity
+                .ok(ApiCommonResponse.success("deletedRoomId", response));
     }
 
     @PostMapping("/{auctionRoomId}/participant/{userId}")
     @Operation(summary = "참가자 추가", description = "auctionRoomId와 userId를 이용하여 경매장에 참가한다.")
-    public ResponseEntity<ApiCommonResponse<AuctionResponse>> participateAuctionRoom
-            (@PathVariable("auctionRoomId") final Long auctionRoomId, @PathVariable("userId") final Long userId) {
-        return ResponseEntity.ok().body(ApiCommonResponse.success(AUCTION_RESULT_NAME, auctionService.addParticipateAuctionRoom(auctionRoomId, userId)));
+    public ResponseEntity<ApiCommonResponse<AuctionResponse>> participateAuctionRoom(
+            @PathVariable("auctionRoomId") final Long auctionRoomId,
+            @PathVariable("userId") final Long userId
+    ) {
+        AuctionResponse response = auctionService.addParticipateAuctionRoom(auctionRoomId, userId);
+        return ResponseEntity
+                .ok(ApiCommonResponse.success(AUCTION_RESULT_NAME, response));
     }
 
     @PostMapping("/bid/{auctionRoomId}")
     @Operation(summary = "가격 입찰", description = "가격을 입찰한다.")
-    public ResponseEntity<ApiCommonResponse<BiddingResponse>> updateBid
-            (@PathVariable("auctionRoomId") final Long auctionRoomId, @RequestBody @Valid BiddingRequest biddingRequest) {
-        return ResponseEntity.ok().body(ApiCommonResponse.success("bid", auctionService.updateBid(auctionRoomId, biddingRequest)));
+    public ResponseEntity<ApiCommonResponse<BiddingResponse>> updateBid(
+            @PathVariable("auctionRoomId") final Long auctionRoomId,
+            @RequestBody @Valid BiddingRequest biddingRequest
+    ) {
+        BiddingResponse response = auctionService.updateBid(auctionRoomId, biddingRequest);
+        return ResponseEntity
+                .ok(ApiCommonResponse.success("bid", response));
     }
 
 }
