@@ -1,6 +1,6 @@
 package com.carrot.auction.domain.user.domain.entity;
 
-import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
+import com.carrot.auction.domain.auction.domain.entity.AuctionParticipation;
 import com.carrot.auction.global.domain.BaseEntity;
 import com.mysema.commons.lang.Assert;
 import jakarta.persistence.*;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) @AllArgsConstructor
 @Table(name = "users")
 public class User extends BaseEntity {
 
@@ -27,9 +27,8 @@ public class User extends BaseEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles = Set.of(UserRole.USER);
-
-    @OneToMany(mappedBy = "hostUser")
-    private List<AuctionRoom> auctionRooms = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+     private List<AuctionParticipation> participatedRoom = new ArrayList<>();
 
     /**
      * 생성 메서드

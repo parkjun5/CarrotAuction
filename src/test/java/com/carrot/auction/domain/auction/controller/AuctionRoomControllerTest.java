@@ -1,6 +1,5 @@
 package com.carrot.auction.domain.auction.controller;
 
-import com.carrot.auction.domain.auction.TestAuctionUtils;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.auction.service.AuctionRoomService;
 import com.carrot.auction.domain.item.domain.Category;
@@ -18,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 
+import static com.carrot.auction.domain.auction.fixture.AuctionFixture.TEST_AUCTION_REQUEST;
+import static com.carrot.auction.domain.auction.fixture.AuctionFixture.TEST_AUCTION_RESPONSE;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AuctionRoomController.class)
 @AutoConfigureMockMvc
 @MockBean(JpaMetamodelMappingContext.class)
-class AuctionRoomControllerTest implements TestAuctionUtils {
+class AuctionRoomControllerTest {
 
     @MockBean
     private AuctionRoomService auctionService;
@@ -42,13 +43,13 @@ class AuctionRoomControllerTest implements TestAuctionUtils {
     @DisplayName("post /api/auctionRoom 경매장 생성 리퀘스트 매핑")
     void createAuctionRoomTest() throws Exception {
         //given
-        given(auctionService.createAuctionRoom(any())).willReturn(getTestResponse());
+        given(auctionService.createAuctionRoom(any())).willReturn(TEST_AUCTION_RESPONSE);
 
         //when
         ResultActions resultActions = mockMvc.perform(
                 post("/api/auctionRoom")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(getTestAuctionRequest()))
+                        .content(objectMapper.writeValueAsString(TEST_AUCTION_REQUEST))
         ).andDo(print());
 
         //then
@@ -104,13 +105,13 @@ class AuctionRoomControllerTest implements TestAuctionUtils {
     @DisplayName("post /api/auctionRoom/{auctionRoomId}")
     void updateAuctionRoom() throws Exception {
         //given
-        given(auctionService.updateAuctionRoom(anyLong(), any(AuctionRequest.class))).willReturn(getTestResponse());
+        given(auctionService.updateAuctionRoom(anyLong(), any(AuctionRequest.class))).willReturn(TEST_AUCTION_RESPONSE);
 
         //when
         ResultActions resultActions = mockMvc.perform(
                 post("/api/auctionRoom/"+ 1L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(getTestAuctionRequest()))
+                        .content(objectMapper.writeValueAsString(TEST_AUCTION_REQUEST))
         ).andDo(print());
 
         //then
