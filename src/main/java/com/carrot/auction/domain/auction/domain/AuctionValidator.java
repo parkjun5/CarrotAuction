@@ -34,7 +34,7 @@ public class AuctionValidator {
     public void bidPriceHigherThanMinimum(int bidPrice, int existPrice) {
         int minimumPrice = BiddingRequest.getMinimumPrice(existPrice);
         if (minimumPrice >= bidPrice) {
-            throw new NotEnoughBiddingPriceException(minimumPrice + "보다 제시하신 금액보다 낮습니다.");
+            throw new NotEnoughBiddingPriceException("최소금액 " + minimumPrice + "보다 제시하신 금액보다 낮습니다.");
         }
     }
 

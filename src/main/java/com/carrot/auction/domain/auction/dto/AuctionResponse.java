@@ -24,8 +24,8 @@ public record AuctionResponse (
         long auctionRoomId,
         @Schema(description = "호스트 유저")
         @JsonSerialize(using = UserSerializer.class) User hostUser,
-        @Schema(description = "참가자 리스트")
-        @JsonSerialize(contentUsing = UserSerializer.class) Set<User> participants,
+        @Schema(description = "참가자 닉네임")
+        Set<String> nameOfParticipants,
         @Schema(description = "경매장 이름", example = "맥북 팝니다")
         String name,
         @Schema(description = "경매장 비밀번호", example = "q1w2e3!")
