@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -68,8 +68,9 @@ public class GlobalExceptionHandler {
 
     private Map<String, String> geInfoByException(BindException ex) {
         Map<String, String> map = new HashMap<>();
-        for (FieldError allError : ex.getBindingResult().getFieldErrors()) {
-            map.put(allError.getField(), allError.getDefaultMessage());
+        ex.getBindingResult().getAllErrors();
+        for (ObjectError allError : ex.getBindingResult().getAllErrors()) {
+            map.put("error: ", allError.getDefaultMessage());
         }
         return map;
     }

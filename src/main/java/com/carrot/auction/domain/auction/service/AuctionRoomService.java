@@ -77,24 +77,24 @@ public class AuctionRoomService {
 
     @Transactional
     public BiddingResponse updateBid(Long roomId, BiddingRequest request) {
-        AuctionRoom findAuction = findAuctionRoomById(roomId);
-        final User bidder = findAuction.getAuctionParticipation()
+        AuctionRoom findAuctionRoom = findAuctionRoomFetchParticipation(roomId);
+        User bidder = findAuctionRoom.getAuctionParticipation()
                 .stream()
+                .filter(auctionParticipation -> auctionParticipation.getUser().getId().equals(request.bidderId()))
                 .map(AuctionParticipation::getUser)
-                .filter(user -> user.getId().equals(request.bidderId()))
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException("참가자 중 없는 계정입니다."));
 
-        auctionValidator.bidTimeBetweenAuctionTime(request.biddingTime(), findAuction.getBeginDateTime(), findAuction.getCloseDateTime());
-        auctionValidator.bidPriceHigherThanMinimum(request.price(), findAuction.getBid().getBiddingPrice());
+        auctionValidator.bidTimeBetweenAuctionTime(request.biddingTime(), findAuctionRoom.getBeginDateTime(), findAuctionRoom.getCloseDateTime());
+        auctionValidator.bidPriceHigherThanMinimum(request.price(), findAuctionRoom.getBid().getBiddingPrice());
 
-        findAuction.getBid().changeBid(bidder.getId(), request.price(), request.biddingTime());
-        return auctionMapper.toBiddingResponseByEntity(findAuction, bidder);
+        findAuctionRoom.getBid().changeBid(bidder.getId(), request.price(), request.biddingTime());
+        return auctionMapper.toBiddingResponseByEntity(findAuctionRoom, bidder);
     }
 
     @Transactional
     public AuctionResponse addParticipateAuctionRoom(Long roomId, Long userId) {
-        AuctionRoom auctionRoom = findAuctionRoomById(roomId);
+        AuctionRoom auctionRoom = findAuctionRoomFetchParticipation(roomId);
         auctionValidator.isFullEnrollment(auctionRoom.getAuctionParticipation().size(), auctionRoom.getLimitOfEnrollment());
 
         User user = userService.findUserById(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
@@ -118,4 +118,9 @@ public class AuctionRoomService {
         return auctionRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException("ID: " + roomId + AUCTION_NOT_FOUND));
     }
 
+    private AuctionRoom findAuctionRoomFetchParticipation(Long roomId) {
+        AuctionRoom findAuctionRoom = auctionRepository.findByIdFetchParticipation(roomId);
+        Assert.notNull(findAuctionRoom,"경매장 아이디: " + roomId + AUCTION_NOT_FOUND);
+        return findAuctionRoom;
+    }
 }
