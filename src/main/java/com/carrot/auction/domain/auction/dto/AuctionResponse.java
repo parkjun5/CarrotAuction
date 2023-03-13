@@ -1,6 +1,5 @@
 package com.carrot.auction.domain.auction.dto;
 
-import com.carrot.auction.domain.auction.domain.Bid;
 import com.carrot.auction.domain.auction.domain.entity.AuctionStatus;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
@@ -32,7 +31,8 @@ public record AuctionResponse (
         String password,
         @Schema(description = "경매장 최대 인원수", example = "5")
         int limitOfEnrollment,
-        @Embedded Bid bid,
+        @Schema(description = "경매 최초 금액", example = "1_000")
+        int bidStartPrice,
         @Embedded Item item,
         @Schema(description = "카테고리", defaultValue = "DIGITAL")
         @Enumerated(EnumType.STRING) Category category,

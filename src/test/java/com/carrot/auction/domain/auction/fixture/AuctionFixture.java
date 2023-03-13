@@ -1,11 +1,12 @@
 package com.carrot.auction.domain.auction.fixture;
 
-import com.carrot.auction.domain.auction.domain.Bid;
 import com.carrot.auction.domain.auction.domain.entity.AuctionParticipation;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.domain.entity.AuctionStatus;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.auction.dto.AuctionResponse;
+import com.carrot.auction.domain.bid.domain.entity.Bid;
+import com.carrot.auction.domain.bid.dto.BidRequest;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.carrot.auction.domain.user.domain.entity.User;
@@ -28,16 +29,13 @@ public class AuctionFixture {
             new ArrayList<>());
 
     public static final User TEST_USER_2 = new User(
+            2L,
             "jagosi@gmail.com",
             "테스터 2",
-            "q1w2e3r4!"
-    );
+            "q1w2e3r4!",
+            Set.of(UserRole.ADMIN),
+            new ArrayList<>());
 
-    public static final Bid TEST_BID = Bid.builder()
-            .bidderId(99_999)
-            .biddingPrice(3_000)
-            .biddingTime(ZonedDateTime.now())
-            .build();
 
     public static final Item TEST_ITEM = Item.of("팔고 싶은 물건", 50_000, "저렴하게 팔아요!");
 
@@ -51,7 +49,7 @@ public class AuctionFixture {
             "성공적인 테스트 기원",
             "",
             3,
-            TEST_BID,
+            5_000,
             TEST_ITEM,
             Category.HOBBY_GAME_MUSIC,
             BEGIN_TIME,
@@ -60,15 +58,23 @@ public class AuctionFixture {
     );
 
     public static final AuctionRoom TEST_AUCTION_ROOM = AuctionRoom.builder()
+            .id(999L)
             .hostUser(TEST_USER_1)
             .name("성공적인 테스트!!")
             .password("")
-            .bid(TEST_BID)
+            .bidStartPrice(5_000)
             .item(TEST_ITEM)
             .category(Category.DIGITAL)
             .beginDateTime(BEGIN_TIME)
             .closeDateTime(CLOSE_TIME)
-            .limitOfEnrollment(3)
+            .limitOfEnrollment(5)
+            .build();
+
+    public static final Bid TEST_BID = Bid.builder()
+            .bidderId(99_999)
+            .auctionRoom(TEST_AUCTION_ROOM)
+            .biddingPrice(3_000)
+            .biddingTime(ZonedDateTime.now())
             .build();
 
     public static final AuctionRequest TEST_AUCTION_REQUEST = AuctionRequest.builder()
@@ -78,10 +84,13 @@ public class AuctionFixture {
                 .password(null)
                 .category(Category.DIGITAL)
                 .limitOfEnrollment(100)
-                .bid(Bid.startPrice(10_000))
+                .bidStartPrice(5_000)
                 .beginDateTime(BEGIN_TIME)
                 .closeDateTime(CLOSE_TIME)
                 .build();
 
-    public static final AuctionParticipation TEST_AUCTION_PARTICIPATION = AuctionParticipation.createAuctionParticipation(TEST_USER_2, TEST_AUCTION_ROOM);
+    public static final BidRequest TEST_BID_REQUEST = new BidRequest(2L, 1L, 50000, ZonedDateTime.now());
+    public static final AuctionParticipation TEST_AUCTION_PARTICIPATION_1 = AuctionParticipation.createAuctionParticipation(TEST_USER_1, TEST_AUCTION_ROOM);
+    public static final AuctionParticipation TEST_AUCTION_PARTICIPATION_2 = AuctionParticipation.createAuctionParticipation(TEST_USER_2, TEST_AUCTION_ROOM);
+
 }

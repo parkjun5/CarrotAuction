@@ -1,9 +1,9 @@
 package com.carrot.auction.domain.auction.service;
 
-import com.carrot.auction.domain.auction.domain.AuctionValidator;
 import com.carrot.auction.domain.auction.domain.entity.AuctionParticipation;
 import com.carrot.auction.domain.auction.domain.repository.AuctionParticipationRepository;
 import com.carrot.auction.domain.auction.dto.*;
+import com.carrot.auction.domain.auction.exception.AlreadyFullEnrollmentException;
 import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.domain.user.service.UserService;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -28,39 +29,34 @@ public class AuctionRoomService {
     private final AuctionParticipationRepository auctionParticipationRepository;
     private final UserService userService;
     private final AuctionMapper auctionMapper;
-    private final AuctionValidator auctionValidator;
     private static final String AUCTION_NOT_FOUND = "의 경매장을 찾지 못했습니다.";
 
     public AuctionResponse findAuctionInfoById(final Long roomId) {
-        final AuctionRoom auctionRoom = findAuctionRoomById(roomId);
-        final Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
-        return auctionMapper.toAuctionResponseByEntity(auctionRoom, nameOfParticipants);
+        AuctionRoom auctionRoom = findAuctionRoomById(roomId);
+        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
+        return auctionMapper.toResponseByEntityAndNames(auctionRoom, nameOfParticipants);
     }
 
     @Transactional
     public AuctionResponse createAuctionRoom(AuctionRequest request) {
-        auctionValidator.correctAuctionTime(request.beginDateTime(), request.closeDateTime());
-
-        final User hostUser = userService.findUserById(request.userId()).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
-        final AuctionRoom auctionRoom = auctionMapper.toAuctionEntityByRequest(hostUser, request);
-        final AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(hostUser, auctionRoom);
-        final Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
+        User hostUser = userService.findUserById(request.userId()).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
+        AuctionRoom auctionRoom = auctionMapper.toEntityByRequestAndUser(hostUser, request);
+        AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(hostUser, auctionRoom);
+        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
 
         auctionParticipationRepository.save(auctionParticipation);
-        return auctionMapper.toAuctionResponseByEntity(auctionRepository.save(auctionRoom), nameOfParticipants);
+        return auctionMapper.toResponseByEntityAndNames(auctionRepository.save(auctionRoom), nameOfParticipants);
     }
 
     @Transactional
     public AuctionResponse updateAuctionRoom(final Long roomId, AuctionRequest request) {
-        auctionValidator.correctAuctionTime(request.beginDateTime(), request.closeDateTime());
-
         AuctionRoom auctionRoom = findAuctionRoomById(roomId);
         auctionRoom.updateAuctionInfo(request.name(), request.password(), request.limitOfEnrollment(),
-                request.bid().getBiddingPrice(), request.beginDateTime(), request.closeDateTime());
+                request.bidStartPrice(), request.beginDateTime(), request.closeDateTime());
         auctionRoom.updateItem(request.item().getTitle(), request.item().getPrice(), request.item().getContent(), request.category());
-        final Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
+        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
 
-        return auctionMapper.toAuctionResponseByEntity(auctionRoom, nameOfParticipants);
+        return auctionMapper.toResponseByEntityAndNames(auctionRoom, nameOfParticipants);
     }
 
     @Transactional
@@ -75,40 +71,24 @@ public class AuctionRoomService {
         return roomId;
     }
 
-    @Transactional
-    public BiddingResponse updateBid(Long roomId, BiddingRequest request) {
-        AuctionRoom findAuction = findAuctionRoomById(roomId);
-        final User bidder = findAuction.getAuctionParticipation()
-                .stream()
-                .map(AuctionParticipation::getUser)
-                .filter(user -> user.getId().equals(request.bidderId()))
-                .findAny()
-                .orElseThrow(() -> new NoSuchElementException("참가자 중 없는 계정입니다."));
-
-        auctionValidator.bidTimeBetweenAuctionTime(request.biddingTime(), findAuction.getBeginDateTime(), findAuction.getCloseDateTime());
-        auctionValidator.bidPriceHigherThanMinimum(request.price(), findAuction.getBid().getBiddingPrice());
-
-        findAuction.getBid().changeBid(bidder.getId(), request.price(), request.biddingTime());
-        return auctionMapper.toBiddingResponseByEntity(findAuction, bidder);
-    }
 
     @Transactional
     public AuctionResponse addParticipateAuctionRoom(Long roomId, Long userId) {
-        AuctionRoom auctionRoom = findAuctionRoomById(roomId);
-        auctionValidator.isFullEnrollment(auctionRoom.getAuctionParticipation().size(), auctionRoom.getLimitOfEnrollment());
+        AuctionRoom auctionRoom = findAuctionRoomFetchParticipation(roomId);
+        isFullEnrollment(auctionRoom.getAuctionParticipation().size(), auctionRoom.getLimitOfEnrollment());
 
         User user = userService.findUserById(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
         AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(user, auctionRoom);
         final Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
 
         auctionParticipationRepository.save(auctionParticipation);
-        return auctionMapper.toAuctionResponseByEntity(auctionRoom, nameOfParticipants);
+        return auctionMapper.toResponseByEntityAndNames(auctionRoom, nameOfParticipants);
     }
 
     public Page<AuctionResponse> getAuctionRoomsByPageable(Pageable pageable) {
         final List<AuctionResponse> auctionResponseList = auctionRepository.findAll(pageable)
                 .stream()
-                .map(auctionRoom -> auctionMapper.toAuctionResponseByEntity(auctionRoom, auctionRoom.getParticipantsNicknames()))
+                .map(auctionRoom -> auctionMapper.toResponseByEntityAndNames(auctionRoom, auctionRoom.getParticipantsNicknames()))
                 .toList();
 
         return new PageImpl<>(auctionResponseList);
@@ -118,4 +98,15 @@ public class AuctionRoomService {
         return auctionRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException("ID: " + roomId + AUCTION_NOT_FOUND));
     }
 
+    public AuctionRoom findAuctionRoomFetchParticipation(Long roomId) {
+        AuctionRoom findAuctionRoom = auctionRepository.findByIdFetchParticipation(roomId);
+        Assert.notNull(findAuctionRoom,"경매장 아이디: " + roomId + AUCTION_NOT_FOUND);
+        return findAuctionRoom;
+    }
+
+    private void isFullEnrollment(int numberOfCurrentEnrollment, int limitOfEnrollment) {
+        if (limitOfEnrollment <= numberOfCurrentEnrollment) {
+            throw new AlreadyFullEnrollmentException("경매장이 꽉찼어요.");
+        }
+    }
 }
