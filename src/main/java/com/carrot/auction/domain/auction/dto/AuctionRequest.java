@@ -1,7 +1,6 @@
 package com.carrot.auction.domain.auction.dto;
 
-import com.carrot.auction.domain.auction.domain.Bid;
-import com.carrot.auction.domain.auction.domain.annotation.EventDateTime;
+import com.carrot.auction.domain.auction.annotation.EventDateTime;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -28,7 +27,9 @@ public record AuctionRequest(
         @Min(value= 0) @Max(value= 100)
         @Schema(description = "경매장 최대 인원수", example = "5")
         int limitOfEnrollment,
-        @Embedded Bid bid,
+        @Min(value = 1_000)
+        @Schema(description = "경매 최초 금액", example = "1_000")
+        int bidStartPrice,
         @Embedded Item item,
         @Enumerated(EnumType.STRING)
         @Schema(description = "카테고리", defaultValue = "DIGITAL")
