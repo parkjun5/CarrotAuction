@@ -45,7 +45,7 @@ class AuctionServiceTest {
     void createAuctionRoomTest() {
         //given
         given(userService.findUserById(anyLong())).willReturn(Optional.of(TEST_USER_1));
-        given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION);
+        given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION_1);
         given(auctionMapper.toAuctionEntityByRequest(any(User.class), any(AuctionRequest.class))).willReturn(TEST_AUCTION_ROOM);
         given(auctionRoomRepository.save(any(AuctionRoom.class))).willReturn(TEST_AUCTION_ROOM);
         //when
@@ -55,7 +55,7 @@ class AuctionServiceTest {
         then(auctionRoomRepository).should(times(1)).save(any(AuctionRoom.class));
         then(auctionParticipationRepository).should(times(1)).save(any(AuctionParticipation.class));
     }
-    
+
     @Test
     @DisplayName("경매장 아이디로 찾기")
     void findAuctionRoom() {
@@ -83,7 +83,7 @@ class AuctionServiceTest {
     void deleteAuction() {
         //given
         given(auctionRoomRepository.findById(anyLong())).willReturn(Optional.ofNullable(TEST_AUCTION_ROOM));
-        given(auctionParticipationRepository.findOneByUserIdAndAuctionRoomId(anyLong(), anyLong())).willReturn(Optional.of(TEST_AUCTION_PARTICIPATION));
+        given(auctionParticipationRepository.findOneByUserIdAndAuctionRoomId(anyLong(), anyLong())).willReturn(Optional.of(TEST_AUCTION_PARTICIPATION_1));
         //when
         auctionRoomService.deleteAuctionRoom(anyLong());
         //then
@@ -95,13 +95,13 @@ class AuctionServiceTest {
     @DisplayName("경매장 인원 등록")
     void addParticipate() {
         //given
-        given(auctionRoomRepository.findById(anyLong())).willReturn(Optional.ofNullable(TEST_AUCTION_ROOM));
+        given(auctionRoomRepository.findByIdFetchParticipation(anyLong())).willReturn(TEST_AUCTION_ROOM);
         given(userService.findUserById(anyLong())).willReturn(Optional.of(TEST_USER_1));
-        given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION);
+        given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION_1);
         //when 
         auctionRoomService.addParticipateAuctionRoom(1L, anyLong());
         //then
-        then(auctionRoomRepository).should(times(1)).findById(anyLong());
+        then(auctionRoomRepository).should(times(1)).findByIdFetchParticipation(anyLong());
         then(auctionParticipationRepository).should(times(1)).save(any(AuctionParticipation.class));
     }
     

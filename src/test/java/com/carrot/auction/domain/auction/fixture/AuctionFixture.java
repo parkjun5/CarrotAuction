@@ -6,6 +6,7 @@ import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.domain.entity.AuctionStatus;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.auction.dto.AuctionResponse;
+import com.carrot.auction.domain.auction.dto.BiddingRequest;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.carrot.auction.domain.user.domain.entity.User;
@@ -28,10 +29,12 @@ public class AuctionFixture {
             new ArrayList<>());
 
     public static final User TEST_USER_2 = new User(
+            2L,
             "jagosi@gmail.com",
             "테스터 2",
-            "q1w2e3r4!"
-    );
+            "q1w2e3r4!",
+            Set.of(UserRole.ADMIN),
+            new ArrayList<>());
 
     public static final Bid TEST_BID = Bid.builder()
             .bidderId(99_999)
@@ -60,6 +63,7 @@ public class AuctionFixture {
     );
 
     public static final AuctionRoom TEST_AUCTION_ROOM = AuctionRoom.builder()
+            .id(999L)
             .hostUser(TEST_USER_1)
             .name("성공적인 테스트!!")
             .password("")
@@ -83,5 +87,8 @@ public class AuctionFixture {
                 .closeDateTime(CLOSE_TIME)
                 .build();
 
-    public static final AuctionParticipation TEST_AUCTION_PARTICIPATION = AuctionParticipation.createAuctionParticipation(TEST_USER_2, TEST_AUCTION_ROOM);
+    public static final BiddingRequest TEST_BID_REQUEST = new BiddingRequest(2L, 50000, ZonedDateTime.now());
+    public static final AuctionParticipation TEST_AUCTION_PARTICIPATION_1 = AuctionParticipation.createAuctionParticipation(TEST_USER_1, TEST_AUCTION_ROOM);
+    public static final AuctionParticipation TEST_AUCTION_PARTICIPATION_2 = AuctionParticipation.createAuctionParticipation(TEST_USER_2, TEST_AUCTION_ROOM);
+
 }
