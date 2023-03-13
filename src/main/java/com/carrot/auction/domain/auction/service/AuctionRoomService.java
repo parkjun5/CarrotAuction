@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -32,8 +33,8 @@ public class AuctionRoomService {
     private static final String AUCTION_NOT_FOUND = "의 경매장을 찾지 못했습니다.";
 
     public AuctionResponse findAuctionInfoById(final Long roomId) {
-        final AuctionRoom auctionRoom = findAuctionRoomById(roomId);
-        final Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
+        AuctionRoom auctionRoom = findAuctionRoomById(roomId);
+        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
         return auctionMapper.toAuctionResponseByEntity(auctionRoom, nameOfParticipants);
     }
 
@@ -54,7 +55,7 @@ public class AuctionRoomService {
         auctionRoom.updateAuctionInfo(request.name(), request.password(), request.limitOfEnrollment(),
                 request.bid().getBiddingPrice(), request.beginDateTime(), request.closeDateTime());
         auctionRoom.updateItem(request.item().getTitle(), request.item().getPrice(), request.item().getContent(), request.category());
-        final Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
+        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
 
         return auctionMapper.toAuctionResponseByEntity(auctionRoom, nameOfParticipants);
     }

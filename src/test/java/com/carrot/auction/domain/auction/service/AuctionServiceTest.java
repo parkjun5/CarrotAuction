@@ -118,4 +118,20 @@ class AuctionServiceTest {
         then(auctionRoomRepository).should(times(1)).findAll(any(Pageable.class));
     }
     
+    @Test
+    @DisplayName("경매 입찰 테스트")
+    void updateParticipate() {
+        //given
+        given(auctionRoomRepository.findByIdFetchParticipation(TEST_AUCTION_ROOM.getId())).willReturn(TEST_AUCTION_ROOM);
+        given(userService.findUserById(TEST_USER_1.getId())).willReturn(Optional.of(TEST_USER_1));
+        given(userService.findUserById(TEST_USER_2.getId())).willReturn(Optional.of(TEST_USER_2));
+        //when
+        auctionRoomService.addParticipateAuctionRoom(TEST_AUCTION_ROOM.getId(), TEST_USER_1.getId());
+        auctionRoomService.addParticipateAuctionRoom(TEST_AUCTION_ROOM.getId(), TEST_USER_2.getId());
+        auctionRoomService.updateBid(TEST_AUCTION_ROOM.getId(), TEST_BID_REQUEST);
+        //then
+        then(auctionRoomRepository).should(times(3)).findByIdFetchParticipation(anyLong());
+        then(auctionValidator).should(times(1)).bidTimeBetweenAuctionTime(any(), any(), any());
+        then(auctionValidator).should(times(1)).bidPriceHigherThanMinimum(anyInt(), anyInt());
+    }
 }
