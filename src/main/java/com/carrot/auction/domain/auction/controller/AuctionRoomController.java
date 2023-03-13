@@ -2,8 +2,6 @@ package com.carrot.auction.domain.auction.controller;
 
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.auction.dto.AuctionResponse;
-import com.carrot.auction.domain.auction.dto.BiddingRequest;
-import com.carrot.auction.domain.auction.dto.BiddingResponse;
 import com.carrot.auction.domain.auction.service.AuctionRoomService;
 import com.carrot.auction.global.dto.ApiCommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -87,17 +85,6 @@ public class AuctionRoomController {
         AuctionResponse response = auctionService.addParticipateAuctionRoom(auctionRoomId, userId);
         return ResponseEntity
                 .ok(ApiCommonResponse.success(AUCTION_RESULT_NAME, response));
-    }
-
-    @PostMapping("/bid/{auctionRoomId}")
-    @Operation(summary = "가격 입찰", description = "가격을 입찰한다.")
-    public ResponseEntity<ApiCommonResponse<BiddingResponse>> updateBid(
-            @PathVariable("auctionRoomId") final Long auctionRoomId,
-            @RequestBody @Valid BiddingRequest biddingRequest
-    ) {
-        BiddingResponse response = auctionService.updateBid(auctionRoomId, biddingRequest);
-        return ResponseEntity
-                .ok(ApiCommonResponse.success("bid", response));
     }
 
 }

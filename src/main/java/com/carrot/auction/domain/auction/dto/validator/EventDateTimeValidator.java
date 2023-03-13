@@ -1,6 +1,6 @@
-package com.carrot.auction.domain.auction.domain.validator;
+package com.carrot.auction.domain.auction.dto.validator;
 
-import com.carrot.auction.domain.auction.domain.annotation.EventDateTime;
+import com.carrot.auction.domain.auction.annotation.EventDateTime;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

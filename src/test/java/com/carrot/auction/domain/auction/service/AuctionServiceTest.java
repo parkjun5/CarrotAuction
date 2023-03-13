@@ -1,5 +1,4 @@
 package com.carrot.auction.domain.auction.service;
-import com.carrot.auction.domain.auction.domain.AuctionValidator;
 import com.carrot.auction.domain.auction.domain.entity.AuctionParticipation;
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.domain.repository.AuctionParticipationRepository;
@@ -37,8 +36,6 @@ class AuctionServiceTest {
     private AuctionParticipationRepository auctionParticipationRepository;
     @Mock
     private AuctionMapper auctionMapper;
-    @Mock
-    private AuctionValidator auctionValidator;
 
     @Test
     @DisplayName("경매장 생성 및 저장 비지니스 로직 테스트")
@@ -46,7 +43,7 @@ class AuctionServiceTest {
         //given
         given(userService.findUserById(anyLong())).willReturn(Optional.of(TEST_USER_1));
         given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION_1);
-        given(auctionMapper.toAuctionEntityByRequest(any(User.class), any(AuctionRequest.class))).willReturn(TEST_AUCTION_ROOM);
+        given(auctionMapper.toEntityByRequestAndUser(any(User.class), any(AuctionRequest.class))).willReturn(TEST_AUCTION_ROOM);
         given(auctionRoomRepository.save(any(AuctionRoom.class))).willReturn(TEST_AUCTION_ROOM);
         //when
         auctionRoomService.createAuctionRoom(TEST_AUCTION_REQUEST);
@@ -116,22 +113,5 @@ class AuctionServiceTest {
         auctionRoomService.getAuctionRoomsByPageable(pageable);
         //then
         then(auctionRoomRepository).should(times(1)).findAll(any(Pageable.class));
-    }
-    
-    @Test
-    @DisplayName("경매 입찰 테스트")
-    void updateParticipate() {
-        //given
-        given(auctionRoomRepository.findByIdFetchParticipation(TEST_AUCTION_ROOM.getId())).willReturn(TEST_AUCTION_ROOM);
-        given(userService.findUserById(TEST_USER_1.getId())).willReturn(Optional.of(TEST_USER_1));
-        given(userService.findUserById(TEST_USER_2.getId())).willReturn(Optional.of(TEST_USER_2));
-        //when
-        auctionRoomService.addParticipateAuctionRoom(TEST_AUCTION_ROOM.getId(), TEST_USER_1.getId());
-        auctionRoomService.addParticipateAuctionRoom(TEST_AUCTION_ROOM.getId(), TEST_USER_2.getId());
-        auctionRoomService.updateBid(TEST_AUCTION_ROOM.getId(), TEST_BID_REQUEST);
-        //then
-        then(auctionRoomRepository).should(times(3)).findByIdFetchParticipation(anyLong());
-        then(auctionValidator).should(times(1)).bidTimeBetweenAuctionTime(any(), any(), any());
-        then(auctionValidator).should(times(1)).bidPriceHigherThanMinimum(anyInt(), anyInt());
     }
 }
