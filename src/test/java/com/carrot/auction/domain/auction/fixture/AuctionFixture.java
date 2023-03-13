@@ -67,7 +67,7 @@ public class AuctionFixture {
             .category(Category.DIGITAL)
             .beginDateTime(BEGIN_TIME)
             .closeDateTime(CLOSE_TIME)
-            .limitOfEnrollment(3)
+            .limitOfEnrollment(5)
             .build();
 
     public static final Bid TEST_BID = Bid.builder()
