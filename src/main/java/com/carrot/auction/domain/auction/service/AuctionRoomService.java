@@ -39,12 +39,10 @@ public class AuctionRoomService {
 
     @Transactional
     public AuctionResponse createAuctionRoom(AuctionRequest request) {
-        auctionValidator.correctAuctionTime(request.beginDateTime(), request.closeDateTime());
-
-        final User hostUser = userService.findUserById(request.userId()).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
-        final AuctionRoom auctionRoom = auctionMapper.toAuctionEntityByRequest(hostUser, request);
-        final AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(hostUser, auctionRoom);
-        final Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
+        User hostUser = userService.findUserById(request.userId()).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
+        AuctionRoom auctionRoom = auctionMapper.toAuctionEntityByRequest(hostUser, request);
+        AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(hostUser, auctionRoom);
+        Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
 
         auctionParticipationRepository.save(auctionParticipation);
         return auctionMapper.toAuctionResponseByEntity(auctionRepository.save(auctionRoom), nameOfParticipants);
@@ -52,8 +50,6 @@ public class AuctionRoomService {
 
     @Transactional
     public AuctionResponse updateAuctionRoom(final Long roomId, AuctionRequest request) {
-        auctionValidator.correctAuctionTime(request.beginDateTime(), request.closeDateTime());
-
         AuctionRoom auctionRoom = findAuctionRoomById(roomId);
         auctionRoom.updateAuctionInfo(request.name(), request.password(), request.limitOfEnrollment(),
                 request.bid().getBiddingPrice(), request.beginDateTime(), request.closeDateTime());

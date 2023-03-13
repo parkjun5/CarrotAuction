@@ -6,21 +6,10 @@ import com.carrot.auction.domain.auction.exception.IllegalAuctionTimeException;
 import com.carrot.auction.domain.auction.exception.NotEnoughBiddingPriceException;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @Component
 public class AuctionValidator {
-
-    public void correctAuctionTime(ZonedDateTime beginDateTime, ZonedDateTime closeDateTime) {
-        if (beginDateTime.isAfter(closeDateTime)) {
-            throw new IllegalAuctionTimeException("시작 날짜: " + beginDateTime + ", 종료 날짜: " + closeDateTime + "종료 날짜보다 시작 날짜가 이릅니다.");
-        }
-        if (LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).isAfter(closeDateTime)) {
-            throw new IllegalAuctionTimeException("종료 날짜: " + closeDateTime + "이미 종료된 날짜입니다.");
-        }
-    }
 
     public void bidTimeBetweenAuctionTime(ZonedDateTime bidTime, ZonedDateTime beginDateTime, ZonedDateTime closeDateTime) {
         if (bidTime.isBefore(beginDateTime)) {
