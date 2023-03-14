@@ -18,7 +18,7 @@ public class BidController {
     private final BidService bidService;
 
     @GetMapping("/{bidId}")
-    @Operation(summary = "가격 입찰", description = "가격을 입찰한다.")
+    @Operation(summary = "입찰 가격 조회", description = "입찰 가격을 조회한다.")
     public ResponseEntity<ApiCommonResponse<BidResponse>> getBid(
             @PathVariable final Long bidId
     ) {

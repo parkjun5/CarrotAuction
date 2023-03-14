@@ -10,7 +10,6 @@ public interface BidMapper {
     @Mapping(source = "bid.biddingTime", target = "biddingTime")
     BidResponse toResponseByEntities(String roomName, Bid bid, String bidderName);
 
-    @Mapping(source = "roomId", target = "auctionRoom.id")
     Bid toEntityByRequest(BidRequest bidRequest);
 
 }

@@ -67,11 +67,23 @@ public class AuctionFixture {
             .category(Category.DIGITAL)
             .beginDateTime(BEGIN_TIME)
             .closeDateTime(CLOSE_TIME)
+            .limitOfEnrollment(10)
+            .build();
+
+    public static final AuctionRoom TEST_UPDATE_ROOM = AuctionRoom.builder()
+            .id(500L)
+            .hostUser(TEST_USER_2)
+            .name("성공적인 테스트 기원!!")
+            .bidStartPrice(11_000)
+            .item(TEST_ITEM)
+            .category(Category.DIGITAL)
+            .beginDateTime(BEGIN_TIME)
+            .closeDateTime(CLOSE_TIME)
             .limitOfEnrollment(5)
             .build();
 
     public static final Bid TEST_BID = Bid.builder()
-            .bidderId(99_999)
+            .bidderId(2L)
             .auctionRoom(TEST_AUCTION_ROOM)
             .biddingPrice(3_000)
             .biddingTime(ZonedDateTime.now())

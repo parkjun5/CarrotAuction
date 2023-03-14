@@ -8,7 +8,6 @@ import com.carrot.auction.domain.bid.domain.repository.BidRepository;
 import com.carrot.auction.domain.bid.dto.BidMapper;
 import com.carrot.auction.domain.bid.dto.BidRequest;
 import com.carrot.auction.domain.bid.dto.BidResponse;
-import com.carrot.auction.domain.bid.dto.validator.BidValidator;
 import com.carrot.auction.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,6 @@ public class BidService {
     private final BidRepository bidRepository;
     private final BidMapper bidMapper;
     private final AuctionRoomService auctionRoomService;
-    private final BidValidator bidValidator;
 
     public BidResponse findBidById(Long bidId) {
         Bid bid = bidRepository.findById(bidId).orElseThrow(() -> new NoSuchElementException("존재하지 않는다."));
@@ -36,9 +34,6 @@ public class BidService {
     public BidResponse bidding(BidRequest req) {
         AuctionRoom findAuctionRoom = auctionRoomService.findAuctionRoomFetchParticipation(req.roomId());
         String bidderName = getBidderNameInParticipant(req.bidderId(), findAuctionRoom);
-
-        bidValidator.bidTimeBetweenAuctionTime(req.biddingTime(), findAuctionRoom.getBeginDateTime(), findAuctionRoom.getCloseDateTime());
-        bidValidator.bidPriceHigherThanMinimum(req.biddingPrice(), findAuctionRoom.getBid().getBiddingPrice());
 
         Bid bid = findAuctionRoom.getBid();
 

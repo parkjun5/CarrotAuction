@@ -31,7 +31,7 @@ public class AuctionRoomService {
     private final AuctionMapper auctionMapper;
     private static final String AUCTION_NOT_FOUND = "의 경매장을 찾지 못했습니다.";
 
-    public AuctionResponse findAuctionInfoById(final Long roomId) {
+    public AuctionResponse findAuctionResponseById(final Long roomId) {
         AuctionRoom auctionRoom = findAuctionRoomById(roomId);
         Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
         return auctionMapper.toResponseByEntityAndNames(auctionRoom, nameOfParticipants);
@@ -94,7 +94,7 @@ public class AuctionRoomService {
         return new PageImpl<>(auctionResponseList);
     }
 
-    private AuctionRoom findAuctionRoomById(Long roomId) {
+    public AuctionRoom findAuctionRoomById(Long roomId) {
         return auctionRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException("ID: " + roomId + AUCTION_NOT_FOUND));
     }
 
