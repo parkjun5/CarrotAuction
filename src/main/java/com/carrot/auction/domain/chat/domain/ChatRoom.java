@@ -1,13 +1,19 @@
 package com.carrot.auction.domain.chat.domain;
 
-public class ChatRoom implements BaseChatRoom {
-    @Override
-    public Long sendChat(Long senderId, String message) {
-        return null;
-    }
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-    @Override
-    public Long readChat(Long readerId) {
-        return null;
-    }
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class ChatRoom {
+
+    @Id @GeneratedValue
+    @Column(name = "chat_room_id")
+    private Long id;
 }
