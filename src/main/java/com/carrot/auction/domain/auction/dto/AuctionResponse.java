@@ -3,10 +3,8 @@ package com.carrot.auction.domain.auction.dto;
 import com.carrot.auction.domain.auction.domain.entity.AuctionStatus;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
-import com.carrot.auction.domain.user.domain.entity.User;
-import com.carrot.auction.domain.user.serailizer.UserSerializer;
+import com.carrot.auction.domain.user.dto.UserResponse;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.EnumType;
@@ -22,7 +20,7 @@ public record AuctionResponse (
         @Schema(description = "경매장 아이디")
         long auctionRoomId,
         @Schema(description = "호스트 유저")
-        @JsonSerialize(using = UserSerializer.class) User hostUser,
+        UserResponse hostUser,
         @Schema(description = "참가자 닉네임")
         Set<String> nameOfParticipants,
         @Schema(description = "경매장 이름", example = "맥북 팝니다")

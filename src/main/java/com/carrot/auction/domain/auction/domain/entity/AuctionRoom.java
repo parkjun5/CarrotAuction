@@ -30,8 +30,7 @@ public class AuctionRoom extends BaseEntity {
     private int limitOfEnrollment;
     private ZonedDateTime beginDateTime;
     private ZonedDateTime closeDateTime;
-    @ManyToOne(fetch = FetchType.EAGER)
-    //TODO UserDTO 생성이전까지만
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User hostUser;
     @Enumerated(EnumType.STRING) private Category category;
