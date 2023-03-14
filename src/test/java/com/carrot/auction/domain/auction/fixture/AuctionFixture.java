@@ -11,6 +11,7 @@ import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.domain.user.domain.entity.UserRole;
+import com.carrot.auction.domain.user.dto.UserResponse;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -42,9 +43,15 @@ public class AuctionFixture {
     public static final ZonedDateTime BEGIN_TIME = ZonedDateTime.of(2002, 12, 2, 12, 0, 0, 0, ZoneId.of("Asia/Seoul"));
     public static final ZonedDateTime CLOSE_TIME = ZonedDateTime.of(2092, 12, 2, 12, 0, 0, 0, ZoneId.of("Asia/Seoul"));
 
+    public static final UserResponse TEST_USER_RESPONSE = new UserResponse(
+            "tester@gmail.com",
+            "테스터 1",
+            BEGIN_TIME
+    );
+
     public static final AuctionResponse TEST_AUCTION_RESPONSE = new AuctionResponse(
             99_999,
-            TEST_USER_1,
+            TEST_USER_RESPONSE,
             new HashSet<>(),
             "성공적인 테스트 기원",
             "",

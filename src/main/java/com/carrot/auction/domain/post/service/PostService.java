@@ -25,7 +25,7 @@ public class PostService {
 
     @Transactional
     public PostResponse createPost(PostRequest request) {
-        User writer = userService.findUserById(request.userId()).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
+        User writer = userService.findUserById(request.userId());
         Post post = postMapper.toEntityByRequest(writer, request);
         return postMapper.toResponseByEntity(postRepository.save(post));
     }

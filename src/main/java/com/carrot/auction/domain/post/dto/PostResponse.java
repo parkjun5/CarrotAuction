@@ -3,9 +3,7 @@ package com.carrot.auction.domain.post.dto;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.carrot.auction.domain.post.domain.entity.PostStatus;
-import com.carrot.auction.domain.user.domain.entity.User;
-import com.carrot.auction.domain.user.serailizer.UserSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.carrot.auction.domain.user.dto.UserResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.EnumType;
@@ -13,7 +11,7 @@ import jakarta.persistence.Enumerated;
 
 public record PostResponse(
         @Schema(description = "작성자", example = "mac seller")
-        @JsonSerialize(using = UserSerializer.class) User user,
+        UserResponse user,
         @Schema(description = "글 제목", example = "[판매] 맥북 판매 경기/수원")
         String postTitle,
         @Schema(description = "글 내용", example = "맥북 판매합니다 경기/수원")
