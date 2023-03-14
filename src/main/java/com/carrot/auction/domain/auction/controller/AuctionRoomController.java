@@ -40,7 +40,7 @@ public class AuctionRoomController {
     public ResponseEntity<ApiCommonResponse<AuctionResponse>> getAuctionRoom(
             @PathVariable("auctionRoomId") final Long auctionRoomId
     ) {
-        AuctionResponse response = auctionService.findAuctionInfoById(auctionRoomId);
+        AuctionResponse response = auctionService.findAuctionResponseById(auctionRoomId);
         return ResponseEntity
                 .ok(ApiCommonResponse.success(AUCTION_RESULT_NAME, response));
     }

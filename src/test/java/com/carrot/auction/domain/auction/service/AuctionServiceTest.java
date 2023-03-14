@@ -59,7 +59,7 @@ class AuctionServiceTest {
         //given
         given(auctionRoomRepository.findById(anyLong())).willReturn(Optional.ofNullable(TEST_AUCTION_ROOM));
         //when
-        auctionRoomService.findAuctionInfoById(anyLong());
+        auctionRoomService.findAuctionResponseById(anyLong());
         //then
         then(auctionRoomRepository).should(times(1)).findById(anyLong());
     }
