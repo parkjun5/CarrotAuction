@@ -1,5 +1,6 @@
 package com.carrot.auction.domain.bid.dto;
 
+import com.carrot.auction.domain.bid.annotation.BidRequestCheck;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
+@BidRequestCheck
 public record BidRequest(
         @Schema(description = "입찰자 아이디", example = "1")
         @NotNull Long bidderId,
