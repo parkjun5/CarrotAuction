@@ -43,9 +43,26 @@ public class UserService {
         return new PageImpl<>(userResponseList);
     }
 
-    public UserResponse getUserById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다"));
+    public UserResponse getUserById(final Long userId) {
+        User user = findUserById(userId);
         return userMapper.toResponseByEntity(user);
     }
 
+
+
+    public UserResponse updateUser(final Long userId, UserRequest request) {
+        User user = findUserById(userId);
+        user.changeInfo(request.email(), request.nickname(), request.password());
+        return userMapper.toResponseByEntity(user);
+    }
+
+    public Long deleteUser(final Long userId) {
+        User user = findUserById(userId);
+        userRepository.delete(user);
+        return userId;
+    }
+
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다"));
+    }
 }

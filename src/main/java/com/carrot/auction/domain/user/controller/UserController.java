@@ -43,4 +43,16 @@ public class UserController {
                 .status(HttpStatus.CREATED)
                 .body(ApiCommonResponse.success("계정 생성이 완료되었습니다", userService.createUser(request)));
     }
+
+    @PostMapping("/{userId}")
+    public ResponseEntity<ApiCommonResponse<UserResponse>> updateUser
+            (@PathVariable final Long userId, @RequestBody @Valid UserRequest request) {
+        return ResponseEntity.ok(ApiCommonResponse.success("user", userService.updateUser(userId, request)));
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<ApiCommonResponse<Long>> updateUser
+            (@PathVariable final Long userId) {
+        return ResponseEntity.ok(ApiCommonResponse.success("deleted User Id", userService.deleteUser(userId)));
+    }
 }

@@ -7,4 +7,6 @@ import org.mapstruct.Mapper;
 public interface UserMapper {
 
     UserResponse toResponseByEntity(User user);
+
+    User toEntityByRequest(UserRequest userRequest);
 }
