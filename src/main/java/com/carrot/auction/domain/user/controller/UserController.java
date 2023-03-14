@@ -32,7 +32,7 @@ public class UserController {
 
     @GetMapping("{/userId}")
     public ResponseEntity<ApiCommonResponse<UserResponse>> getUserById
-            (@PathVariable Long userId) {
+            (@PathVariable final Long userId) {
         return ResponseEntity.ok(ApiCommonResponse.success("users",userService.getUserById(userId) ));
     }
 

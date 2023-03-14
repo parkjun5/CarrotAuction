@@ -48,7 +48,7 @@ class PostServiceTest {
     @DisplayName("글 등록 테스트")
     void createPost() {
         //given
-        given(userService.findUserById(any())).willReturn(Optional.of(user));
+        given(userService.findUserById(any())).willReturn(user);
         given(postMapper.toEntityByRequest(user, request)).willReturn(post);
         given(postRepository.save(post)).willReturn(post);
         given(postMapper.toResponseByEntity(post)).willReturn(response);

@@ -41,7 +41,7 @@ public class AuctionRoomService {
 
     @Transactional
     public AuctionResponse createAuctionRoom(AuctionRequest request) {
-        User hostUser = userService.findUserById(request.userId()).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
+        User hostUser = userService.findUserById(request.userId());
         AuctionRoom auctionRoom = auctionMapper.toEntityByRequestAndUser(hostUser, request);
         AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(hostUser, auctionRoom);
 
@@ -76,7 +76,7 @@ public class AuctionRoomService {
         AuctionRoom auctionRoom = findAuctionRoomFetchParticipation(roomId);
         isFullEnrollment(auctionRoom.getAuctionParticipation().size(), auctionRoom.getLimitOfEnrollment());
 
-        User user = userService.findUserById(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다."));
+        User user = userService.findUserById(userId);
         AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(user, auctionRoom);
 
         auctionParticipationRepository.save(auctionParticipation);

@@ -44,7 +44,7 @@ class AuctionServiceTest {
     @DisplayName("경매장 생성 및 저장 비지니스 로직 테스트")
     void createAuctionRoomTest() {
         //given
-        given(userService.findUserById(anyLong())).willReturn(Optional.of(TEST_USER_1));
+        given(userService.findUserById(anyLong())).willReturn(TEST_USER_1);
         given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION_1);
         given(auctionMapper.toEntityByRequestAndUser(any(User.class), any(AuctionRequest.class))).willReturn(TEST_AUCTION_ROOM);
         given(userMapper.toResponseByEntity(any(User.class))).willReturn(TEST_USER_RESPONSE);
@@ -97,7 +97,7 @@ class AuctionServiceTest {
     void addParticipate() {
         //given
         given(auctionRoomRepository.findByIdFetchParticipation(anyLong())).willReturn(TEST_AUCTION_ROOM);
-        given(userService.findUserById(anyLong())).willReturn(Optional.of(TEST_USER_1));
+        given(userService.findUserById(anyLong())).willReturn(TEST_USER_1);
         given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION_1);
         //when 
         auctionRoomService.addParticipateAuctionRoom(1L, anyLong());

@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,17 +22,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public Optional<User> findUserById(Long userId) {
-        return userRepository.findById(userId);
-    }
-
     @Transactional
     public User createUser(UserRequest userRequest) {
-        User user = User.createUser()
-                .email(userRequest.email())
-                .nickname(userRequest.nickname())
-                .password(userRequest.password())
-                .build();
+        User user = userMapper.toEntityByRequest(userRequest);
         return userRepository.save(user);
     }
 
