@@ -5,6 +5,7 @@ import com.carrot.auction.domain.auction.domain.repository.AuctionParticipationR
 import com.carrot.auction.domain.auction.dto.AuctionMapper;
 import com.carrot.auction.domain.auction.dto.AuctionRequest;
 import com.carrot.auction.domain.user.domain.entity.User;
+import com.carrot.auction.domain.user.dto.UserMapper;
 import com.carrot.auction.domain.user.service.UserService;
 import com.carrot.auction.domain.auction.domain.repository.AuctionRoomRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -36,6 +37,8 @@ class AuctionServiceTest {
     private AuctionParticipationRepository auctionParticipationRepository;
     @Mock
     private AuctionMapper auctionMapper;
+    @Mock
+    private UserMapper userMapper;
 
     @Test
     @DisplayName("경매장 생성 및 저장 비지니스 로직 테스트")
@@ -44,6 +47,7 @@ class AuctionServiceTest {
         given(userService.findUserById(anyLong())).willReturn(Optional.of(TEST_USER_1));
         given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION_1);
         given(auctionMapper.toEntityByRequestAndUser(any(User.class), any(AuctionRequest.class))).willReturn(TEST_AUCTION_ROOM);
+        given(userMapper.toResponseByEntity(any(User.class))).willReturn(TEST_USER_RESPONSE);
         given(auctionRoomRepository.save(any(AuctionRoom.class))).willReturn(TEST_AUCTION_ROOM);
         //when
         auctionRoomService.createAuctionRoom(TEST_AUCTION_REQUEST);

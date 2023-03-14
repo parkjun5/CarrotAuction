@@ -2,6 +2,7 @@ package com.carrot.auction.domain.auction.dto;
 
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.user.domain.entity.User;
+import com.carrot.auction.domain.user.dto.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -18,6 +19,6 @@ public interface AuctionMapper {
 
     @Mapping(source = "auctionRoom.id", target = "auctionRoomId")
     @Mapping(source = "nameOfParticipants", target = "nameOfParticipants")
-    AuctionResponse toResponseByEntityAndNames(AuctionRoom auctionRoom, Set<String> nameOfParticipants);
+    AuctionResponse toResponseByEntityAndNames(AuctionRoom auctionRoom, UserResponse userResponse, Set<String> nameOfParticipants);
 
 }

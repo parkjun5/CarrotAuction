@@ -20,7 +20,7 @@ public record AuctionResponse (
         @Schema(description = "경매장 아이디")
         long auctionRoomId,
         @Schema(description = "호스트 유저")
-        UserResponse hostUser,
+        UserResponse userResponse,
         @Schema(description = "참가자 닉네임")
         Set<String> nameOfParticipants,
         @Schema(description = "경매장 이름", example = "맥북 팝니다")
