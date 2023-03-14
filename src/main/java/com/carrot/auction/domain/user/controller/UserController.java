@@ -1,16 +1,19 @@
 package com.carrot.auction.domain.user.controller;
 
-import com.carrot.auction.domain.user.dto.CreateUserRequest;
+import com.carrot.auction.domain.user.dto.UserRequest;
+import com.carrot.auction.domain.user.dto.UserResponse;
 import com.carrot.auction.domain.user.service.UserService;
 import com.carrot.auction.global.dto.ApiCommonResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @Tag(name = "user", description = "유저 API")
@@ -21,12 +24,23 @@ public class UserController {
 
     private final UserService userService;
 
+    @GetMapping
+    public ResponseEntity<ApiCommonResponse<Page<UserResponse>>> getUserList
+            (@PageableDefault(direction = Sort.Direction.ASC, sort = "id") Pageable pageable) {
+        return ResponseEntity.ok(ApiCommonResponse.success("users",userService.getUsersByPageable(pageable) ));
+    }
+
+    @GetMapping("{/userId}")
+    public ResponseEntity<ApiCommonResponse<UserResponse>> getUserById
+            (@PathVariable Long userId) {
+        return ResponseEntity.ok(ApiCommonResponse.success("users",userService.getUserById(userId) ));
+    }
+
     @PostMapping
     public ResponseEntity<ApiCommonResponse<Object>> createUser
-            (@RequestBody CreateUserRequest createUserRequest) {
-
+            (@RequestBody @Valid UserRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ApiCommonResponse.success("계정 생성이 완료되었습니다", userService.createUser(createUserRequest)));
+                .body(ApiCommonResponse.success("계정 생성이 완료되었습니다", userService.createUser(request)));
     }
 }
