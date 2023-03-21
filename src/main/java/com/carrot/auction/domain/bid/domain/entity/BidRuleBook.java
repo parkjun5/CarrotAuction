@@ -1,6 +1,5 @@
-package com.carrot.auction.domain.bid.domain.rulebook;
+package com.carrot.auction.domain.bid.domain.entity;
 
-import com.carrot.auction.domain.bid.domain.entity.Bid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

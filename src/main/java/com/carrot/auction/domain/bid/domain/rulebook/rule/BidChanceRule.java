@@ -1,5 +1,6 @@
 package com.carrot.auction.domain.bid.domain.rulebook.rule;
 
+import com.carrot.auction.domain.bid.domain.rulebook.BidRule;
 import com.carrot.auction.domain.bid.domain.rulebook.BidRuleCommand;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

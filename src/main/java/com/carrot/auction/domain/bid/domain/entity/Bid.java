@@ -1,7 +1,6 @@
 package com.carrot.auction.domain.bid.domain.entity;
 
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
-import com.carrot.auction.domain.bid.domain.rulebook.BidRuleBook;
 import com.carrot.auction.global.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
