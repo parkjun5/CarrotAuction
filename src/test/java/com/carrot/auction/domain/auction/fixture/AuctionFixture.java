@@ -21,22 +21,23 @@ import java.util.Set;
 
 public class AuctionFixture {
 
-    public static final User TEST_USER_1 = new User(
-            1L,
-            "tester@gmail.com",
-            "테스터 1",
-            "password",
-            Set.of(UserRole.ADMIN),
-            new ArrayList<>());
+    public static final User TEST_USER_1 = User.builder()
+            .id(1L)
+            .email("tester@gmail.com")
+            .nickname("테스터 1")
+            .password("password")
+            .roles(Set.of(UserRole.ADMIN))
+            .participatedRoom(new ArrayList<>())
+            .build();
 
-    public static final User TEST_USER_2 = new User(
-            2L,
-            "jagosi@gmail.com",
-            "테스터 2",
-            "q1w2e3r4!",
-            Set.of(UserRole.ADMIN),
-            new ArrayList<>());
-
+    public static final User TEST_USER_2 = User.builder()
+            .id(1L)
+            .email("jagosi@gmail.com")
+            .nickname("테스터 2")
+            .password("q1w2e3r4")
+            .roles(Set.of(UserRole.ADMIN))
+            .participatedRoom(new ArrayList<>())
+            .build();
 
     public static final Item TEST_ITEM = Item.of("팔고 싶은 물건", 50_000, "저렴하게 팔아요!");
 

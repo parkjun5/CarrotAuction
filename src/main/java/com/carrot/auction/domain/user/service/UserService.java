@@ -39,8 +39,6 @@ public class UserService {
         return userMapper.toResponseByEntity(user);
     }
 
-
-
     public UserResponse updateUser(final Long userId, UserRequest request) {
         User user = findUserById(userId);
         user.changeInfo(request.email(), request.nickname(), request.password());
