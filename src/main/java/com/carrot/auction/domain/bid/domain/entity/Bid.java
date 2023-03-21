@@ -1,6 +1,7 @@
 package com.carrot.auction.domain.bid.domain.entity;
 
 import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
+import com.carrot.auction.domain.bid.domain.rulebook.BidRuleBook;
 import com.carrot.auction.global.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,6 +11,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,6 +34,9 @@ public class Bid extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     @Schema(description = "입찰 시간" ,type = "string", example = "2023-03-08T00:00:00+0900")
     private ZonedDateTime biddingTime;
+    @OneToMany(mappedBy = "bid")
+    @Builder.Default
+    private List<BidRuleBook> bidRuleBooks = new ArrayList<>();
 
     public void setAuctionRoom(AuctionRoom auctionRoom) {
         this.auctionRoom = auctionRoom;
