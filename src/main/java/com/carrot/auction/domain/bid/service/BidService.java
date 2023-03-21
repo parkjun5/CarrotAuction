@@ -34,15 +34,8 @@ public class BidService {
     public BidResponse bidding(BidRequest req) {
         AuctionRoom findAuctionRoom = auctionRoomService.findAuctionRoomFetchParticipation(req.roomId());
         String bidderName = getBidderNameInParticipant(req.bidderId(), findAuctionRoom);
-
-        Bid bid = findAuctionRoom.getBid();
-
-        if (bid == null) {
-            bid = bidMapper.toEntityByRequest(req);
-            findAuctionRoom.createBid(bid);
-        } else {
-            bid.changeBid(req.bidderId(), req.biddingPrice(), req.biddingTime());
-        }
+        Bid bid = bidMapper.toEntityByRequest(req);
+        findAuctionRoom.addBid(bid);
 
         return bidMapper.toResponseByEntities(findAuctionRoom.getName(), bid, bidderName);
     }
@@ -51,9 +44,9 @@ public class BidService {
         return findAuctionRoom.getAuctionParticipation()
                 .stream()
                 .filter(auctionParticipation -> auctionParticipation.getUser().getId().equals(bidderId))
+                .findAny()
                 .map(AuctionParticipation::getUser)
                 .map(User::getNickname)
-                .findAny()
                 .orElseThrow(() -> new NoSuchElementException("참가자 중 없는 계정입니다."));
     }
 }

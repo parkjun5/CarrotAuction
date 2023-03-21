@@ -1,5 +1,7 @@
 package com.carrot.auction.domain.bid.domain.entity;
 
+import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
+import com.carrot.auction.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BidRuleBook {
+public class BidRuleBook extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "bid_rule_id")
@@ -28,6 +30,6 @@ public class BidRuleBook {
     private int value;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bid_id")
-    private Bid bid;
+    @JoinColumn(name = "auction_room_id")
+    private AuctionRoom auctionRoom;
 }

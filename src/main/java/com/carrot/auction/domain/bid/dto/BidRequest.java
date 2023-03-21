@@ -10,6 +10,10 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
+//TODO 유저 삭제 변경
+// 비드 취소?
+// 비드 룰 만들기
+// 옥션 방 옥션 분리
 @BidRequestCheck
 public record BidRequest(
         @Schema(description = "입찰자 아이디", example = "1")

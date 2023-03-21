@@ -1,6 +1,7 @@
 package com.carrot.auction.domain.auction.domain.entity;
 
 import com.carrot.auction.domain.bid.domain.entity.Bid;
+import com.carrot.auction.domain.bid.domain.entity.BidRuleBook;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.carrot.auction.domain.user.domain.entity.User;
@@ -9,7 +10,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,9 +40,14 @@ public class AuctionRoom extends BaseEntity {
     @OneToMany(mappedBy = "auctionRoom")
     @Builder.Default
     private Set<AuctionParticipation> auctionParticipation = new HashSet<>();
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "bid_id")
-    private Bid bid;
+    @Builder.Default
+    private List<Bid> bids = new ArrayList<>();
+    @OneToMany(fetch = LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "bid_rule_id")
+    @Builder.Default
+    private Set<BidRuleBook> bidRuleBooks= new HashSet<>();
     @Embedded private Item item;
     @Builder.Default
     @Enumerated(EnumType.STRING) private AuctionStatus auctionStatus = AuctionStatus.DRAFT;
@@ -58,8 +66,8 @@ public class AuctionRoom extends BaseEntity {
         this.category = category;
     }
 
-    public void createBid(Bid bid) {
-        this.bid = bid;
+    public void addBid(Bid bid) {
+        this.bids.add(bid);
         bid.setAuctionRoom(this);
     }
 
