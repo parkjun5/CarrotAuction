@@ -1,7 +1,8 @@
 package com.carrot.auction.domain.auction.controller;
 
-import com.carrot.auction.domain.auction.dto.AuctionRequest;
-import com.carrot.auction.domain.auction.service.AuctionRoomService;
+import com.carrot.auction.domain.auctionroom.dto.AuctionRoomRequest;
+import com.carrot.auction.domain.auctionroom.service.AuctionRoomService;
+import com.carrot.auction.domain.auctionroom.controller.AuctionRoomController;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,7 +63,7 @@ class AuctionRoomControllerTest {
     @DisplayName("post /api/auctionRoom 널갑 전송")
     void createAuctionRoomWithNullValue() throws Exception {
         //given
-        AuctionRequest userIdNull = AuctionRequest.builder()
+        AuctionRoomRequest userIdNull = AuctionRoomRequest.builder()
                 .item(Item.of("맥북", 500_000, "신형 맥북 급처"))
                 .category(Category.DIGITAL)
                 .limitOfEnrollment(100)
@@ -83,7 +84,7 @@ class AuctionRoomControllerTest {
     @DisplayName("날짜가 널일 경우 400에러 발생")
     void dateNullRequest() throws Exception {
         //given
-        AuctionRequest dateNullRequest = AuctionRequest.builder()
+        AuctionRoomRequest dateNullRequest = AuctionRoomRequest.builder()
                 .userId(1L)
                 .name("날씨가 널인 요청")
                 .limitOfEnrollment(10)
@@ -105,7 +106,7 @@ class AuctionRoomControllerTest {
     @DisplayName("post /api/auctionRoom/{auctionRoomId}")
     void updateAuctionRoom() throws Exception {
         //given
-        given(auctionService.updateAuctionRoom(anyLong(), any(AuctionRequest.class))).willReturn(TEST_AUCTION_RESPONSE);
+        given(auctionService.updateAuctionRoom(anyLong(), any(AuctionRoomRequest.class))).willReturn(TEST_AUCTION_RESPONSE);
 
         //when
         ResultActions resultActions = mockMvc.perform(

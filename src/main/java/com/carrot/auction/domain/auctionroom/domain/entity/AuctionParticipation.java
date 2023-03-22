@@ -1,4 +1,4 @@
-package com.carrot.auction.domain.auction.domain.entity;
+package com.carrot.auction.domain.auctionroom.domain.entity;
 
 import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.global.domain.BaseEntity;

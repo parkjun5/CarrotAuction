@@ -1,6 +1,5 @@
 package com.carrot.auction.domain.bid.domain.entity;
 
-import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
 import com.carrot.auction.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -15,9 +14,9 @@ import lombok.NoArgsConstructor;
 public class BidRuleBook extends BaseEntity {
 
     @Id @GeneratedValue
-    @Column(name = "bid_rule_id")
+    @Column(name = "bid_rule_book_id")
     private Long id;
-    private String name;
+    private String code;
     
     // 비딩 기회 ->1, 3, 무제한 (무제한 일 경우 취소 가능) 1,3,-1
     
@@ -27,9 +26,10 @@ public class BidRuleBook extends BaseEntity {
     // 목표금액 -> 설정하면 이 금액을 이상의 값이 세팅되면 자동 종료 1_000_000
     
     // 비딩 금액 tick 설정 -> 기본 10퍼센트 혹은 설정 가능 tick 1 ~ 50 tick
-    private int value;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "auction_room_id")
-    private AuctionRoom auctionRoom;
+    private String description;
+
+    //TODO REQUST 룰 북 추가 및 저장 
+    // VAILDATE AND 로직 추가
+    private int value;
 }

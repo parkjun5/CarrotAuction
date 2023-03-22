@@ -1,4 +1,4 @@
-package com.carrot.auction.domain.auction.domain.entity;
+package com.carrot.auction.domain.auction.domain;
 
 
 public enum AuctionStatus {

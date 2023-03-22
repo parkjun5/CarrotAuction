@@ -1,13 +1,14 @@
 package com.carrot.auction.domain.auction.service;
-import com.carrot.auction.domain.auction.domain.entity.AuctionParticipation;
-import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
-import com.carrot.auction.domain.auction.domain.repository.AuctionParticipationRepository;
-import com.carrot.auction.domain.auction.dto.AuctionMapper;
-import com.carrot.auction.domain.auction.dto.AuctionRequest;
+import com.carrot.auction.domain.auctionroom.domain.entity.AuctionParticipation;
+import com.carrot.auction.domain.auctionroom.domain.entity.AuctionRoom;
+import com.carrot.auction.domain.auctionroom.domain.repository.AuctionParticipationRepository;
+import com.carrot.auction.domain.auctionroom.dto.AuctionRoomMapper;
+import com.carrot.auction.domain.auctionroom.dto.AuctionRoomRequest;
+import com.carrot.auction.domain.auctionroom.service.AuctionRoomService;
 import com.carrot.auction.domain.user.domain.entity.User;
 import com.carrot.auction.domain.user.dto.UserMapper;
 import com.carrot.auction.domain.user.service.UserService;
-import com.carrot.auction.domain.auction.domain.repository.AuctionRoomRepository;
+import com.carrot.auction.domain.auctionroom.domain.repository.AuctionRoomRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +37,7 @@ class AuctionServiceTest {
     @Mock
     private AuctionParticipationRepository auctionParticipationRepository;
     @Mock
-    private AuctionMapper auctionMapper;
+    private AuctionRoomMapper auctionRoomMapper;
     @Mock
     private UserMapper userMapper;
 
@@ -46,7 +47,7 @@ class AuctionServiceTest {
         //given
         given(userService.findUserById(anyLong())).willReturn(TEST_USER_1);
         given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION_1);
-        given(auctionMapper.toEntityByRequestAndUser(any(User.class), any(AuctionRequest.class))).willReturn(TEST_AUCTION_ROOM);
+        given(auctionRoomMapper.toEntityByRequestAndUser(any(User.class), any(AuctionRoomRequest.class))).willReturn(TEST_AUCTION_ROOM);
         given(userMapper.toResponseByEntity(any(User.class))).willReturn(TEST_USER_RESPONSE);
         given(auctionRoomRepository.save(any(AuctionRoom.class))).willReturn(TEST_AUCTION_ROOM);
         //when
@@ -97,8 +98,8 @@ class AuctionServiceTest {
     void addParticipate() {
         //given
         given(auctionRoomRepository.findByIdFetchParticipation(anyLong())).willReturn(TEST_AUCTION_ROOM);
-        given(userService.findUserById(anyLong())).willReturn(TEST_USER_1);
-        given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION_1);
+        given(userService.findUserById(anyLong())).willReturn(TEST_USER_2);
+        given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION_2);
         //when 
         auctionRoomService.addParticipateAuctionRoom(1L, anyLong());
         //then

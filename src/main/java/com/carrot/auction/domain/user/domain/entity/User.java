@@ -1,6 +1,6 @@
 package com.carrot.auction.domain.user.domain.entity;
 
-import com.carrot.auction.domain.auction.domain.entity.AuctionParticipation;
+import com.carrot.auction.domain.auctionroom.domain.entity.AuctionParticipation;
 import com.carrot.auction.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

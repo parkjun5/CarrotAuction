@@ -1,6 +1,6 @@
-package com.carrot.auction.domain.auction.dto;
+package com.carrot.auction.domain.auctionroom.dto;
 
-import com.carrot.auction.domain.auction.domain.entity.AuctionStatus;
+import com.carrot.auction.domain.auction.domain.AuctionStatus;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.carrot.auction.domain.user.dto.UserResponse;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Builder
 @Schema(description = "경매장 응답 객체")
-public record AuctionResponse (
+public record AuctionRoomResponse(
         @Schema(description = "경매장 아이디")
         long auctionRoomId,
         @Schema(description = "호스트 유저")

@@ -1,13 +1,13 @@
-package com.carrot.auction.domain.auction.domain.repository;
+package com.carrot.auction.domain.auctionroom.domain.repository;
 
 
-import com.carrot.auction.domain.auction.domain.entity.AuctionParticipation;
+import com.carrot.auction.domain.auctionroom.domain.entity.AuctionParticipation;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
-import static com.carrot.auction.domain.auction.domain.entity.QAuctionParticipation.*;
+import static com.carrot.auction.domain.auctionroom.domain.entity.QAuctionParticipation.*;
 
 @RequiredArgsConstructor
 public class AuctionParticipationCustomRepositoryImpl implements AuctionParticipationCustomRepository {

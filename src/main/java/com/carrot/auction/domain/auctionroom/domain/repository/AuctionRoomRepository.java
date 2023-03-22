@@ -1,6 +1,6 @@
-package com.carrot.auction.domain.auction.domain.repository;
+package com.carrot.auction.domain.auctionroom.domain.repository;
 
-import com.carrot.auction.domain.auction.domain.entity.AuctionRoom;
+import com.carrot.auction.domain.auctionroom.domain.entity.AuctionRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

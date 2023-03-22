@@ -1,6 +1,6 @@
-package com.carrot.auction.domain.auction.dto;
+package com.carrot.auction.domain.auctionroom.dto;
 
-import com.carrot.auction.domain.auction.annotation.EventDateTime;
+import com.carrot.auction.domain.auctionroom.annotation.EventDateTime;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -15,7 +15,7 @@ import java.time.ZonedDateTime;
 @Builder
 @Schema(description = "경매장 요청 객체")
 @EventDateTime(beginDateTime = "beginDateTime", closeDateTime = "closeDateTime")
-public record AuctionRequest(
+public record AuctionRoomRequest(
         @NotNull
         @Schema(description = "호스트유저 아이디", example = "1")
         Long userId,

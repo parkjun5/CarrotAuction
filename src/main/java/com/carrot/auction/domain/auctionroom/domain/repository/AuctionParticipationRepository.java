@@ -1,6 +1,6 @@
-package com.carrot.auction.domain.auction.domain.repository;
+package com.carrot.auction.domain.auctionroom.domain.repository;
 
-import com.carrot.auction.domain.auction.domain.entity.AuctionParticipation;
+import com.carrot.auction.domain.auctionroom.domain.entity.AuctionParticipation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
