@@ -7,8 +7,7 @@ import com.carrot.parkjun5.auction.application.dto.AuctionRequest;
 import com.carrot.parkjun5.auction.application.dto.AuctionResponse;
 import com.carrot.parkjun5.auctionroom.domain.AuctionRoom;
 import com.carrot.parkjun5.auctionroom.application.AuctionRoomService;
-import com.carrot.parkjun5.bidrule.domain.BidRuleBook;
-import com.carrot.parkjun5.bidrule.application.dto.BidRuleBookRequest;
+import com.carrot.parkjun5.bidrule.application.dto.BidRuleRequest;
 import com.carrot.parkjun5.bidrule.application.BidRuleBookService;
 import com.carrot.parkjun5.bidrule.application.BidRuleFinder;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 
 @Service
@@ -36,10 +34,12 @@ public class AuctionService {
         AuctionRoom auctionRoom = auctionRoomService.findAuctionRoomById(auctionRoomId);
         Auction auction = auctionMapper.toEntityByRequest(request);
         auctionRoom.addAuction(auction);
-        List<String> codeNames = request.selectedBidRules().stream().map(BidRuleBookRequest::codeName).toList();
+
+        //TODO VALIDATE 어노테이션으로 TEST 작성
+        List<String> codeNames = request.selectedBidRules().stream().map(BidRuleRequest::codeName).toList();
         bidRuleFinder.checkSelectRules(codeNames);
-        Set<BidRuleBook> bidRuleBooks = bidRuleBookService.createBidRuleBook(request.selectedBidRules().toArray(new BidRuleBookRequest[]{}));
-        auction.setBidRuleBooks(bidRuleBooks);
+
+        bidRuleBookService.setAuctionBidRules(auction, request.selectedBidRules());
 
         return auctionMapper.toResponseByEntity(auction);
     }
