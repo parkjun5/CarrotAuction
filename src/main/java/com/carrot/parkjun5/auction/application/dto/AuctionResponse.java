@@ -29,6 +29,7 @@ public record AuctionResponse(
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") ZonedDateTime closeDateTime,
         @Schema(description = "경매장 상태", defaultValue = "DRAFT")
         @Enumerated(EnumType.STRING) AuctionStatus auctionStatus,
+        //TODO RESPONSE
         List<String> selectedRules) {
 
 }

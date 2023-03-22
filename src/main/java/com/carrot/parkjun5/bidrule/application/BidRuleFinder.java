@@ -1,7 +1,7 @@
 package com.carrot.parkjun5.bidrule.application;
 
 import com.carrot.parkjun5.bidrule.application.annotation.BidRuleName;
-import com.carrot.parkjun5.bidrule.domain.BidRule;
+import com.carrot.parkjun5.bidrule.domain.BiddingRule;
 import com.carrot.parkjun5.bidrule.exception.DuplicatedBidRuleTypeException;
 import lombok.NoArgsConstructor;
 import org.reflections.Reflections;
@@ -19,40 +19,40 @@ public class BidRuleFinder {
 
     private static final String BID_RULE_PACKAGE = "com.carrot.parkjun5.bidrule.domain.rule";
 
-    public List<BidRule> findBidRuleByName(String[] codes) {
-        List<BidRule> allBidRules = getRuleClassesInPackage();
+    public List<BiddingRule> findBidRuleByName(String[] codes) {
+        List<BiddingRule> allBiddingRules = getRuleClassesInPackage();
 
         return Arrays.stream(codes)
-                .map(code -> findEnumByName(allBidRules, code))
+                .map(code -> findEnumByName(allBiddingRules, code))
                 .toList();
     }
 
     public void checkSelectRules(List<String> codeNames) {
-        List<BidRule> allBidRules = getRuleClassesInPackage();
-        List<BidRule> selectedRules = Arrays.stream(codeNames.toArray(String[]::new))
-                .map(code -> findEnumByName(allBidRules, code))
+        List<BiddingRule> allBiddingRules = getRuleClassesInPackage();
+        List<BiddingRule> selectedRules = Arrays.stream(codeNames.toArray(String[]::new))
+                .map(code -> findEnumByName(allBiddingRules, code))
                 .toList();
         checkDuplicateRuleType(selectedRules);
     }
 
-    private BidRule findEnumByName(List<BidRule> bidRules, String name) {
-        return bidRules.stream()
+    private BiddingRule findEnumByName(List<BiddingRule> biddingRules, String name) {
+        return biddingRules.stream()
                 .filter(rule -> name.equals(rule.name()))
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException(name + "이름의 규칙이 존재하지 않습니다."));
     }
 
-    private List<BidRule> getRuleClassesInPackage() {
+    private List<BiddingRule> getRuleClassesInPackage() {
         Reflections reflections = new Reflections(BID_RULE_PACKAGE);
-        return reflections.getSubTypesOf(BidRule.class).stream()
+        return reflections.getSubTypesOf(BiddingRule.class).stream()
                 .flatMap(enu -> Arrays.stream(enu.getEnumConstants()))
-                .map(BidRule.class::cast)
+                .map(BiddingRule.class::cast)
                 .toList();
     }
 
-    private void checkDuplicateRuleType(List<BidRule> selectedRules) {
+    private void checkDuplicateRuleType(List<BiddingRule> selectedRules) {
         var countSameTypeRule = selectedRules.stream()
-                .map(BidRule::getClass)
+                .map(BiddingRule::getClass)
                 .map(n -> n.getAnnotation(BidRuleName.class))
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .entrySet();

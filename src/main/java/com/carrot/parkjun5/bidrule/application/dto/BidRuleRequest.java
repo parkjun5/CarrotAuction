@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 // 비드 취소?
 // 비드 룰 만들기
 // 옥션 방 옥션 분리
-public record BidRuleBookRequest(
+public record BidRuleRequest(
         @Schema(description = "비딩 룰 코드명", example = "ONE_CHANCE_RULE")
         @NotBlank String codeName,
         @Schema(description = "비딩 룰 설명", example = "단 한번만 입찰 가능")

@@ -1,7 +1,7 @@
 package com.carrot.parkjun5.auction.application.dto;
 
 import com.carrot.parkjun5.auction.application.annotation.EventDateTime;
-import com.carrot.parkjun5.bidrule.application.dto.BidRuleBookRequest;
+import com.carrot.parkjun5.bidrule.application.dto.BidRuleRequest;
 import com.carrot.parkjun5.item.domain.Category;
 import com.carrot.parkjun5.item.domain.Item;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -35,5 +35,5 @@ public record AuctionRequest(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssZ", timezone = "Asia/Seoul")
         @Schema(description = "경매 종료 일자", type = "string", example = "2024-03-08T00:00:00+0900")
         ZonedDateTime closeDateTime,
-        List<BidRuleBookRequest> selectedBidRules) {
+        List<BidRuleRequest> selectedBidRules) {
 }

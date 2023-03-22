@@ -3,7 +3,7 @@ package com.carrot.parkjun5.auction.domain;
 import com.carrot.parkjun5.auction.application.dto.AuctionRequest;
 import com.carrot.parkjun5.auctionroom.domain.AuctionRoom;
 import com.carrot.parkjun5.bid.domain.Bid;
-import com.carrot.parkjun5.bidrule.domain.BidRuleBook;
+import com.carrot.parkjun5.bidrule.domain.BidRule;
 import com.carrot.parkjun5.item.domain.Category;
 import com.carrot.parkjun5.item.domain.Item;
 import com.carrot.parkjun5.common.domain.BaseEntity;
@@ -31,9 +31,9 @@ public class Auction extends BaseEntity {
     @Enumerated(EnumType.STRING) private Category category;
     @Embedded private Item item;
     @OneToMany(fetch = LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "bid_rule_book_id")
+    @JoinColumn(name = "bid_rule_id")
     @Builder.Default
-    private Set<BidRuleBook> bidRuleBooks= new HashSet<>();
+    private Set<BidRule> bidRules = new HashSet<>();
     @OneToMany(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "bid_id")
     @Builder.Default
@@ -69,10 +69,8 @@ public class Auction extends BaseEntity {
         this.auctionRoom = auctionRoom;
     }
 
-    public void setBidRuleBooks(Set<BidRuleBook> bidRuleBooks) {
-        for (BidRuleBook bidRuleBook : bidRuleBooks) {
-            bidRuleBook.setAuction(this);
-        }
-        this.bidRuleBooks = bidRuleBooks;
+    public void setBidRuleBook(BidRule bidRule) {
+        bidRule.setAuction(this);
+        this.bidRules.add(bidRule);
     }
 }
