@@ -19,7 +19,7 @@ public class BidRuleCommand {
         log.info(bidTickIntervalRule.name());
     }
     public void doSomething(BidRule bidRule) {
-        log.info(bidRule.toString());
+        log.info("베이스");
     }
 
 }

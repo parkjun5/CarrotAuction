@@ -51,7 +51,7 @@ class AuctionServiceTest {
         given(userMapper.toResponseByEntity(any(User.class))).willReturn(TEST_USER_RESPONSE);
         given(auctionRoomRepository.save(any(AuctionRoom.class))).willReturn(TEST_AUCTION_ROOM);
         //when
-        auctionRoomService.createAuctionRoom(TEST_AUCTION_REQUEST);
+        auctionRoomService.createAuctionRoom(TEST_AUCTION_ROOM_REQUEST);
         //then
         then(userService).should(times(1)).findUserById(anyLong());
         then(auctionRoomRepository).should(times(1)).save(any(AuctionRoom.class));
@@ -75,7 +75,7 @@ class AuctionServiceTest {
         //given
         given(auctionRoomRepository.findById(anyLong())).willReturn(Optional.of(TEST_AUCTION_ROOM));
         //when
-        assertThatCode(() -> auctionRoomService.updateAuctionRoom(1L, TEST_AUCTION_REQUEST)).doesNotThrowAnyException();
+        assertThatCode(() -> auctionRoomService.updateAuctionRoom(1L, TEST_AUCTION_ROOM_REQUEST)).doesNotThrowAnyException();
         //then
         then(auctionRoomRepository).should(times(1)).findById(anyLong());
     }

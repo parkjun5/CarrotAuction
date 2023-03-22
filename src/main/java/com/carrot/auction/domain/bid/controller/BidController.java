@@ -1,7 +1,7 @@
 package com.carrot.auction.domain.bid.controller;
 
-import com.carrot.auction.domain.bid.dto.BidRequest;
-import com.carrot.auction.domain.bid.dto.BidResponse;
+import com.carrot.auction.domain.bid.dto.bid.BidRequest;
+import com.carrot.auction.domain.bid.dto.bid.BidResponse;
 import com.carrot.auction.domain.bid.service.BidService;
 import com.carrot.auction.global.dto.ApiCommonResponse;
 import io.swagger.v3.oas.annotations.Operation;

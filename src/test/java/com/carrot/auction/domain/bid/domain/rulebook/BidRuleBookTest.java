@@ -17,13 +17,13 @@ class BidRuleBookTest {
                 "TARGET_AMOUNT",
                 "TICK_INTERVAL",
                 "TIME_LIMIT_RULE", "TIME_NO_LIMIT_RULE"};
+        List<BidRule> bidRuleByName = bidRuleFinder.findBidRuleByName(ruleNames);
+        bidRuleByName.forEach(bidRule -> {
+            bidRuleCommand.doSomething(bidRule); // 커맨드에서 doSomething 실행 기본 메소드 실행 **BidRule 로 인식?
+            bidRule.doSomething(bidRuleCommand); // 클래스에서 doSomething 오버라이딩 된 메소드 실행
+        } );
 
-        List<BidRule> bidRules = bidRuleFinder.getRuleClassesInPackage();
-
-        for (String ruleName : ruleNames) {
-            BidRule enumByName = bidRuleFinder.findEnumByName(bidRules, ruleName);
-            Assertions.assertDoesNotThrow(() -> enumByName.doSomething(bidRuleCommand));
-        }
+        Assertions.assertDoesNotThrow(() -> bidRuleByName);
 
     }
 

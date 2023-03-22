@@ -93,7 +93,7 @@ public class AuctionRoomService {
     public AuctionRoom findAuctionRoomById(Long roomId) {
         return auctionRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException("ID: " + roomId + AUCTION_NOT_FOUND));
     }
-
+    // 데이터가 많으면 오히려 짧게 많이 select 보내는 것이 나을 수 도 있다.
     public AuctionRoom findAuctionRoomFetchParticipation(Long roomId) {
         AuctionRoom findAuctionRoom = auctionRepository.findByIdFetchParticipation(roomId);
         Assert.notNull(findAuctionRoom,"경매장 아이디: " + roomId + AUCTION_NOT_FOUND);

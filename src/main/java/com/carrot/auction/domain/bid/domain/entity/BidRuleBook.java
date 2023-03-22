@@ -1,5 +1,6 @@
 package com.carrot.auction.domain.bid.domain.entity;
 
+import com.carrot.auction.domain.auction.domain.entity.Auction;
 import com.carrot.auction.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BidRuleBook extends BaseEntity {
 
@@ -32,4 +33,11 @@ public class BidRuleBook extends BaseEntity {
     //TODO REQUST 룰 북 추가 및 저장 
     // VAILDATE AND 로직 추가
     private int value;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "auction_id")
+    private Auction auction;
+
+    public void setAuction(Auction auction) {
+        this.auction = auction;
+    }
 }

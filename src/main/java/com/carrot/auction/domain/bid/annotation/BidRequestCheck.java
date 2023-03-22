@@ -1,6 +1,6 @@
 package com.carrot.auction.domain.bid.annotation;
 
-import com.carrot.auction.domain.bid.dto.validator.BidValidator;
+import com.carrot.auction.domain.bid.dto.bid.validator.BidValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

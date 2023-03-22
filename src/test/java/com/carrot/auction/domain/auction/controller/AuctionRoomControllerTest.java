@@ -18,8 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 
-import static com.carrot.auction.domain.auction.fixture.AuctionFixture.TEST_AUCTION_REQUEST;
-import static com.carrot.auction.domain.auction.fixture.AuctionFixture.TEST_AUCTION_RESPONSE;
+import static com.carrot.auction.domain.auction.fixture.AuctionFixture.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -44,13 +43,13 @@ class AuctionRoomControllerTest {
     @DisplayName("post /api/auctionRoom 경매장 생성 리퀘스트 매핑")
     void createAuctionRoomTest() throws Exception {
         //given
-        given(auctionService.createAuctionRoom(any())).willReturn(TEST_AUCTION_RESPONSE);
+        given(auctionService.createAuctionRoom(any())).willReturn(TEST_AUCTION_ROOM_RESPONSE);
 
         //when
         ResultActions resultActions = mockMvc.perform(
                 post("/api/auctionRoom")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(TEST_AUCTION_REQUEST))
+                        .content(objectMapper.writeValueAsString(TEST_AUCTION_ROOM_REQUEST))
         ).andDo(print());
 
         //then
@@ -64,8 +63,6 @@ class AuctionRoomControllerTest {
     void createAuctionRoomWithNullValue() throws Exception {
         //given
         AuctionRoomRequest userIdNull = AuctionRoomRequest.builder()
-                .item(Item.of("맥북", 500_000, "신형 맥북 급처"))
-                .category(Category.DIGITAL)
                 .limitOfEnrollment(100)
                 .build();
 
@@ -88,8 +85,6 @@ class AuctionRoomControllerTest {
                 .userId(1L)
                 .name("날씨가 널인 요청")
                 .limitOfEnrollment(10)
-                .item(Item.of("임시", 100, "임시 컨텐츠"))
-                .category(Category.HOBBY_GAME_MUSIC)
                 .build();
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -106,13 +101,13 @@ class AuctionRoomControllerTest {
     @DisplayName("post /api/auctionRoom/{auctionRoomId}")
     void updateAuctionRoom() throws Exception {
         //given
-        given(auctionService.updateAuctionRoom(anyLong(), any(AuctionRoomRequest.class))).willReturn(TEST_AUCTION_RESPONSE);
+        given(auctionService.updateAuctionRoom(anyLong(), any(AuctionRoomRequest.class))).willReturn(TEST_AUCTION_ROOM_RESPONSE);
 
         //when
         ResultActions resultActions = mockMvc.perform(
                 post("/api/auctionRoom/"+ 1L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(TEST_AUCTION_REQUEST))
+                        .content(objectMapper.writeValueAsString(TEST_AUCTION_ROOM_REQUEST))
         ).andDo(print());
 
         //then

@@ -1,4 +1,4 @@
-package com.carrot.auction.domain.bid.dto;
+package com.carrot.auction.domain.bid.dto.bid;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;

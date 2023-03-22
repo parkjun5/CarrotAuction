@@ -1,10 +1,10 @@
 package com.carrot.auction.domain.bid.service;
 
-import com.carrot.auction.domain.auction.service.AuctionRoomService;
+import com.carrot.auction.domain.auctionroom.service.AuctionRoomService;
 import com.carrot.auction.domain.bid.domain.entity.Bid;
 import com.carrot.auction.domain.bid.domain.repository.BidRepository;
-import com.carrot.auction.domain.bid.dto.BidMapper;
-import com.carrot.auction.domain.bid.dto.BidRequest;
+import com.carrot.auction.domain.bid.dto.bid.BidMapper;
+import com.carrot.auction.domain.bid.dto.bid.BidRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,6 +50,7 @@ class BidServiceTest {
         //given
         given(auctionRoomService.findAuctionRoomFetchParticipation(anyLong())).willReturn(TEST_AUCTION_ROOM);
         given(bidMapper.toEntityByRequest(any(BidRequest.class))).willReturn(TEST_BID);
+        TEST_AUCTION_ROOM.addAuction(TEST_AUCTION_1);
         //when
         auctionRoomService.addParticipateAuctionRoom(TEST_AUCTION_ROOM.getId(), TEST_USER_1.getId());
         auctionRoomService.addParticipateAuctionRoom(TEST_AUCTION_ROOM.getId(), TEST_USER_2.getId());

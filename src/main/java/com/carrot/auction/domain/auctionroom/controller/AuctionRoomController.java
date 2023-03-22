@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuctionRoomController {
 
     private final AuctionRoomService auctionService;
-    private static final String AUCTION_RESULT_NAME ="AuctionRoom";
+    private static final String AUCTION_ROOM_RESULT_MESSAGE = "AuctionRoom";
 
     @GetMapping
     @Operation(summary = "경매장 리스트 조회", description = "pageable 를 이용하여 경매장 리스트를 조회한다.")
@@ -32,7 +32,7 @@ public class AuctionRoomController {
     ) {
         Page<AuctionRoomResponse> responsePage = auctionService.getAuctionRoomsByPageable(pageable);
         return ResponseEntity
-                .ok(ApiCommonResponse.success(AUCTION_RESULT_NAME, responsePage));
+                .ok(ApiCommonResponse.success(AUCTION_ROOM_RESULT_MESSAGE, responsePage));
     }
 
     @GetMapping("/{auctionRoomId}")
@@ -42,7 +42,7 @@ public class AuctionRoomController {
     ) {
         AuctionRoomResponse response = auctionService.findAuctionResponseById(auctionRoomId);
         return ResponseEntity
-                .ok(ApiCommonResponse.success(AUCTION_RESULT_NAME, response));
+                .ok(ApiCommonResponse.success(AUCTION_ROOM_RESULT_MESSAGE, response));
     }
 
     @PostMapping
@@ -52,7 +52,8 @@ public class AuctionRoomController {
     ) {
         AuctionRoomResponse createdResult = auctionService.createAuctionRoom(auctionRoomRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiCommonResponse.success(201, "CREATED", AUCTION_RESULT_NAME, createdResult));
+                .body(ApiCommonResponse.success(201, "CREATED",
+                        AUCTION_ROOM_RESULT_MESSAGE, createdResult));
     }
 
     @PostMapping("/{auctionRoomId}")
@@ -63,7 +64,7 @@ public class AuctionRoomController {
     ) {
         AuctionRoomResponse response = auctionService.updateAuctionRoom(auctionRoomId, auctionRoomRequest);
         return ResponseEntity
-                .ok(ApiCommonResponse.success(AUCTION_RESULT_NAME, response));
+                .ok(ApiCommonResponse.success(AUCTION_ROOM_RESULT_MESSAGE, response));
     }
 
     @DeleteMapping("/{auctionRoomId}")
@@ -84,7 +85,7 @@ public class AuctionRoomController {
     ) {
         AuctionRoomResponse response = auctionService.addParticipateAuctionRoom(auctionRoomId, userId);
         return ResponseEntity
-                .ok(ApiCommonResponse.success(AUCTION_RESULT_NAME, response));
+                .ok(ApiCommonResponse.success(AUCTION_ROOM_RESULT_MESSAGE, response));
     }
 
 }

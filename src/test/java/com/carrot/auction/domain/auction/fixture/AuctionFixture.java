@@ -1,13 +1,15 @@
 package com.carrot.auction.domain.auction.fixture;
 
 import com.carrot.auction.domain.auction.domain.entity.Auction;
+import com.carrot.auction.domain.auction.dto.AuctionRequest;
+import com.carrot.auction.domain.auction.dto.AuctionResponse;
 import com.carrot.auction.domain.auctionroom.domain.entity.AuctionParticipation;
 import com.carrot.auction.domain.auctionroom.domain.entity.AuctionRoom;
 import com.carrot.auction.domain.auction.domain.AuctionStatus;
 import com.carrot.auction.domain.auctionroom.dto.AuctionRoomRequest;
 import com.carrot.auction.domain.auctionroom.dto.AuctionRoomResponse;
 import com.carrot.auction.domain.bid.domain.entity.Bid;
-import com.carrot.auction.domain.bid.dto.BidRequest;
+import com.carrot.auction.domain.bid.dto.bid.BidRequest;
 import com.carrot.auction.domain.item.domain.Category;
 import com.carrot.auction.domain.item.domain.Item;
 import com.carrot.auction.domain.user.domain.entity.User;
@@ -51,19 +53,24 @@ public class AuctionFixture {
             BEGIN_TIME
     );
 
-    public static final AuctionRoomResponse TEST_AUCTION_RESPONSE = new AuctionRoomResponse(
+    public static final AuctionRoomResponse TEST_AUCTION_ROOM_RESPONSE = new AuctionRoomResponse(
             99_999,
             TEST_USER_RESPONSE,
             new HashSet<>(),
             "성공적인 테스트 기원",
             "",
-            3,
+            3
+    );
+
+    public static final AuctionResponse TEST_AUCTION_RESPONSE = new AuctionResponse(
+            1L,
             5_000,
             TEST_ITEM,
             Category.HOBBY_GAME_MUSIC,
             BEGIN_TIME,
             CLOSE_TIME,
-            AuctionStatus.DRAFT
+            AuctionStatus.DRAFT,
+            null
     );
 
     public static final AuctionRoom TEST_AUCTION_ROOM = AuctionRoom.builder()
@@ -96,14 +103,15 @@ public class AuctionFixture {
             .biddingTime(ZonedDateTime.now())
             .build();
 
-    public static final AuctionRoomRequest TEST_AUCTION_REQUEST = AuctionRoomRequest.builder()
+    public static final AuctionRoomRequest TEST_AUCTION_ROOM_REQUEST = AuctionRoomRequest.builder()
             .userId(1L)
             .name("테스트 경매장")
-            .item(Item.of("맥북", 500_000, "신형 맥북 급처"))
             .password(null)
-            .category(Category.DIGITAL)
-            .limitOfEnrollment(100)
+            .build();
+
+    public static final AuctionRequest TEST_AUCTION_REQUEST = AuctionRequest.builder()
             .bidStartPrice(5_000)
+            .category(Category.DIGITAL)
             .beginDateTime(BEGIN_TIME)
             .closeDateTime(CLOSE_TIME)
             .build();
