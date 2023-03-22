@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class BidRuleBookService {
+public class BidRuleService {
 
     private final BidRuleRepository bidRuleRepository;
     private final BidRuleMapper bidRuleMapper;

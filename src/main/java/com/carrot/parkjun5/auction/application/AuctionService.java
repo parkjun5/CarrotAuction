@@ -8,7 +8,7 @@ import com.carrot.parkjun5.auction.application.dto.AuctionResponse;
 import com.carrot.parkjun5.auctionroom.domain.AuctionRoom;
 import com.carrot.parkjun5.auctionroom.application.AuctionRoomService;
 import com.carrot.parkjun5.bidrule.application.dto.BidRuleRequest;
-import com.carrot.parkjun5.bidrule.application.BidRuleBookService;
+import com.carrot.parkjun5.bidrule.application.BidRuleService;
 import com.carrot.parkjun5.bidrule.application.BidRuleFinder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class AuctionService {
     private final AuctionRoomService auctionRoomService;
     private final AuctionMapper auctionMapper;
     private final BidRuleFinder bidRuleFinder;
-    private final BidRuleBookService bidRuleBookService;
+    private final BidRuleService bidRuleService;
 
     @Transactional
     public AuctionResponse createAuctionToRoom(final Long auctionRoomId, AuctionRequest request) {
@@ -39,7 +39,7 @@ public class AuctionService {
         List<String> codeNames = request.selectedBidRules().stream().map(BidRuleRequest::codeName).toList();
         bidRuleFinder.checkSelectRules(codeNames);
 
-        bidRuleBookService.setAuctionBidRules(auction, request.selectedBidRules());
+        bidRuleService.setAuctionBidRules(auction, request.selectedBidRules());
 
         return auctionMapper.toResponseByEntity(auction);
     }
