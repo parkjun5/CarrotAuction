@@ -9,12 +9,11 @@ import com.carrot.parkjun5.item.domain.Item;
 import com.carrot.parkjun5.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -51,6 +50,10 @@ public class Auction extends BaseEntity {
         bid.setAuction(this);
     }
 
+    public static int getMinimumPrice(int existingPrice, BigDecimal minBiddingPercent) {
+        return existingPrice + minBiddingPercent.multiply(BigDecimal.valueOf(existingPrice)).intValue();
+    }
+
     public void changeAuctionInfo(AuctionRequest auctionRequest) {
         this.bidStartPrice = auctionRequest.bidStartPrice();
         Item requestItem = auctionRequest.item();
@@ -61,7 +64,6 @@ public class Auction extends BaseEntity {
     public void changeBeginTime(ZonedDateTime beginDateTime) {
         this.beginDateTime = beginDateTime;
     }
-
     public void changeCloseTime(ZonedDateTime closeDateTime) {
         this.closeDateTime = closeDateTime;
     }
@@ -69,8 +71,25 @@ public class Auction extends BaseEntity {
         this.auctionRoom = auctionRoom;
     }
 
+
     public void setBidRuleBook(BidRule bidRule) {
         bidRule.setAuction(this);
         this.bidRules.add(bidRule);
     }
+
+    public int getLastBidPrice() {
+        if (CollectionUtils.isEmpty(this.getBids())) {
+            return this.bidStartPrice;
+        }
+        return this.bids.get(this.bids.size() - 1).getBiddingPrice();
+    }
+
+    public void beginAuction() {
+        this.auctionStatus = AuctionStatus.BEGAN_ENROLLMENT;
+    }
+
+    public void endAuction() {
+        this.auctionStatus = AuctionStatus.END_ENROLLMENT;
+    }
+
 }
