@@ -87,6 +87,19 @@ public class AuctionService {
         Auction auction = findAuctionById(auctionId);
         auction.beginAuction();
     }
+
+    public int findLastBiddingPrice(Auction auction) {
+        Integer maxBiddingPriceById = auctionRepository.findMaxBiddingPriceById(auction.getId());
+        if (maxBiddingPriceById == null) {
+            maxBiddingPriceById = auction.getBidStartPrice();
+        }
+        return maxBiddingPriceById;
+    }
+
+    public int getNumberOfBiddersBid(final Long auctionId, final Long bidderId) {
+        return auctionRepository.countBidByIdAndBidderId(auctionId, bidderId);
+    }
+
     private void changeAuctionTime(Auction auction, AuctionRequest request) {
         auction.changeBeginTime(request.beginDateTime());
 

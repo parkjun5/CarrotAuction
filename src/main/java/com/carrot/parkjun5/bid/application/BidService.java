@@ -74,7 +74,8 @@ public class BidService {
                 .map(BidRule::getRuleValue)
                 .orElse(BASE_TICK_INTERVAL_NUMBER);
 
-        int minimumPrice = Auction.getMinimumPrice(auction.getLastBidPrice(), BigDecimal.valueOf(tickInterval / 100));
+        int nowBidPrice = auctionService.findLastBiddingPrice(auction);
+        int minimumPrice = Auction.getMinimumPrice(nowBidPrice, BigDecimal.valueOf(tickInterval / 100));
         if (minimumPrice >= biddingPrice) {
             throw new NotEnoughBiddingPriceException("최소금액 " + minimumPrice + "보다 제시하신 금액보다 낮습니다.");
         }
@@ -88,10 +89,7 @@ public class BidService {
                 .map(BidRule::getRuleValue)
                 .orElse(BASE_MAX_INT);
 
-        long numberOfBids = auction.getBids().stream()
-                .filter(bid -> bidderId.equals(bid.getBidderId()))
-                .count();
-
+        int numberOfBids = auctionService.getNumberOfBiddersBid(auction.getId(), bidderId);
         if (chanceLimit <= numberOfBids) {
             throw new AlreadyUseBidChanceException( "이미" + chanceLimit + " 번의 입찰 기회를 전부 사용하였습니다.");
         }
@@ -104,8 +102,7 @@ public class BidService {
                 .map(BidRule::getRuleValue)
                 .orElse(BASE_MAX_INT);
 
-        int nowBidPrice  = auction.getLastBidPrice();
-
+        int nowBidPrice = auctionService.findLastBiddingPrice(auction);
         if (nowBidPrice >= targetAmount) {
             auction.endAuction();
         }
