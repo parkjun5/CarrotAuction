@@ -26,10 +26,11 @@ public class User extends BaseEntity {
     private String password;
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Set<UserRole> roles = Set.of(UserRole.USER);
     @OneToMany(mappedBy = "user")
-     private List<AuctionParticipation> participatedRoom = new ArrayList<>();
-
+    @Builder.Default
+    private List<AuctionParticipation> participatedRoom = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
