@@ -5,17 +5,23 @@ import com.carrot.parkjun5.auction.domain.repository.AuctionRepository;
 import com.carrot.parkjun5.auction.application.dto.AuctionMapper;
 import com.carrot.parkjun5.auction.application.dto.AuctionRequest;
 import com.carrot.parkjun5.auction.application.dto.AuctionResponse;
+import com.carrot.parkjun5.auction.exception.IllegalAuctionTimeException;
 import com.carrot.parkjun5.auctionroom.domain.AuctionRoom;
 import com.carrot.parkjun5.auctionroom.application.AuctionRoomService;
-import com.carrot.parkjun5.bidrule.application.dto.BidRuleRequest;
+import com.carrot.parkjun5.bidrule.application.dto.BidRuleMapper;
 import com.carrot.parkjun5.bidrule.application.BidRuleService;
-import com.carrot.parkjun5.bidrule.application.BidRuleFinder;
+import com.carrot.parkjun5.bidrule.application.dto.BidRuleResponse;
+import com.carrot.parkjun5.bidrule.application.rule.BiddingTimeLimitRule;
+import com.carrot.parkjun5.bidrule.domain.BidRule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -26,7 +32,7 @@ public class AuctionService {
     private final AuctionRepository auctionRepository;
     private final AuctionRoomService auctionRoomService;
     private final AuctionMapper auctionMapper;
-    private final BidRuleFinder bidRuleFinder;
+    private final BidRuleMapper bidRuleMapper;
     private final BidRuleService bidRuleService;
 
     @Transactional
@@ -34,21 +40,20 @@ public class AuctionService {
         AuctionRoom auctionRoom = auctionRoomService.findAuctionRoomById(auctionRoomId);
         Auction auction = auctionMapper.toEntityByRequest(request);
         auctionRoom.addAuction(auction);
-
-        //TODO VALIDATE 어노테이션으로 TEST 작성
-        List<String> codeNames = request.selectedBidRules().stream().map(BidRuleRequest::codeName).toList();
-        bidRuleFinder.checkSelectRules(codeNames);
-
         bidRuleService.setAuctionBidRules(auction, request.selectedBidRules());
-
-        return auctionMapper.toResponseByEntity(auction);
+        return getAuctionResponse(auction);
     }
 
     public List<AuctionResponse> getRoomAuctions(final Long auctionRoomId) {
         AuctionRoom auctionRoom = auctionRoomService.findAuctionRoomById(auctionRoomId);
         return auctionRoom.getAuctions().stream()
-                .map(auctionMapper::toResponseByEntity)
+                .map(this::getAuctionResponse)
                 .toList();
+    }
+
+    public AuctionResponse findAuctionResponseById(final Long auctionId) {
+        Auction auction = findAuctionById(auctionId);
+        return getAuctionResponse(auction);
     }
 
     @Transactional
@@ -56,7 +61,7 @@ public class AuctionService {
         Auction auction = findAuctionById(auctionId);
         auction.changeAuctionInfo(request);
         changeAuctionTime(auction, request);
-        return auctionMapper.toResponseByEntity(auction);
+        return getAuctionResponse(auction);
     }
 
     @Transactional
@@ -66,19 +71,41 @@ public class AuctionService {
         return auctionId;
     }
 
-    private void changeAuctionTime(Auction auction, AuctionRequest request) {
-        // TODO RULE 처리도 필요함
-        if (request.beginDateTime() != null) {
-            auction.changeBeginTime(request.beginDateTime());
-        }
-        if (request.closeDateTime() != null) {
-            auction.changeCloseTime(request.closeDateTime());
-        }
-    }
-
-    private Auction findAuctionById(Long auctionId) {
+    public Auction findAuctionById(Long auctionId) {
         return auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new NoSuchElementException(auctionId + ": 존재하지 않는 경매번호 입니다."));
     }
 
+    @Transactional
+    public void closeAuction(Long auctionId) {
+        Auction auction = findAuctionById(auctionId);
+        auction.endAuction();
+    }
+
+    @Transactional
+    public void openAuction(Long auctionId) {
+        Auction auction = findAuctionById(auctionId);
+        auction.beginAuction();
+    }
+    private void changeAuctionTime(Auction auction, AuctionRequest request) {
+        auction.changeBeginTime(request.beginDateTime());
+
+        if (request.closeDateTime() != null) {
+            Optional<BidRule> noTimeRule = auction.getBidRules().stream()
+                    .filter(bidRule -> BiddingTimeLimitRule.TIME_NO_LIMIT_RULE.name().equals(bidRule.getCode()))
+                    .findAny();
+            if (noTimeRule.isPresent()) {
+                throw new IllegalAuctionTimeException("종료 타임이 없는 경매입니다.");
+            }
+            auction.changeCloseTime(request.closeDateTime());
+        }
+    }
+
+    private AuctionResponse getAuctionResponse(Auction auction) {
+        Set<BidRuleResponse> bidRuleResponses = auction.getBidRules().stream()
+                .map(bidRuleMapper::toResponseByEntity)
+                .collect(Collectors.toSet());
+
+        return auctionMapper.toResponseByEntities(auction, bidRuleResponses);
+    }
 }

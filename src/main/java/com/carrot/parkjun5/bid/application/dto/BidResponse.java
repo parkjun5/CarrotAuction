@@ -8,8 +8,8 @@ import java.time.ZonedDateTime;
 
 
 public record BidResponse(
-        @Schema(description = "경매장 이름", example = "맥북 팝니다")
-        String roomName,
+        @Schema(description = "경매 이름", example = "맥북 / 14년식")
+        String auctionName,
         @Schema(description = "입찰자 명", example = "wtbMacBook")
         String bidderName,
         @Schema(description = "입찰 가격", example = "50000")

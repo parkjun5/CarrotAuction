@@ -1,7 +1,6 @@
 package com.carrot.parkjun5.bidrule.application;
 
 import com.carrot.parkjun5.bidrule.application.annotation.BidRuleName;
-import com.carrot.parkjun5.bidrule.domain.BiddingRule;
 import com.carrot.parkjun5.bidrule.exception.DuplicatedBidRuleTypeException;
 import lombok.NoArgsConstructor;
 import org.reflections.Reflections;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class BidRuleFinder {
 
-    private static final String BID_RULE_PACKAGE = "com.carrot.parkjun5.bidrule.domain.rule";
+    private static final String BID_RULE_PACKAGE = "com.carrot.parkjun5.bidrule.application.rule";
 
     public List<BiddingRule> findBidRuleByName(String[] codes) {
         List<BiddingRule> allBiddingRules = getRuleClassesInPackage();
@@ -27,11 +26,12 @@ public class BidRuleFinder {
                 .toList();
     }
 
-    public void checkSelectRules(List<String> codeNames) {
+    public void checkDuplicateRules(List<String> codeNames) {
         List<BiddingRule> allBiddingRules = getRuleClassesInPackage();
         List<BiddingRule> selectedRules = Arrays.stream(codeNames.toArray(String[]::new))
                 .map(code -> findEnumByName(allBiddingRules, code))
                 .toList();
+
         checkDuplicateRuleType(selectedRules);
     }
 

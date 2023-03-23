@@ -97,13 +97,13 @@ class AuctionServiceTest {
     @DisplayName("경매장 인원 등록")
     void addParticipate() {
         //given
-        given(auctionRoomRepository.findByIdFetchParticipation(anyLong())).willReturn(TEST_AUCTION_ROOM);
+        given(auctionRoomRepository.findById(anyLong())).willReturn(Optional.ofNullable(TEST_AUCTION_ROOM));
         given(userService.findUserById(anyLong())).willReturn(TEST_USER_2);
         given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION_2);
         //when 
         auctionRoomService.addParticipateAuctionRoom(1L, anyLong());
         //then
-        then(auctionRoomRepository).should(times(1)).findByIdFetchParticipation(anyLong());
+        then(auctionRoomRepository).should(times(1)).findById(anyLong());
         then(auctionParticipationRepository).should(times(1)).save(any(AuctionParticipation.class));
     }
     

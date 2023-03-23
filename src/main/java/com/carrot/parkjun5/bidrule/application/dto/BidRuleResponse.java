@@ -12,5 +12,5 @@ public record BidRuleResponse(
         @NotBlank String description,
 
         @Schema(description = "비딩 룰 값", example = "1")
-        int value) {
+        int ruleValue) {
 }

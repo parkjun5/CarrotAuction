@@ -1,10 +1,6 @@
 package com.carrot.parkjun5.bidrule.application;
 
-import com.carrot.parkjun5.bidrule.domain.BiddingRule;
-import com.carrot.parkjun5.bidrule.domain.rule.BiddingChanceRule;
-import com.carrot.parkjun5.bidrule.domain.rule.BiddingTargetAmountRule;
-import com.carrot.parkjun5.bidrule.domain.rule.BiddingTickIntervalRule;
-import com.carrot.parkjun5.bidrule.domain.rule.BiddingTimeLimitRule;
+import com.carrot.parkjun5.bidrule.application.rule.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,6 +19,7 @@ public class BidRuleCommand {
         log.info(bidTickIntervalRule.name());
     }
     public void doSomething(BiddingRule biddingRule) {
+        log.info(biddingRule.name());
         log.info("베이스");
     }
 

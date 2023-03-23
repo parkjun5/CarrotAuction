@@ -8,8 +8,10 @@ import org.mapstruct.Mapping;
 public interface BidMapper {
     @Mapping(source = "bid.biddingPrice", target = "biddingPrice")
     @Mapping(source = "bid.biddingTime", target = "biddingTime")
-    BidResponse toResponseByEntities(String roomName, Bid bid, String bidderName);
+    BidResponse toResponseByEntities(String auctionName, Bid bid, String bidderName);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "auction", ignore = true)
     Bid toEntityByRequest(BidRequest bidRequest);
 
 }

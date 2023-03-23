@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -72,7 +71,7 @@ public class AuctionRoomService {
 
     @Transactional
     public AuctionRoomResponse addParticipateAuctionRoom(Long roomId, Long userId) {
-        AuctionRoom auctionRoom = findAuctionRoomFetchParticipation(roomId);
+        AuctionRoom auctionRoom = findAuctionRoomById(roomId);
         isFullEnrollment(auctionRoom.getAuctionParticipation().size(), auctionRoom.getLimitOfEnrollment());
 
         User user = userService.findUserById(userId);
@@ -92,12 +91,6 @@ public class AuctionRoomService {
 
     public AuctionRoom findAuctionRoomById(Long roomId) {
         return auctionRepository.findById(roomId).orElseThrow(() -> new NoSuchElementException("ID: " + roomId + AUCTION_NOT_FOUND));
-    }
-    // 데이터가 많으면 오히려 짧게 많이 select 보내는 것이 나을 수 도 있다.
-    public AuctionRoom findAuctionRoomFetchParticipation(Long roomId) {
-        AuctionRoom findAuctionRoom = auctionRepository.findByIdFetchParticipation(roomId);
-        Assert.notNull(findAuctionRoom,"경매장 아이디: " + roomId + AUCTION_NOT_FOUND);
-        return findAuctionRoom;
     }
 
     private void isFullEnrollment(int numberOfCurrentEnrollment, int limitOfEnrollment) {
