@@ -9,7 +9,6 @@ import com.carrot.parkjun5.item.domain.Item;
 import com.carrot.parkjun5.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -77,12 +76,6 @@ public class Auction extends BaseEntity {
         this.bidRules.add(bidRule);
     }
 
-    public int getLastBidPrice() {
-        if (CollectionUtils.isEmpty(this.getBids())) {
-            return this.bidStartPrice;
-        }
-        return this.bids.get(this.bids.size() - 1).getBiddingPrice();
-    }
 
     public void beginAuction() {
         this.auctionStatus = AuctionStatus.BEGAN_ENROLLMENT;

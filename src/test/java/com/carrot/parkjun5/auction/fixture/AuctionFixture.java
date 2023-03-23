@@ -88,6 +88,7 @@ public class AuctionFixture {
             .limitOfEnrollment(5)
             .build();
     public static final Auction TEST_AUCTION_1 = Auction.builder()
+            .id(1L)
             .bidStartPrice(5_000)
             .item(TEST_ITEM)
             .category(Category.DIGITAL)
