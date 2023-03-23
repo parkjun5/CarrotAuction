@@ -1,6 +1,7 @@
 package com.carrot.parkjun5.auction.application.dto;
 
 import com.carrot.parkjun5.auction.domain.AuctionStatus;
+import com.carrot.parkjun5.bidrule.application.dto.BidRuleResponse;
 import com.carrot.parkjun5.item.domain.Category;
 import com.carrot.parkjun5.item.domain.Item;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -29,7 +30,6 @@ public record AuctionResponse(
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ") ZonedDateTime closeDateTime,
         @Schema(description = "경매장 상태", defaultValue = "DRAFT")
         @Enumerated(EnumType.STRING) AuctionStatus auctionStatus,
-        //TODO RESPONSE
-        List<String> selectedRules) {
+        List<BidRuleResponse> selectedRules) {
 
 }

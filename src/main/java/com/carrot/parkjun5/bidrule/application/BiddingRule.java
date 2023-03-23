@@ -1,6 +1,5 @@
-package com.carrot.parkjun5.bidrule.domain;
+package com.carrot.parkjun5.bidrule.application;
 
-import com.carrot.parkjun5.bidrule.application.BidRuleCommand;
 
 public interface BiddingRule {
     String name();

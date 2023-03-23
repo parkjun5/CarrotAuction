@@ -1,5 +1,6 @@
 package com.carrot.parkjun5.bid.service;
 
+import com.carrot.parkjun5.auction.application.AuctionService;
 import com.carrot.parkjun5.auctionroom.application.AuctionRoomService;
 import com.carrot.parkjun5.bid.application.BidService;
 import com.carrot.parkjun5.bid.domain.Bid;
@@ -32,6 +33,8 @@ class BidServiceTest {
     private BidMapper bidMapper;
     @Mock
     private AuctionRoomService auctionRoomService;
+    @Mock
+    private AuctionService auctionService;
     
     @Test
     @DisplayName("경매 조회 테스트")
@@ -49,7 +52,7 @@ class BidServiceTest {
     @DisplayName("경매 입찰 테스트")
     void bidding() {
         //given
-        given(auctionRoomService.findAuctionRoomFetchParticipation(anyLong())).willReturn(TEST_AUCTION_ROOM);
+        given(auctionService.findAuctionById(anyLong())).willReturn(TEST_AUCTION_1);
         given(bidMapper.toEntityByRequest(any(BidRequest.class))).willReturn(TEST_BID);
         TEST_AUCTION_ROOM.addAuction(TEST_AUCTION_1);
         //when
@@ -57,7 +60,7 @@ class BidServiceTest {
         auctionRoomService.addParticipateAuctionRoom(TEST_AUCTION_ROOM.getId(), TEST_USER_2.getId());
         bidService.bidding(TEST_BID_REQUEST);
         //then
-        then(auctionRoomService).should(times(1)).findAuctionRoomFetchParticipation(anyLong());
+        then(auctionService).should(times(1)).findAuctionById(anyLong());
         then(bidMapper).should(times(1)).toEntityByRequest(any(BidRequest.class));
         then(bidMapper).should(times(1)).toResponseByEntities(anyString(), any(Bid.class), anyString());
     }

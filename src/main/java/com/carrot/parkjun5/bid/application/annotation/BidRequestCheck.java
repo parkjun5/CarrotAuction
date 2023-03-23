@@ -16,7 +16,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 public @interface BidRequestCheck {
-    String message() default "입찰 금액이 최소 금액보다 낮습니다.";
     Class <?> [] groups() default {};
     Class <? extends Payload> [] payload() default {};
 }

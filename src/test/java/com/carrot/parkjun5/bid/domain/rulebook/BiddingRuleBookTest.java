@@ -1,6 +1,6 @@
 package com.carrot.parkjun5.bid.domain.rulebook;
 
-import com.carrot.parkjun5.bidrule.domain.BiddingRule;
+import com.carrot.parkjun5.bidrule.application.BiddingRule;
 import com.carrot.parkjun5.bidrule.application.BidRuleCommand;
 import com.carrot.parkjun5.bidrule.application.BidRuleFinder;
 import org.junit.jupiter.api.Assertions;
@@ -21,13 +21,7 @@ class BiddingRuleBookTest {
                 "TICK_INTERVAL",
                 "TIME_LIMIT_RULE", "TIME_NO_LIMIT_RULE"};
         List<BiddingRule> biddingRuleByName = bidRuleFinder.findBidRuleByName(ruleNames);
-        biddingRuleByName.forEach(bidRule -> {
-            bidRuleCommand.doSomething(bidRule); // 커맨드에서 doSomething 실행 기본 메소드 실행 **BidRule 로 인식?
-            bidRule.doSomething(bidRuleCommand); // 클래스에서 doSomething 오버라이딩 된 메소드 실행
-        } );
-
-        Assertions.assertDoesNotThrow(() -> biddingRuleByName);
-
+        Assertions.assertDoesNotThrow(() -> biddingRuleByName.forEach(bidRule -> bidRule.doSomething(bidRuleCommand)));
     }
 
 }

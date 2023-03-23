@@ -4,10 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 
-//TODO 유저 삭제 변경
-// 비드 취소?
-// 비드 룰 만들기
-// 옥션 방 옥션 분리
 public record BidRuleRequest(
         @Schema(description = "비딩 룰 코드명", example = "ONE_CHANCE_RULE")
         @NotBlank String codeName,
@@ -15,6 +11,6 @@ public record BidRuleRequest(
         @NotBlank String description,
 
         @Schema(description = "비딩 룰 값", example = "1")
-        int value) {
+        int ruleValue) {
 
 }
