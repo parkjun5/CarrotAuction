@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AuctionServiceTest {
+class AuctionRoomServiceTest {
 
     @InjectMocks
     private AuctionRoomService auctionRoomService;
@@ -119,4 +119,5 @@ class AuctionServiceTest {
         //then
         then(auctionRoomRepository).should(times(1)).findAll(any(Pageable.class));
     }
+
 }
