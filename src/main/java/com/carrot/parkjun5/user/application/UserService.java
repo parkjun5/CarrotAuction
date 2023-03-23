@@ -29,7 +29,7 @@ public class UserService {
     }
 
     public Page<UserResponse> getUsersByPageable(Pageable pageable) {
-        Page<User> users = userRepository.findAll(pageable);
+        Page<User> users = userRepository.findAllByDeletedIsFalse(pageable);
         List<UserResponse> userResponseList = users.stream().map(userMapper::toResponseByEntity).toList();
         return new PageImpl<>(userResponseList);
     }
@@ -39,19 +39,21 @@ public class UserService {
         return userMapper.toResponseByEntity(user);
     }
 
+    @Transactional
     public UserResponse updateUser(final Long userId, UserRequest request) {
         User user = findUserById(userId);
         user.changeInfo(request.email(), request.nickname(), request.password());
         return userMapper.toResponseByEntity(user);
     }
 
+    @Transactional
     public Long deleteUser(final Long userId) {
         User user = findUserById(userId);
-        userRepository.delete(user);
+        user.deleteUser();
         return userId;
     }
 
     public User findUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다"));
+        return userRepository.findByIdAndDeletedIsFalse(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다"));
     }
 }
