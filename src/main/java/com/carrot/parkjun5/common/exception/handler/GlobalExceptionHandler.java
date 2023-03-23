@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Slf4j
-@RestControllerAdvice(basePackages = "com.carrot.auction.domain")
+@RestControllerAdvice(basePackages = "com.carrot.parkjun5")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
