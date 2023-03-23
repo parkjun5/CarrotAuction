@@ -13,6 +13,7 @@ public interface AuctionRoomMapper {
     @Mapping(source = "request.password", target = "password")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "auctionParticipation", ignore = true)
+    @Mapping(target = "auctions", ignore = true)
     AuctionRoom toEntityByRequestAndUser(User hostUser, AuctionRoomRequest request);
 
     @Mapping(source = "auctionRoom.id", target = "auctionRoomId")

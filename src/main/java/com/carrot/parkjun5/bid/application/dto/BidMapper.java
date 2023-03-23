@@ -10,6 +10,8 @@ public interface BidMapper {
     @Mapping(source = "bid.biddingTime", target = "biddingTime")
     BidResponse toResponseByEntities(String roomName, Bid bid, String bidderName);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "auction", ignore = true)
     Bid toEntityByRequest(BidRequest bidRequest);
 
 }

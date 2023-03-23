@@ -7,8 +7,13 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AuctionMapper {
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "auctionRoom", ignore = true)
+    @Mapping(target = "bidRules", ignore = true)
+    @Mapping(target = "bids", ignore = true)
+    @Mapping(target = "auctionStatus", ignore = true)
     Auction toEntityByRequest(AuctionRequest request);
 
-    AuctionResponse toResponseByEntity(Auction auctionRoom);
+    @Mapping(source = "id", target = "auctionId")
+    AuctionResponse toResponseByEntity(Auction auction);
 
 }
