@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.carrot.parkjun5.auction.fixture.AuctionFixture.*;
+import static com.carrot.parkjun5.bid.fixture.BidFixture.TEST_BID_RULE_RESPONSE;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;

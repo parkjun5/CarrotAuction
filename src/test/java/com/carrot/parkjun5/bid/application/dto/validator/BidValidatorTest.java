@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.carrot.parkjun5.auction.fixture.AuctionFixture.*;
+import static com.carrot.parkjun5.bid.fixture.BidFixture.TEST_BID_REQUEST;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 
