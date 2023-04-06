@@ -15,9 +15,9 @@ public class BidRule extends BaseEntity {
     @Id @GeneratedValue
     @Column(name = "bid_rule_id")
     private Long id;
-    private String code;
+    private String name;
     private String description;
-    private int ruleValue;
+    private String ruleValue;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "auction_id")
     private Auction auction;

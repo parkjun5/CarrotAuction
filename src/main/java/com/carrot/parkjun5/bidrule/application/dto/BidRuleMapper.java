@@ -9,7 +9,7 @@ public interface BidRuleMapper {
 
     BidRuleResponse toResponseByEntity(BidRule bidRule);
 
-    @Mapping(source = "codeName", target = "code")
+    @Mapping(source = "name", target = "name")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "auction", ignore = true)
     BidRule toEntityByRequest(BidRuleRequest bidRequest);
