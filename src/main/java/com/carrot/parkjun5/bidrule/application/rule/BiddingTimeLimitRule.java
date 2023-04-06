@@ -1,21 +1,24 @@
 package com.carrot.parkjun5.bidrule.application.rule;
 
-import com.carrot.parkjun5.bidrule.application.BidRuleCommand;
+import com.carrot.parkjun5.auction.domain.Auction;
+import com.carrot.parkjun5.bid.application.dto.BidRequest;
 import com.carrot.parkjun5.bidrule.application.BiddingRule;
 import com.carrot.parkjun5.bidrule.application.annotation.BidRuleName;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-@Getter
-@AllArgsConstructor
+import java.time.ZonedDateTime;
+
+@Service
 @BidRuleName("TimeLimitRule")
-public enum BiddingTimeLimitRule implements BiddingRule {
-    TIME_NO_LIMIT_RULE,
-    TIME_LIMIT_RULE,
-    ;
-
+@RequiredArgsConstructor
+public class BiddingTimeLimitRule implements BiddingRule {
+    
     @Override
-    public void doSomething(BidRuleCommand bidRuleCommand) {
-        bidRuleCommand.doSomething(this);
+    public void doValidate(BidRequest req, Auction auction, String ruleValue) {
+        boolean isEndAuction = auction.getCloseDateTime().isBefore(ZonedDateTime.now());
+        if (isEndAuction) {
+            auction.endAuction();
+        }
     }
 }

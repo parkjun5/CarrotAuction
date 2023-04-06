@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.ZonedDateTime;
 
-//TODO 유저 삭제 변경
+//TODO
 // 비드 취소? 테스트 작성 필요
 @BidRequestCheck
 public record BidRequest(

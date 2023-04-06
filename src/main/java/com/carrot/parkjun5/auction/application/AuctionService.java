@@ -11,7 +11,6 @@ import com.carrot.parkjun5.auctionroom.application.AuctionRoomService;
 import com.carrot.parkjun5.bidrule.application.dto.BidRuleMapper;
 import com.carrot.parkjun5.bidrule.application.BidRuleService;
 import com.carrot.parkjun5.bidrule.application.dto.BidRuleResponse;
-import com.carrot.parkjun5.bidrule.application.rule.BiddingTimeLimitRule;
 import com.carrot.parkjun5.bidrule.domain.BidRule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -104,11 +102,12 @@ public class AuctionService {
         auction.changeBeginTime(request.beginDateTime());
 
         if (request.closeDateTime() != null) {
-            Optional<BidRule> noTimeRule = auction.getBidRules().stream()
-                    .filter(bidRule -> BiddingTimeLimitRule.TIME_NO_LIMIT_RULE.name().equals(bidRule.getCode()))
-                    .findAny();
-            if (noTimeRule.isPresent()) {
-                throw new IllegalAuctionTimeException("종료 타임이 없는 경매입니다.");
+            boolean isExistTimeLimitRule = auction.getBidRules().stream()
+                    .map(BidRule::getName)
+                    .anyMatch(bidRuleName -> bidRuleName.equals("TimeLimitRule"));
+
+            if (isExistTimeLimitRule) {
+                throw new IllegalAuctionTimeException("종료 시간이 없는 경매입니다.");
             }
             auction.changeCloseTime(request.closeDateTime());
         }

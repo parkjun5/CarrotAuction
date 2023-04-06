@@ -17,7 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static com.carrot.parkjun5.auction.fixture.AuctionFixture.*;
-import static com.carrot.parkjun5.auction.fixture.AuctionFixture.TEST_BID_REQUEST;
+import static com.carrot.parkjun5.bid.fixture.BidFixture.TEST_BID;
+import static com.carrot.parkjun5.bid.fixture.BidFixture.TEST_BID_REQUEST;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.times;
@@ -40,6 +41,7 @@ class BidServiceTest {
     @DisplayName("경매 조회 테스트")
     void getBid() {
         //given
+        TEST_BID.setAuction(TEST_AUCTION_1);
         given(bidRepository.findById(anyLong())).willReturn(Optional.of(TEST_BID));
         //when
         bidService.findBidById(anyLong());

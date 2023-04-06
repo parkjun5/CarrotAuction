@@ -30,7 +30,7 @@ public class UserController {
         return ResponseEntity.ok(ApiCommonResponse.success("users",userService.getUsersByPageable(pageable) ));
     }
 
-    @GetMapping("{/userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<ApiCommonResponse<UserResponse>> getUserById
             (@PathVariable final Long userId) {
         return ResponseEntity.ok(ApiCommonResponse.success("users",userService.getUserById(userId) ));
