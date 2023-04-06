@@ -1,10 +1,9 @@
 package com.carrot.parkjun5.bidrule.application;
 
 
-public interface BiddingRule {
-    String name();
+import com.carrot.parkjun5.auction.domain.Auction;
+import com.carrot.parkjun5.bid.application.dto.BidRequest;
 
-    default void doSomething(BidRuleCommand bidRuleCommand) {
-        bidRuleCommand.doSomething(this);
-    }
+public interface BiddingRule {
+    void doValidate(BidRequest req, Auction auction, String ruleValue);
 }
