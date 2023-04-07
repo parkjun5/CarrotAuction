@@ -9,7 +9,6 @@ public record BidRuleRequest(
         @NotBlank String name,
         @Schema(description = "비딩 룰 설명", example = "단 한번만 입찰 가능")
         @NotBlank String description,
-
         @Schema(description = "비딩 룰 값", example = "0")
         String ruleValue) {
 
