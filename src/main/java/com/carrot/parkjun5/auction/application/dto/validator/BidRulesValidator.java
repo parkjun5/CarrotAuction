@@ -25,8 +25,8 @@ public class BidRulesValidator implements ConstraintValidator<NotDuplicatedType,
         List<String> codeNames = selectedBidRules.stream()
                 .map(BidRuleRequest::name)
                 .toList();
-
-        biddingRuleValidator.checkDuplicateRules(codeNames);
+        List<Object> biddingRules = biddingRuleValidator.findRuleByName(codeNames);
+        biddingRuleValidator.checkExclusiveRuleType(biddingRules);
         return true;
     }
 }
