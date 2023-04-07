@@ -4,7 +4,6 @@ import com.carrot.parkjun5.auction.application.AuctionService;
 import com.carrot.parkjun5.auction.domain.Auction;
 import com.carrot.parkjun5.auction.exception.NotEnoughBiddingPriceException;
 import com.carrot.parkjun5.bid.application.dto.BidRequest;
-import com.carrot.parkjun5.bidrule.application.BiddingRule;
 import com.carrot.parkjun5.bidrule.application.annotation.BidRuleName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,12 +13,11 @@ import java.math.BigDecimal;
 @Service
 @BidRuleName("TickIntervalRule")
 @RequiredArgsConstructor
-public class BiddingTickIntervalRule implements BiddingRule {
-    
+public class BiddingTickIntervalRule {
+
     private final AuctionService auctionService;
 
-    @Override
-    public void doValidate(BidRequest req, Auction auction, String ruleValue) {
+    public void validate(BidRequest req, Auction auction, String ruleValue) {
         int tickInterval;
         try {
             tickInterval = Integer.parseInt(ruleValue);

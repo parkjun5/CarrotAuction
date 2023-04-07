@@ -3,7 +3,11 @@ package com.carrot.parkjun5.bidrule.application;
 import com.carrot.parkjun5.auction.domain.Auction;
 import com.carrot.parkjun5.bid.application.dto.BidRequest;
 import com.carrot.parkjun5.bidrule.application.annotation.BidRuleName;
-import com.carrot.parkjun5.bidrule.exception.DuplicatedBidRuleTypeException;
+import com.carrot.parkjun5.bidrule.application.rule.BiddingChanceRule;
+import com.carrot.parkjun5.bidrule.application.rule.BiddingTargetAmountRule;
+import com.carrot.parkjun5.bidrule.application.rule.BiddingTickIntervalRule;
+import com.carrot.parkjun5.bidrule.application.rule.BiddingTimeLimitRule;
+import com.carrot.parkjun5.bidrule.exception.NonExclusiveRuleTypeException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
@@ -16,50 +20,53 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class BiddingRuleValidator {
-    private static final Map<String, BiddingRule> BIDDING_RULES = new HashMap<>();
+    private static final Map<String, Object> BIDDING_RULES = new HashMap<>();
     private final ApplicationContext context;
+    private final BiddingChanceRule biddingChanceRule;
+    private final BiddingTargetAmountRule biddingTargetAmountRule;
+    private final BiddingTickIntervalRule biddingTickIntervalRule;
+    private final BiddingTimeLimitRule biddingTimeLimitRule;
 
     @PostConstruct
     public void setBiddingRules() {
-        Map<String, Object> beansWithAnnotation = context.getBeansWithAnnotation(BidRuleName.class);
-        for (Object obj : beansWithAnnotation.values()) {
-            String key = obj.getClass().getAnnotation(BidRuleName.class).value();
-            BIDDING_RULES.put(key, (BiddingRule) obj);
-        }
+        BIDDING_RULES.putAll(context.getBeansWithAnnotation(BidRuleName.class));
     }
 
     public void validateBidRule(BidRequest req, Auction auction) {
-        auction.getBidRules()
-                .forEach(bidRule ->
-                        BIDDING_RULES.get(bidRule.getName()).doValidate(req, auction, bidRule.getRuleValue()));
+        auction.getBidRules().forEach(bidRule -> {
+            switch (bidRule.getName()) {
+                case "ChanceRule" -> biddingChanceRule.validate(req, auction, bidRule.getRuleValue());
+                case "TargetAmountRule" -> biddingTargetAmountRule.validate(auction, bidRule.getRuleValue());
+                case "TickIntervalRule" -> biddingTickIntervalRule.validate(req, auction, bidRule.getRuleValue());
+                case "TimeLimitRule" -> biddingTimeLimitRule.validate(auction);
+                default -> throw new NoSuchElementException("일치하는 룰이 존재하지 않습니다.");
+            }
+        });
     }
 
-    public void checkDuplicateRules(List<String> codeNames) {
-        List<BiddingRule> selectedRules = Arrays.stream(codeNames.toArray(String[]::new))
-                .map(this::findRuleByName)
-                .toList();
-        checkDuplicateRuleType(selectedRules);
+    public void checkExclusiveRuleType(List<Object> biddingRules) {
+        var countSameTypeRule = biddingRules.stream()
+                .map(Object::getClass)
+                .map(obj -> obj.getAnnotation(BidRuleName.class))
+                .map(BidRuleName::value)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .values();
+
+        boolean hasExclusiveRule = countSameTypeRule.stream().anyMatch(rule -> rule > 1);
+
+        if (hasExclusiveRule) {
+            throw new NonExclusiveRuleTypeException("같은 타입의 룰을 중복하여 설정하였습니다.");
+        }
     }
 
-    public BiddingRule findRuleByName(String name) {
-        return BIDDING_RULES.keySet().stream()
+    public List<Object> findRuleByName(List<String> ruleNames) {
+        return ruleNames.stream().map(name
+                -> BIDDING_RULES.keySet().stream()
                 .filter(name::equals)
                 .map(BIDDING_RULES::get)
                 .findAny()
-                .orElseThrow(() -> new NoSuchElementException(name + "이름의 규칙이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(name + "이름의 규칙이 존재하지 않습니다."))
+        ).toList();
     }
 
-    private void checkDuplicateRuleType(List<BiddingRule> selectedRules) {
-        var countSameTypeRule = selectedRules.stream()
-                .map(Object::getClass)
-                .map(obj -> obj.getAnnotation(BidRuleName.class).value())
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .entrySet();
-
-        boolean hasDuplicateRule = countSameTypeRule.stream().anyMatch(element -> element.getValue() > 1);
-
-        if (hasDuplicateRule) {
-            throw new DuplicatedBidRuleTypeException("같은 타입의 룰을 중복하여 설정하였습니다.");
-        }
-    }
 }
