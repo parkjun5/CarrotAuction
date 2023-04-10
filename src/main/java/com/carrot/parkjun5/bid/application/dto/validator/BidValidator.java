@@ -52,7 +52,7 @@ public class BidValidator implements ConstraintValidator<BidRequestCheck, BidReq
             throw new AlreadyEndAuctionException(ALREADY_CLOSE_MESSAGE);
         }
 
-        biddingRuleValidator.validateBidRule(request, auction);
+        biddingRuleValidator.validateByBiddingRule(request, auction);
         return true;
     }
 }

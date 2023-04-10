@@ -1,7 +1,7 @@
 # 당근마켓 x 경매 프로젝트
 
-이 프로젝트의 주 목표는 이펙티브 자바에서 배운 내용을 녹여내고 실무에서 발생할 수 있는 상황을 해결하는 것이다.  
-부 목표는 경매와 같은 새로운 기능을 프로젝트에 추가해 나갈 것이다.
+    이 프로젝트의 주 목표는 이펙티브 자바에서 배운 내용을 녹여내고 실무에서 발생할 수 있는 상황을 해결하는 것이다.  
+    부 목표는 경매와 같은 새로운 기능을 프로젝트에 추가해 나갈 것이다.
 
 ---
 ## Overview
@@ -24,7 +24,7 @@
 5.	__NonBlocking 일부 기능 개발__:
       -	Webflux와 NoSql를 활용 일부 기능을 완전 NonBlocking으로 구성
       -	가능하다면 이 기능을 당담하는 kotlin api 구성 ex)선착순 이벤트
-      -     멀티 모듈 프로젝트로  
+      - 멀티 모듈 프로젝트로  
 6.	__성능 개선__:
       - 성능 테스트를 통해 병목지점 확인 후 개선
       - 트래픽 최저점 대비 100배까지 증가하는 트래픽 스파이크 대비머ㅏ
@@ -63,7 +63,7 @@
         
 
 ## 기술 스펙
-- Spring boot, Gradle, Java 17, Kotlin  
-- Spring Data JPA, QueryDsl  
-- Redis  
-- Docker  
+### Spring boot, Gradle, Java 17, Kotlin  
+### Spring Data JPA, QueryDsl  
+### Redis  
+### Docker  

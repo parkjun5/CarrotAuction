@@ -32,12 +32,12 @@ class BidValidatorTest {
     void bidRuleValidatorTest() {
         //given
         given(auctionService.findAuctionById(anyLong())).willReturn(TEST_AUCTION_1);
-        willDoNothing().given(biddingRuleValidator).validateBidRule(TEST_BID_REQUEST, TEST_AUCTION_1);
+        willDoNothing().given(biddingRuleValidator).validateByBiddingRule(TEST_BID_REQUEST, TEST_AUCTION_1);
         //when
         bidValidator.isValid(TEST_BID_REQUEST, context);
         //then
         then(auctionService).should(times(1)).findAuctionById(anyLong());
-        then(biddingRuleValidator).should(times(1)).validateBidRule(TEST_BID_REQUEST, TEST_AUCTION_1);
+        then(biddingRuleValidator).should(times(1)).validateByBiddingRule(TEST_BID_REQUEST, TEST_AUCTION_1);
     }
 
 }
