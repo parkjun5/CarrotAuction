@@ -1,4 +1,4 @@
-package com.carrot.web_mvc.chat.domain;
+package com.carrot.web_flux.chat.domain;
 
 import com.carrot.web_mvc.user.domain.User;
 import jakarta.persistence.FetchType;

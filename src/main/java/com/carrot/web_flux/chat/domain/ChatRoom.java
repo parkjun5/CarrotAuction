@@ -1,4 +1,4 @@
-package com.carrot.web_mvc.chat.domain;
+package com.carrot.web_flux.chat.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
