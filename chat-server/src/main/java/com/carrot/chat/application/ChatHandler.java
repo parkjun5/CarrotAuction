@@ -15,8 +15,7 @@ public class ChatHandler implements WebSocketHandler {
     public ChatHandler() {
         Sinks.Many<String> processor = Sinks.many().replay().limit(10);
         this.chatMessages = processor.asFlux()
-                .onBackpressureLatest()
-                .publishOn(Schedulers.parallel());
+                .onBackpressureLatest();
         this.chatSink = processor;
     }
 
