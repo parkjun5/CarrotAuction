@@ -25,11 +25,7 @@ public class WebSocketConfiguration  {
         Map<String, WebSocketHandler> handlerByPathMap = new HashMap<>();
         handlerByPathMap.put("/chat", chatHandler);
 
-        SimpleUrlHandlerMapping handlerMapping = new SimpleUrlHandlerMapping();
-        handlerMapping.setUrlMap(handlerByPathMap);
-        handlerMapping.setOrder(-1);
-
-        return handlerMapping;
+        return new SimpleUrlHandlerMapping(handlerByPathMap, -1);
     }
 
     @Bean
