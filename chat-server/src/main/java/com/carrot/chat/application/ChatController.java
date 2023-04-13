@@ -32,7 +32,7 @@ public class ChatController {
     @GetMapping("/stream")
     Flux<Map<String, Integer>> stream() {
         Stream<Integer> stream = Stream.iterate(0, i -> i + 1);
-        return Flux.fromStream(stream.limit(20000))
+        return Flux.fromStream(stream.limit(2000))
                 .map(i -> Collections.singletonMap("value", i));
     }
 
