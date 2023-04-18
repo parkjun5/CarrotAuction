@@ -25,6 +25,6 @@ public class ChatHandlerT extends TextWebSocketHandler {
         //userBO.findAll -> List<User> 반환
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Flux.just(chatService.findAll(request.pathVariable("name"))), ChatMessage.class);
+                .body(Flux.just(chatService.findAll()), ChatMessage.class);
     }
 }
