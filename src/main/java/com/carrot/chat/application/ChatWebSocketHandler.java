@@ -12,44 +12,52 @@ import reactor.core.publisher.*;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.Collections;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
-public class ChatHandler implements WebSocketHandler {
+public class ChatWebSocketHandler implements WebSocketHandler {
 
     private final Flux<ChatMessage> chatMessages;
     private final Sinks.Many<ChatMessage> chatSink;
     private final ObjectMapper mapper;
+    private final Map<String, String> sessionMap;
 
-    public ChatHandler() {
+    public ChatWebSocketHandler() {
         Sinks.Many<ChatMessage> processor = Sinks.many().replay().limit(10);
         this.chatMessages = processor.asFlux().onBackpressureLatest(); //pub
         this.chatSink = processor;
         this.mapper = new ObjectMapper();
+        this.sessionMap = new ConcurrentHashMap<>();
     }
+    
+    //TODO sessionMap에 세션 아이디와 메시지 아이디를 저장하도록 변경
+    // 그이후 채팅방 번호 확인해서 그방에만 뿌리도록 그리고 자기자신한테는 안뿌리도록 변경
 
     @Override
     public Mono<Void> handle(WebSocketSession session) {
-
-        AtomicLong roomId = new AtomicLong();
-
-        Flux<ChatMessage> sessionMessages = session.receive()
-                .map(socketMessage -> toChatMessage(socketMessage.getPayloadAsText()))
-                .publishOn(Schedulers.boundedElastic())
-                .doOnNext(chatMessage -> {
-                    roomId.set(chatMessage.getChatRoomId());
-                    chatSink.tryEmitNext(chatMessage);
-                })
-                .thenMany(Flux.fromIterable(Collections.emptyList()));
+        Flux<ChatMessage> sessionMessages = handleReceivedMessages(session);
 
         Flux<WebSocketMessage> messageFlux = this.chatMessages
+                .filter(chatMessage -> !chatMessage.getSenderId().equals(sessionMap.get(session.getId())))
                 .mergeWith(sessionMessages)
                 .onBackpressureLatest()
-                .filter(each -> roomId.longValue() == each.getChatRoomId())
                 .map(each -> session.textMessage(each.getMessage()));
 
         return session.send(messageFlux);
     }
+
+    private Flux<ChatMessage> handleReceivedMessages(WebSocketSession session) {
+        return session.receive()
+                .map(socketMessage -> toChatMessage(socketMessage.getPayloadAsText()))
+                .publishOn(Schedulers.boundedElastic())
+                .doOnNext(chatMessage -> {
+                    this.sessionMap.put(session.getId(), chatMessage.getSenderId());
+                    chatSink.tryEmitNext(chatMessage);
+                })
+                .thenMany(Flux.fromIterable(Collections.emptyList()));
+    }
+
 
     private ChatMessage toChatMessage(String str) {
         try {

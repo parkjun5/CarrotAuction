@@ -1,8 +1,9 @@
 package com.carrot.api;
 
 
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableJpaAuditing
@@ -10,7 +11,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class CarrotAuctionMainApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CarrotAuctionMainApplication.class, args);
+        new SpringApplicationBuilder(CarrotAuctionMainApplication.class)
+                .profiles("main-api")
+                .web(WebApplicationType.SERVLET)
+                .run(args);
     }
 
 }
