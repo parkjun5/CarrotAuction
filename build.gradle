@@ -12,6 +12,14 @@ springBoot {
     mainClass = "CarrotAuctionApplication"
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java", "build/generated/sources/annotationProcessor/java"]
+        }
+    }
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
