@@ -5,17 +5,19 @@ import com.carrot.chat.domain.ChatMessage;
 import com.carrot.chat.exception.ChatConvertException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.*;
 import reactor.core.scheduler.Schedulers;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
+@Component
 public class ChatWebSocketHandler implements WebSocketHandler {
 
     private final Flux<ChatMessage> chatMessages;
@@ -24,40 +26,38 @@ public class ChatWebSocketHandler implements WebSocketHandler {
     private final Map<String, String> sessionMap;
 
     public ChatWebSocketHandler() {
-        Sinks.Many<ChatMessage> processor = Sinks.many().replay().limit(10);
-        this.chatMessages = processor.asFlux().onBackpressureLatest(); //pub
+        Sinks.Many<ChatMessage> processor = Sinks.many().replay().limit(3);
+        this.chatMessages = processor.asFlux().onBackpressureBuffer(3, BufferOverflowStrategy.DROP_OLDEST);
         this.chatSink = processor;
         this.mapper = new ObjectMapper();
         this.sessionMap = new ConcurrentHashMap<>();
     }
-    
-    //TODO sessionMap에 세션 아이디와 메시지 아이디를 저장하도록 변경
-    // 그이후 채팅방 번호 확인해서 그방에만 뿌리도록 그리고 자기자신한테는 안뿌리도록 변경
 
     @Override
-    public Mono<Void> handle(WebSocketSession session) {
-        Flux<ChatMessage> sessionMessages = handleReceivedMessages(session);
+    public Mono<Void> handle( WebSocketSession session) {
+        handleReceivedMessages(session);
 
         Flux<WebSocketMessage> messageFlux = this.chatMessages
-                .filter(chatMessage -> !chatMessage.getSenderId().equals(sessionMap.get(session.getId())))
-                .mergeWith(sessionMessages)
-                .onBackpressureLatest()
-                .map(each -> session.textMessage(each.getMessage()));
+                .filter(chatMessage -> {
+                    String sessionId = session.getId();
+                    String values = sessionMap.get(chatMessage.getSenderId());
+                    return values != null && !Arrays.asList(values.split(",")).contains(sessionId);
+                })
+                .map(each -> session.textMessage(String.valueOf(each)));
 
         return session.send(messageFlux);
     }
 
-    private Flux<ChatMessage> handleReceivedMessages(WebSocketSession session) {
-        return session.receive()
+    private void handleReceivedMessages(WebSocketSession session) {
+        session.receive()
                 .map(socketMessage -> toChatMessage(socketMessage.getPayloadAsText()))
                 .publishOn(Schedulers.boundedElastic())
                 .doOnNext(chatMessage -> {
-                    this.sessionMap.put(session.getId(), chatMessage.getSenderId());
+                    sessionMap.compute(chatMessage.getSenderId(), (k,v) -> v == null? session.getId() : v + "," + session.getId());
                     chatSink.tryEmitNext(chatMessage);
                 })
-                .thenMany(Flux.fromIterable(Collections.emptyList()));
+                .subscribe();
     }
-
 
     private ChatMessage toChatMessage(String str) {
         try {
