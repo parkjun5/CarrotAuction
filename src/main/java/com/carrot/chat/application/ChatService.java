@@ -1,33 +1,49 @@
 package com.carrot.chat.application;
 
-import com.carrot.chat.domain.ChatMessage;
+import com.carrot.chat.domain.ChatRoom;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyExtractors;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
 public class ChatService {
-    public List<ChatMessage> findAll() {
-        ArrayList<ChatMessage> chatMessages = new ArrayList<>();
-        IntStream.range(0, 10).forEach(i -> {
-            ChatMessage chatMessage = new ChatMessage();
-            chatMessage.setMessage(i + " 번째 신규 메세지");
-            chatMessage.setSenderId("발신자");
-            chatMessage.setChatRoomId(1L);
-            chatMessages.add(chatMessage);
-        });
 
-        return chatMessages;
+    private final ObjectMapper objectMapper;
+
+    private final Map<String, ChatRoom> chatRoomRepository = new HashMap<>();
+
+    public Flux<ChatRoom> findAll() {
+        return Flux.fromStream(chatRoomRepository.values().stream());
     }
 
-    public ChatMessage findByName(String name) {
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setMessage("새로운 신규 메세지");
-        chatMessage.setSenderId(name);
-        chatMessage.setChatRoomId(1L);
+    public Mono<ChatRoom> findChatRoomById(String chatRoomId) {
+        ChatRoom data = chatRoomRepository.get(chatRoomId);
+        if (data == null) {
+            throw new NoSuchElementException("존재하지 않는 채팅방입니다.");
+        }
+        return Mono.just(data);
+    }
 
-        return chatMessage;
+    public Mono<ChatRoom> createChatRoom(ServerRequest serverRequest) {
+        return serverRequest.body(BodyExtractors.toMono(String.class)).handle((jsonString, sink) -> {
+            try {
+                ChatRoom chatRoom = objectMapper.readValue(jsonString, ChatRoom.class);
+                chatRoom.initId();
+                chatRoomRepository.put(chatRoom.getId(), chatRoom);
+                sink.next(chatRoom);
+            } catch (JsonProcessingException e) {
+                sink.error(new IllegalArgumentException(e));
+            }
+        });
     }
 }
