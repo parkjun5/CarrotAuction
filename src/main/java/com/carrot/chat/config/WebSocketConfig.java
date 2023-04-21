@@ -16,11 +16,6 @@ import java.util.Map;
 @EnableWebSocket
 public class WebSocketConfig {
     @Bean
-    public ChatWebSocketHandler chatWebSocketHandler() {
-        return new ChatWebSocketHandler();
-    }
-
-    @Bean
     public HandlerMapping handlerMapping(ChatWebSocketHandler handler) {
         Map<String, WebSocketHandler> handlerByPathMap = new HashMap<>();
         handlerByPathMap.put("/chat/message", handler);

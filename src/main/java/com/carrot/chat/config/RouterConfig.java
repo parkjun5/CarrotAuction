@@ -22,8 +22,9 @@ public class RouterConfig {
         //CRUD
         return RouterFunctions
                 .route()
-                .GET("/chat/room/{roomId}", routeHandler::findByName)
+                .GET("/chat/room/{chatRoomId}", routeHandler::findChatRoomById)
                 .GET("/chat/room", routeHandler::findAll)
+                .POST("/chat/room", routeHandler::createChatRoom)
                 .build();
     }
 
