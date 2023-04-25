@@ -30,4 +30,12 @@ public class ChatController {
     public Flux<ChatMessage> addChat(@PathVariable Long roomId) {
         return chatService.findAllByRoomId(roomId);
     }
+
+    @GetMapping(value = "/chatMessages", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ChatMessage> addChat22() {
+        Stream<ChatMessage> chatMessageStream = IntStream.range(1, 10)
+                .mapToObj(index -> new ChatMessage((long) index, "message" + index, "아이디!", "1"));
+
+        return Flux.fromStream(chatMessageStream).delayElements(Duration.ofSeconds(1));
+    }
 }
