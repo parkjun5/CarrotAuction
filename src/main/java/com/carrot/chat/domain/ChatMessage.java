@@ -1,12 +1,15 @@
 package com.carrot.chat.domain;
 
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter @Setter
+@Data
 @NoArgsConstructor
 public class ChatMessage {
+
+    @Id
+    private Long id;
 
     private String message;
 
