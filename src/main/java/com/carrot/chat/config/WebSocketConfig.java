@@ -1,9 +1,6 @@
 package com.carrot.chat.config;
 
 import com.carrot.chat.application.ChatWebSocketHandler;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.HandlerMapping;
@@ -20,7 +17,7 @@ import java.util.Map;
 
 @Configuration
 @EnableWebSocket
-@EnableAutoConfiguration(exclude={ DataSourceAutoConfiguration.class, SpringApplicationAdminJmxAutoConfiguration.class })
+//@EnableAutoConfiguration(exclude={  SpringApplicationAdminJmxAutoConfiguration.class })
 public class WebSocketConfig {
     @Bean
     public HandlerMapping handlerMapping(ChatWebSocketHandler handler) {
