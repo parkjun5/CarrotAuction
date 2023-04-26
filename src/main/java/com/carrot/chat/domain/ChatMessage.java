@@ -1,25 +1,19 @@
 package com.carrot.chat.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Table("chatMessage")
+@Getter @Setter
+@Document(collection = "chat_message")
 public class ChatMessage {
 
+    @Transient
+    public static final String SEQUENCE_NAME = "chat_message_sequence";
     @Id
     private Long id;
-
     private String message;
-
     private String senderId;
-
     private String chatRoomId;
 }
