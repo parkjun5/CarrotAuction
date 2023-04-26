@@ -23,6 +23,7 @@ public class ChatWebSocketHandler implements WebSocketHandler {
     private final Flux<Object> chatMessages;
     private final Sinks.Many<Object> chatSink;
     private final ObjectMapper mapper;
+    private final ChatService chatService;
 
     /**
      * 제공된 sinks와 chatMessages를 사용하여 ChatWebSocketHandler를 초기화합니다.
@@ -30,10 +31,11 @@ public class ChatWebSocketHandler implements WebSocketHandler {
      * @param sinks        채팅 메시지 처리를 위한 Sinks.Many 인스턴스
      * @param chatMessages 채팅 메시지 처리를 위한 Flux 인스턴스
      */
-    public ChatWebSocketHandler(Sinks.Many<Object> sinks, Flux<Object> chatMessages) {
+    public ChatWebSocketHandler(Sinks.Many<Object> sinks, Flux<Object> chatMessages, ChatService chatService) {
         this.chatMessages = chatMessages;
         this.chatSink = sinks;
         this.mapper = new ObjectMapper();
+        this.chatService = chatService;
     }
 
     /**
@@ -97,7 +99,7 @@ public class ChatWebSocketHandler implements WebSocketHandler {
                     String userId = sessionId.stream().findAny().orElseThrow(IllegalArgumentException::new);
                     chatSink.emitNext(userId + "님이 채팅방에서 나갔습니다!", Sinks.EmitFailureHandler.FAIL_FAST);
                 })
-                .subscribe(incomingMessage -> log.info("Received inbound message from client" + incomingMessage.getSenderId() + " : " + incomingMessage.getMessage()));
+                .subscribe(chatService::saveChatMessage);
     }
 
     /**
