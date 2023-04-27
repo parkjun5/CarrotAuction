@@ -1,7 +1,7 @@
 package com.carrot.chat.presentation;
 
 
-import com.carrot.chat.application.ChatService;
+import com.carrot.chat.application.ChatMessageService;
 import com.carrot.chat.domain.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class ChatController {
 
-    private final ChatService chatService;
+    private final ChatMessageService chatMessageService;
     private final Sinks.Many<Object> chatSink;
 
     @PostMapping(value = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -29,7 +29,7 @@ public class ChatController {
 
     @GetMapping("/chatMessages/{roomId}")
     public Flux<ChatMessage> addChat(@PathVariable Long roomId) {
-        return chatService.findAllByRoomId(roomId);
+        return chatMessageService.findAllByRoomId(roomId);
     }
 
     @GetMapping(value = "/chatMessages", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -49,21 +49,21 @@ public class ChatController {
 
     @GetMapping(value = "/messages", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Mono<ChatMessage> getMessages() {
-        return chatService.makeTestMessages();
+        return chatMessageService.makeTestMessages();
     }
 
     @GetMapping(value = "/messages/user", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ChatMessage> getMessages(@RequestParam("SenderId") String senderId) {
-        return chatService.findChatMessageBySenderId(senderId);
+        return chatMessageService.findChatMessageBySenderId(senderId);
     }
 
     @GetMapping(value = "/messages2", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ChatMessage> getMessages2() {
-        return chatService.findAll().delayElements(Duration.ofSeconds(1));
+        return chatMessageService.findAll();
     }
 
     @DeleteMapping(value = "/messages2")
     public Mono<Void> deleteMessage() {
-        return chatService.deleteAll();
+        return chatMessageService.deleteAll();
     }
 }
