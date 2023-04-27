@@ -1,6 +1,7 @@
 package com.carrot.api.user.domain;
 
 import com.carrot.api.auctionroom.domain.AuctionParticipation;
+import com.carrot.api.chat.domain.ChatRoomParticipation;
 import com.carrot.api.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,7 +30,10 @@ public class User extends BaseEntity {
     private Set<UserRole> roles = Set.of(UserRole.USER);
     @OneToMany(mappedBy = "user")
     @Builder.Default
-    private List<AuctionParticipation> participatedRoom = new ArrayList<>();
+    private List<AuctionParticipation> participatedAuctionRoom = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<ChatRoomParticipation> participatedChatRoom = new ArrayList<>();
 
     public void changeInfo(String email, String nickname, String password) {
         this.email = email;

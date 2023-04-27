@@ -27,7 +27,7 @@ public class AuctionParticipation extends BaseEntity {
 
     public void setUser(User user) {
         this.user = user;
-        user.getParticipatedRoom().add(this);
+        user.getParticipatedAuctionRoom().add(this);
     }
 
     public void setAuctionRoom(AuctionRoom auctionRoom) {
