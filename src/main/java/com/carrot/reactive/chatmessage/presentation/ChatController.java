@@ -1,8 +1,8 @@
-package com.carrot.chat.presentation;
+package com.carrot.reactive.chatmessage.presentation;
 
 
-import com.carrot.chat.application.ChatMessageService;
-import com.carrot.chat.domain.ChatMessage;
+import com.carrot.reactive.chatmessage.application.ChatMessageService;
+import com.carrot.reactive.chatmessage.domain.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +27,6 @@ public class ChatController {
         delaidElements.subscribe(s -> chatSink.emitNext(s, Sinks.EmitFailureHandler.FAIL_FAST));
     }
 
-    @GetMapping("/chatMessages/{roomId}")
-    public Flux<ChatMessage> addChat(@PathVariable Long roomId) {
-        return chatMessageService.findAllByRoomId(roomId);
-    }
-
     @GetMapping(value = "/chatMessages", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ChatMessage> addChat22() {
         Stream<ChatMessage> chatMessageStream = IntStream.range(8990, 9000)
@@ -40,7 +35,7 @@ public class ChatController {
                     chatMessage.setId((long) index);
                     chatMessage.setMessage("message : " + index);
                     chatMessage.setSenderId("테스터1");
-                    chatMessage.setChatRoomId("테스터 방");
+                    chatMessage.setChatRoomId(1L);
                     return chatMessage;
                 } );
 

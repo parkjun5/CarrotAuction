@@ -1,4 +1,4 @@
-package com.carrot.chat.exception;
+package com.carrot.reactive.chatmessage.exception;
 
 
 public class ChatConvertException extends RuntimeException {

@@ -1,6 +1,5 @@
-package com.carrot.chat.application;
+package com.carrot.reactive.common.sequence;
 
-import com.carrot.chat.domain.sequence.ChatMessageSequence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Update;

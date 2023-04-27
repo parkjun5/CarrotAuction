@@ -1,4 +1,4 @@
-package com.carrot.chat.domain;
+package com.carrot.reactive.chatmessage.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,5 +20,5 @@ public class ChatMessage implements Serializable {
     private Long id;
     private String message;
     private String senderId;
-    private String chatRoomId;
+    private Long chatRoomId;
 }

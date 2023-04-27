@@ -1,4 +1,4 @@
-package com.carrot.chat.application;
+package com.carrot.reactive.chatmessage.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

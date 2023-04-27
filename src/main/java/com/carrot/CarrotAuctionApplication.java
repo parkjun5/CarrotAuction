@@ -2,7 +2,7 @@ package com.carrot;
 
 
 import com.carrot.api.CarrotAuctionMainApplication;
-import com.carrot.chat.CarrotChatApplication;
+import com.carrot.reactive.CarrotChatApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

@@ -1,4 +1,4 @@
-package com.carrot.chat.domain;
+package com.carrot.reactive.chatmessage.domain;
 
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;

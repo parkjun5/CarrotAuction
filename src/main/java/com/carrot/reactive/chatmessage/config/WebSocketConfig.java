@@ -1,6 +1,6 @@
-package com.carrot.chat.config;
+package com.carrot.reactive.chatmessage.config;
 
-import com.carrot.chat.application.ChatWebSocketHandler;
+import com.carrot.reactive.chatmessage.application.ChatWebSocketHandler;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,6 @@ public class WebSocketConfig {
     public HandlerMapping handlerMapping(ChatWebSocketHandler handler) {
         Map<String, WebSocketHandler> handlerByPathMap = new HashMap<>();
         handlerByPathMap.put("/chat/message", handler);
-
         return new SimpleUrlHandlerMapping(handlerByPathMap, -1);
     }
 

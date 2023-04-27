@@ -1,4 +1,4 @@
-package com.carrot.chat.domain.sequence;
+package com.carrot.reactive.common.sequence;
 
 import jakarta.persistence.Id;
 import lombok.Getter;

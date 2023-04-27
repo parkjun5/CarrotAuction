@@ -1,8 +1,9 @@
-package com.carrot.chat.application;
+package com.carrot.reactive.chatmessage.application;
 
-import com.carrot.chat.domain.ChatMessage;
-import com.carrot.chat.domain.ChatMessageRepository;
-import com.carrot.chat.exception.ChatConvertException;
+import com.carrot.reactive.common.sequence.SequenceService;
+import com.carrot.reactive.chatmessage.domain.ChatMessage;
+import com.carrot.reactive.chatmessage.domain.ChatMessageRepository;
+import com.carrot.reactive.chatmessage.exception.ChatConvertException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -44,14 +45,6 @@ public class ChatMessageService {
         return chatRoomRepository.findAllBySenderId(senderId);
     }
 
-    public Mono<ChatMessage> createChatRoom(ChatMessage chatMessage) {
-        return chatRoomRepository.save(chatMessage);
-    }
-
-    public Flux<ChatMessage> findAllByRoomId(Long roomId) {
-        return null;
-    }
-
     public void saveChatMessage(ChatMessage chatMessage) {
         chatMessage.setId(sequenceService.generateSeqByName(ChatMessage.SEQUENCE_NAME));
         chatRoomRepository.save(chatMessage).subscribe();
@@ -62,7 +55,7 @@ public class ChatMessageService {
         chatMessage.setId(sequenceService.generateSeqByName(ChatMessage.SEQUENCE_NAME));
         chatMessage.setMessage(UUID.randomUUID().toString());
         chatMessage.setSenderId("발신자");
-        chatMessage.setChatRoomId("최초 방");
+        chatMessage.setChatRoomId(0L);
         return chatRoomRepository.save(chatMessage);
 
     }
