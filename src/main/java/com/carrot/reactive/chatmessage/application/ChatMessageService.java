@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -73,8 +74,13 @@ public class ChatMessageService {
      * @return 로그인이 유효한 경우 true, 그렇지 않으면 false
      */
     public boolean afterConnectionValidate(WebSocketSession session) {
-        HttpCookie httpCookie = session.getHandshakeInfo().getCookies().get(JSESSION_ID)
-                .stream().filter(f -> f.getName().equals(JSESSION_ID)).findAny()
+        List<HttpCookie> httpCookies = session.getHandshakeInfo().getCookies().get(JSESSION_ID);
+        if (httpCookies == null) return false;
+
+        HttpCookie httpCookie = httpCookies
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(f -> f.getName().equals(JSESSION_ID)).findAny()
                 .orElse(null);
 
         if (httpCookie == null) return false;
