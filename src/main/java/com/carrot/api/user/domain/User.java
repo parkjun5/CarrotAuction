@@ -28,10 +28,10 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Set<UserRole> roles = Set.of(UserRole.USER);
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     private List<AuctionParticipation> participatedAuctionRoom = new ArrayList<>();
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     private List<ChatRoomParticipation> participatedChatRoom = new ArrayList<>();
 
