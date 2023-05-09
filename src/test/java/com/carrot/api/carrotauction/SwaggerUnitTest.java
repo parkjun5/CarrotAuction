@@ -10,11 +10,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.springframework.boot.test.context.SpringBootTest.UseMainMethod.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-@SpringBootTest
+@SpringBootTest(useMainMethod = WHEN_AVAILABLE)
 class SwaggerUnitTest {
 
 	@Autowired
