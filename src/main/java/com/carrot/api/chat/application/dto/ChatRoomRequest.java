@@ -5,7 +5,6 @@ import lombok.Builder;
 
 @Builder
 public record ChatRoomRequest (
-    Long chatRoomId,
     @NotNull
     Long userId,
     @NotBlank @Size(max= 40)
