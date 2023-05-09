@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>채팅방 목록</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background-color: #f1f1f1;
+      padding: 10px;
+      margin: 5px 0;
+      cursor: pointer;
+    }
+    li:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+<h1>채팅방 목록</h1>
+<ul id="chatroomList"></ul>
+
+<script>
+  const apiUrl = "/api/chatroom?page=0&size=3&sort=id";
+  const chatroomListElement = document.getElementById("chatroomList");
+
+  function fetchChatrooms() {
+    fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+              data.content.forEach(chatroom => {
+                const listItem = document.createElement("li");
+                listItem.textContent = chatroom.name;
+                listItem.addEventListener("click", () => {
+                  window.location.href = `/chat-index?chatroomId=${chatroom.id}`;
+                });
+                chatroomListElement.appendChild(listItem);
+              });
+            })
+            .catch(error => {
+              console.error("Error fetching chatrooms:", error);
+            });
+  }
+
+  fetchChatrooms();
+</script>
+</body>
+</html>
