@@ -56,4 +56,8 @@ public class UserService {
     public User findUserById(Long userId) {
         return userRepository.findByIdAndDeletedIsFalse(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다"));
     }
+
+    public User findUserAndChatRoomById(Long userId) {
+        return userRepository.findByIdFetchChatRoom(userId).orElseThrow(() -> new NoSuchElementException("계정이 존재하지 않습니다"));
+    }
 }

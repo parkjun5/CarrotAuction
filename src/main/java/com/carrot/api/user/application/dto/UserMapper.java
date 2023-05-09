@@ -10,6 +10,6 @@ public interface UserMapper {
     UserResponse toResponseByEntity(User user);
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "roles", ignore = true)
-    @Mapping(target = "participatedRoom", ignore = true)
+    @Mapping(target = "participatedChatRoom", ignore = true)
     User toEntityByRequest(UserRequest userRequest);
 }
