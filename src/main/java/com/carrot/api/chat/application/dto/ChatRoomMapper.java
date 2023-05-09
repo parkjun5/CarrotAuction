@@ -9,6 +9,8 @@ import org.mapstruct.Mapping;
 public interface ChatRoomMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "chatRoomParticipation", ignore = true)
+    @Mapping(target = "name", source = "name")
     ChatRoom toEntityByRequest(ChatRoomRequest request);
-
+    @Mapping(source = "chatRoom.id", target = "chatRoomId")
+    ChatRoomResponse toResponseByEntity(ChatRoom chatRoom);
 }
