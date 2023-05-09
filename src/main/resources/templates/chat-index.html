@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <title>WebSocket Chat Client</title>
 </head>
 <body>
@@ -64,6 +65,23 @@
         listItem.textContent = message.senderId + ": " + message.message;
         messageList.appendChild(listItem);
     }
+
+    $(function() {
+
+        $.ajax({
+            type: "GET",
+            url: "/api/chatroom?page=0&size=3&sort=id",
+            contentType : "application/x-www-form-urlencoded;charset=UTF-8",
+            error: function() {
+                console.log('통신실패!!');
+            },
+            success: function(data) {
+                console.log("통신데이터 값 : " + data);
+            }
+        });
+
+
+    });
 
 </script>
 </body>
