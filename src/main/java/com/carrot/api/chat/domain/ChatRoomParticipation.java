@@ -30,9 +30,8 @@ public class ChatRoomParticipation extends BaseEntity {
         user.getParticipatedChatRoom().add(this);
     }
 
-    public void setChatRoom(ChatRoom chatRoom) {
+    private void setChatRoom(ChatRoom chatRoom) {
         this.chatRoom = chatRoom;
-        chatRoom.getChatRoomParticipation().add(this);
     }
 
     public static ChatRoomParticipation createChatRoomParticipation(User user, ChatRoom chatRoom) {
