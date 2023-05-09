@@ -8,6 +8,9 @@ import com.carrot.api.auctionroom.domain.AuctionRoom;
 import com.carrot.api.auction.domain.AuctionStatus;
 import com.carrot.api.auctionroom.application.dto.AuctionRoomRequest;
 import com.carrot.api.auctionroom.application.dto.AuctionRoomResponse;
+import com.carrot.api.chat.application.dto.ChatRoomRequest;
+import com.carrot.api.chat.application.dto.ChatRoomResponse;
+import com.carrot.api.chat.domain.ChatRoom;
 import com.carrot.api.item.domain.Category;
 import com.carrot.api.item.domain.Item;
 import com.carrot.api.user.domain.User;
@@ -32,7 +35,8 @@ public class AuctionFixture {
             .nickname("테스터 1")
             .password("password")
             .roles(Set.of(UserRole.ADMIN))
-            .participatedRoom(new ArrayList<>())
+            .participatedAuctionRoom(new ArrayList<>())
+            .participatedChatRoom(new ArrayList<>())
             .build();
     public static final User TEST_USER_2 = User.builder()
             .id(2L)
@@ -40,7 +44,8 @@ public class AuctionFixture {
             .nickname("테스터 2")
             .password("q1w2e3r4")
             .roles(Set.of(UserRole.ADMIN))
-            .participatedRoom(new ArrayList<>())
+            .participatedChatRoom(new ArrayList<>())
+            .participatedAuctionRoom(new ArrayList<>())
             .build();
 
     public static final Item TEST_ITEM = Item.of("팔고 싶은 물건", 50_000, "저렴하게 팔아요!");
@@ -107,5 +112,9 @@ public class AuctionFixture {
             .build();
     public static final AuctionParticipation TEST_AUCTION_PARTICIPATION_1 = AuctionParticipation.createAuctionParticipation(TEST_USER_1, TEST_AUCTION_ROOM);
     public static final AuctionParticipation TEST_AUCTION_PARTICIPATION_2 = AuctionParticipation.createAuctionParticipation(TEST_USER_2, TEST_AUCTION_ROOM);
+
+    public static final ChatRoomRequest CHAT_ROOM_REQUEST = ChatRoomRequest.builder().name("테스트용 채팅방").userId(0L).build();
+    public static final ChatRoom CHAT_ROOM = ChatRoom.builder().name("테스트용 채팅방").build();
+    public static final ChatRoomResponse CHAT_ROOM_RESPONSE = ChatRoomResponse.builder().name("테스트 채팅방").build();
 
 }
