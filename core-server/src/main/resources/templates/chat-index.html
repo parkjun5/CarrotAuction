@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <title>WebSocket Chat Client</title>
+</head>
+<body>
+<div id="chat">
+    <ul id="message-list"></ul>
+    <form id="message-form">
+        <label for="message-input">메시지 : </label><input type="text" id="message-input" placeholder="Type your message..." />
+        <label for="chat-room-input">채팅방 : </label><input type="text" id="chat-room-input" placeholder="Type your chat room Id..." />
+        <button type="submit">Send</button>
+    </form>
+</div>
+<script>
+    const messageList = document.getElementById("message-list");
+    const messageForm = document.getElementById("message-form");
+    const messageInput = document.getElementById("message-input");
+    const chatRoomInput = document.getElementById("chat-room-input");
+    document.cookie = 'JSESSION_ID=테스트사용자';
+
+    const socket = new WebSocket("ws://localhost:8001/chat/message");
+
+    socket.onopen = () => {
+        console.log("Connected to WebSocket server");
+    };
+
+    socket.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+        showMessage(message);
+    };
+
+    socket.onclose = () => {
+        console.log("Disconnected from WebSocket server");
+    };
+
+    socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+    };
+
+    messageForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const messageVal = messageInput.value.trim();
+        const chatRoomVal = chatRoomInput.value.trim();
+        if (!messageVal) {
+            return;
+        }
+
+        const chatMessage = {
+            senderId: "Anonymous",
+            message: messageVal,
+            chatRoomId: chatRoomVal
+        };
+
+        socket.send(JSON.stringify(chatMessage));
+        messageInput.value = "";
+    });
+
+    function showMessage(message) {
+        const listItem = document.createElement("li");
+        listItem.textContent = message.senderId + ": " + message.message;
+        messageList.appendChild(listItem);
+    }
+
+    $(function() {
+
+        $.ajax({
+            type: "GET",
+            url: "/api/chatroom?page=0&size=3&sort=id",
+            contentType : "application/x-www-form-urlencoded;charset=UTF-8",
+            error: function() {
+                console.log('통신실패!!');
+            },
+            success: function(data) {
+                console.log("통신데이터 값 : " + data);
+            }
+        });
+
+
+    });
+
+</script>
+</body>
+</html>
