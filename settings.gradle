@@ -1,1 +1,4 @@
 rootProject.name = "CarrotAuction"
+
+include "core-server"
+include "chat-server"
