@@ -1,10 +1,11 @@
-package com.carrot.chat.chatmessage.config;
+package com.carrot.chat.websocket.common;
 
-import com.carrot.chat.chatmessage.application.ChatWebSocketHandler;
+import com.carrot.chat.websocket.chatmessage.application.ChatWebSocketHandler;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.reactive.HandlerMapping;
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.reactive.socket.WebSocketHandler;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@Profile("mongodb")
 @EnableWebSocket
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 public class WebSocketConfig {

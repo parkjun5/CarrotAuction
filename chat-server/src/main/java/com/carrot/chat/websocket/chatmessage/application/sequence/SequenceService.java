@@ -1,6 +1,7 @@
-package com.carrot.chat.common.sequence;
+package com.carrot.chat.websocket.chatmessage.application.sequence;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import static org.springframework.data.mongodb.core.FindAndModifyOptions.options
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
+@Profile("mongodb")
 @Service
 @RequiredArgsConstructor
 public class SequenceService {
