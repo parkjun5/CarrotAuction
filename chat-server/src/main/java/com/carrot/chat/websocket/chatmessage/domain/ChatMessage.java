@@ -1,4 +1,4 @@
-package com.carrot.chat.chatmessage.domain;
+package com.carrot.chat.websocket.chatmessage.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;

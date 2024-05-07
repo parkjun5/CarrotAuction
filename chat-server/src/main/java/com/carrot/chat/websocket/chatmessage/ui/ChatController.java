@@ -1,9 +1,10 @@
-package com.carrot.chat.chatmessage.presentation;
+package com.carrot.chat.websocket.chatmessage.ui;
 
 
-import com.carrot.chat.chatmessage.application.ChatMessageService;
-import com.carrot.chat.chatmessage.domain.ChatMessage;
+import com.carrot.chat.websocket.chatmessage.application.ChatMessageService;
+import com.carrot.chat.websocket.chatmessage.domain.ChatMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -14,6 +15,7 @@ import java.time.Duration;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+@Profile("mongodb")
 @RestController
 @RequiredArgsConstructor
 public class ChatController {

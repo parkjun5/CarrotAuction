@@ -1,13 +1,14 @@
-package com.carrot.chat.chatmessage.application;
+package com.carrot.chat.websocket.chatmessage.application;
 
-import com.carrot.chat.common.sequence.SequenceService;
-import com.carrot.chat.chatmessage.domain.ChatMessage;
-import com.carrot.chat.chatmessage.domain.ChatMessageRepository;
-import com.carrot.chat.chatmessage.exception.ChatConvertException;
+import com.carrot.chat.websocket.chatmessage.domain.ChatMessage;
+import com.carrot.chat.websocket.chatmessage.domain.ChatMessageRepository;
+import com.carrot.chat.websocket.common.exception.ChatConvertException;
+import com.carrot.chat.websocket.chatmessage.application.sequence.SequenceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.socket.WebSocketSession;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 
 @Slf4j
+@Profile("mongodb")
 @Service
 @RequiredArgsConstructor
 public class ChatMessageService {

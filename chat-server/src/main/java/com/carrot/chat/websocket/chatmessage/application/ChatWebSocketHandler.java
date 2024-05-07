@@ -1,14 +1,17 @@
-package com.carrot.chat.chatmessage.application;
+package com.carrot.chat.websocket.chatmessage.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketSession;
-import reactor.core.publisher.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 
+@Profile("mongodb")
 @Slf4j
 @Component
 @RequiredArgsConstructor
