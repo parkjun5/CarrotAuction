@@ -27,7 +27,7 @@ public class Subscriber extends ValueObject<Subscriber> implements MessageListen
     public void onMessage(@Nonnull Message message, byte[] pattern) {
 
         MessageObject messageObject = MessageConverter.convertBody(message, MessageObject.class);
-        if (name.equals(messageObject.name())) {
+        if (name.equals(messageObject.writer())) {
             return;
         }
         String text = String.format("to: %s => message: %s", name, messageObject);

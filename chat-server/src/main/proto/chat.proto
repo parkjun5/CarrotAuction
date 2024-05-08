@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package chat;
+
+service ChatHistoryRecorder {
+  rpc RecordHistory (ChatHistoryRecord) returns (RecordHistoryResponse);
+}
+
+message RecordHistoryResponse {
+  int64 historyId = 1;
+}
+
+message ChatHistoryRecord {
+  string message = 1;
+  google.protobuf.Timestamp sendAt = 2;
+  int64 writerId = 3;
+  int64 chatRoomId = 4;
+}

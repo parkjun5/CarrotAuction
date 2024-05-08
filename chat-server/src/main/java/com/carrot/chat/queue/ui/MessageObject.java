@@ -6,7 +6,7 @@ public record MessageObject(
         String message,
         Timestamp timestamp,
         Long chatRoomId,
-        String name,
+        String writer,
         Long userId
 ) {
 }
