@@ -1,17 +1,15 @@
 package com.carrot.core.auctionroom.application;
 
-import com.carrot.core.auctionroom.domain.AuctionParticipation;
-import com.carrot.core.auctionroom.domain.repository.AuctionParticipationRepository;
-import com.carrot.core.auctionroom.exception.AlreadyFullEnrollmentException;
-import com.carrot.core.auctionroom.application.dto.AuctionRoomMapper;
 import com.carrot.core.auctionroom.application.dto.AuctionRoomRequest;
 import com.carrot.core.auctionroom.application.dto.AuctionRoomResponse;
-import com.carrot.core.user.domain.User;
-import com.carrot.core.user.application.dto.UserMapper;
-import com.carrot.core.user.application.dto.UserResponse;
-import com.carrot.core.user.application.UserService;
+import com.carrot.core.auctionroom.domain.AuctionParticipation;
 import com.carrot.core.auctionroom.domain.AuctionRoom;
+import com.carrot.core.auctionroom.domain.repository.AuctionParticipationRepository;
 import com.carrot.core.auctionroom.domain.repository.AuctionRoomRepository;
+import com.carrot.core.auctionroom.exception.AlreadyFullEnrollmentException;
+import com.carrot.core.user.application.UserService;
+import com.carrot.core.user.application.dto.UserResponse;
+import com.carrot.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,8 +29,6 @@ public class AuctionRoomService {
     private final AuctionRoomRepository auctionRepository;
     private final AuctionParticipationRepository auctionParticipationRepository;
     private final UserService userService;
-    private final AuctionRoomMapper auctionRoomMapper;
-    private final UserMapper userMapper;
     private static final String AUCTION_NOT_FOUND = "의 경매장을 찾지 못했습니다.";
 
     public AuctionRoomResponse findAuctionResponseById(final Long roomId) {
@@ -43,7 +39,7 @@ public class AuctionRoomService {
     @Transactional
     public AuctionRoomResponse createAuctionRoom(AuctionRoomRequest request) {
         User hostUser = userService.findUserById(request.userId());
-        AuctionRoom auctionRoom = auctionRoomMapper.toEntityByRequestAndUser(hostUser, request);
+        AuctionRoom auctionRoom = AuctionRoom.of(hostUser, request);
         AuctionParticipation auctionParticipation = AuctionParticipation.createAuctionParticipation(hostUser, auctionRoom);
 
         auctionParticipationRepository.save(auctionParticipation);
@@ -101,8 +97,8 @@ public class AuctionRoomService {
 
     private AuctionRoomResponse toResponseByAuctionRoom(AuctionRoom auctionRoom) {
         Set<String> nameOfParticipants = auctionRoom.getParticipantsNicknames();
-        UserResponse userResponse = userMapper.toResponseByEntity(auctionRoom.getHostUser());
-        return auctionRoomMapper.toResponseByEntityAndNames(auctionRoom, userResponse, nameOfParticipants);
+        UserResponse userResponse = UserResponse.from(auctionRoom.getHostUser());
+        return AuctionRoomResponse.from(auctionRoom, userResponse, nameOfParticipants);
     }
 
 }

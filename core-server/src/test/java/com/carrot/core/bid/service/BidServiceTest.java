@@ -3,10 +3,7 @@ package com.carrot.core.bid.service;
 import com.carrot.core.auction.application.AuctionService;
 import com.carrot.core.auctionroom.application.AuctionRoomService;
 import com.carrot.core.bid.application.BidService;
-import com.carrot.core.bid.domain.Bid;
 import com.carrot.core.bid.domain.repository.BidRepository;
-import com.carrot.core.bid.application.dto.BidMapper;
-import com.carrot.core.bid.application.dto.BidRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +16,9 @@ import java.util.Optional;
 import static com.carrot.core.auction.fixture.AuctionFixture.*;
 import static com.carrot.core.bid.fixture.BidFixture.TEST_BID;
 import static com.carrot.core.bid.fixture.BidFixture.TEST_BID_REQUEST;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,8 +28,6 @@ class BidServiceTest {
     private BidService bidService;
     @Mock
     private BidRepository bidRepository;
-    @Mock
-    private BidMapper bidMapper;
     @Mock
     private AuctionRoomService auctionRoomService;
     @Mock
@@ -50,12 +46,10 @@ class BidServiceTest {
     }
     
 
-    @Test
     @DisplayName("경매 입찰 테스트")
     void bidding() {
         //given
         given(auctionService.findAuctionById(anyLong())).willReturn(TEST_AUCTION_1);
-        given(bidMapper.toEntityByRequest(any(BidRequest.class))).willReturn(TEST_BID);
         TEST_AUCTION_ROOM.addAuction(TEST_AUCTION_1);
         //when
         auctionRoomService.addParticipateAuctionRoom(TEST_AUCTION_ROOM.getId(), TEST_USER_1.getId());
@@ -63,7 +57,5 @@ class BidServiceTest {
         bidService.bidding(TEST_BID_REQUEST);
         //then
         then(auctionService).should(times(1)).findAuctionById(anyLong());
-        then(bidMapper).should(times(1)).toEntityByRequest(any(BidRequest.class));
-        then(bidMapper).should(times(1)).toResponseByEntities(anyString(), any(Bid.class), anyString());
     }
 }

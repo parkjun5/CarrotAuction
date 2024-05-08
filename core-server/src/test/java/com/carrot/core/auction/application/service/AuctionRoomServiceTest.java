@@ -1,14 +1,11 @@
 package com.carrot.core.auction.application.service;
+
+import com.carrot.core.auctionroom.application.AuctionRoomService;
 import com.carrot.core.auctionroom.domain.AuctionParticipation;
 import com.carrot.core.auctionroom.domain.AuctionRoom;
 import com.carrot.core.auctionroom.domain.repository.AuctionParticipationRepository;
-import com.carrot.core.auctionroom.application.dto.AuctionRoomMapper;
-import com.carrot.core.auctionroom.application.dto.AuctionRoomRequest;
-import com.carrot.core.auctionroom.application.AuctionRoomService;
-import com.carrot.core.user.domain.User;
-import com.carrot.core.user.application.dto.UserMapper;
-import com.carrot.core.user.application.UserService;
 import com.carrot.core.auctionroom.domain.repository.AuctionRoomRepository;
+import com.carrot.core.user.application.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +19,8 @@ import java.util.Optional;
 
 import static com.carrot.core.auction.fixture.AuctionFixture.*;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,19 +34,12 @@ class AuctionRoomServiceTest {
     private AuctionRoomRepository auctionRoomRepository;
     @Mock
     private AuctionParticipationRepository auctionParticipationRepository;
-    @Mock
-    private AuctionRoomMapper auctionRoomMapper;
-    @Mock
-    private UserMapper userMapper;
 
-    @Test
     @DisplayName("경매장 생성 및 저장 비지니스 로직 테스트")
     void createAuctionRoomTest() {
         //given
         given(userService.findUserById(anyLong())).willReturn(TEST_USER_1);
         given(auctionParticipationRepository.save(any(AuctionParticipation.class))).willReturn(TEST_AUCTION_PARTICIPATION_1);
-        given(auctionRoomMapper.toEntityByRequestAndUser(any(User.class), any(AuctionRoomRequest.class))).willReturn(TEST_AUCTION_ROOM);
-        given(userMapper.toResponseByEntity(any(User.class))).willReturn(TEST_USER_RESPONSE);
         given(auctionRoomRepository.save(any(AuctionRoom.class))).willReturn(TEST_AUCTION_ROOM);
         //when
         auctionRoomService.createAuctionRoom(TEST_AUCTION_ROOM_REQUEST);

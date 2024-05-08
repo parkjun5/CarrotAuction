@@ -4,11 +4,10 @@ import com.carrot.core.auction.application.AuctionService;
 import com.carrot.core.auction.domain.Auction;
 import com.carrot.core.auctionroom.domain.AuctionParticipation;
 import com.carrot.core.auctionroom.domain.AuctionRoom;
-import com.carrot.core.bid.domain.Bid;
-import com.carrot.core.bid.domain.repository.BidRepository;
-import com.carrot.core.bid.application.dto.BidMapper;
 import com.carrot.core.bid.application.dto.BidRequest;
 import com.carrot.core.bid.application.dto.BidResponse;
+import com.carrot.core.bid.domain.Bid;
+import com.carrot.core.bid.domain.repository.BidRepository;
 import com.carrot.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,24 +21,23 @@ import java.util.NoSuchElementException;
 public class BidService {
 
     private final BidRepository bidRepository;
-    private final BidMapper bidMapper;
     private final AuctionService auctionService;
 
     public BidResponse findBidById(Long bidId) {
         Bid bid = bidRepository.findById(bidId).orElseThrow(() -> new NoSuchElementException("입찰이 존재하지 않습니다."));
         String bidderName = getBidderNameInParticipant(bid.getBidderId(), bid.getAuction().getAuctionRoom());
-        return bidMapper.toResponseByEntities(bid.getAuction().getAuctionRoom().getName(), bid, bidderName);
+        return BidResponse.from(bid,bid.getAuction().getAuctionRoom().getName(), bidderName);
     }
 
     @Transactional
-    public BidResponse bidding(BidRequest req) {
-        Auction auction = auctionService.findAuctionById(req.auctionId());
+    public BidResponse bidding(BidRequest request) {
+        Auction auction = auctionService.findAuctionById(request.auctionId());
 
-        Bid bid = bidMapper.toEntityByRequest(req);
+        Bid bid = Bid.of(request, auction);
         auction.addBid(bid);
 
-        String bidderName = getBidderNameInParticipant(req.bidderId(), auction.getAuctionRoom());
-        return bidMapper.toResponseByEntities(auction.getItem().getTitle(), bid, bidderName);
+        String bidderName = getBidderNameInParticipant(request.bidderId(), auction.getAuctionRoom());
+        return BidResponse.from(bid,auction.getItem().getTitle(), bidderName);
     }
 
     private String getBidderNameInParticipant(Long bidderId, AuctionRoom auctionRoom) {

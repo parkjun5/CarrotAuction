@@ -1,5 +1,6 @@
 package com.carrot.core.auction.application.dto;
 
+import com.carrot.core.auction.domain.Auction;
 import com.carrot.core.auction.domain.AuctionStatus;
 import com.carrot.core.bidrule.application.dto.BidRuleResponse;
 import com.carrot.core.item.domain.Category;
@@ -18,7 +19,7 @@ import java.util.List;
 @Schema(description = "경매장 응답 객체")
 public record AuctionResponse(
         @Schema(description = "경매 아이디")
-        long auctionId,
+        Long auctionId,
         @Schema(description = "경매 최초 금액", example = "1_000")
         int bidStartPrice,
         @Embedded Item item,
@@ -31,5 +32,12 @@ public record AuctionResponse(
         @Schema(description = "경매장 상태", defaultValue = "DRAFT")
         @Enumerated(EnumType.STRING) AuctionStatus auctionStatus,
         List<BidRuleResponse> selectedRules) {
+
+    public static AuctionResponse from(Auction auction, List<BidRuleResponse> bidRuleResponses) {
+        return new AuctionResponse(auction.getId(), auction.getBidStartPrice(),
+                auction.getItem(), auction.getCategory(), auction.getBeginDateTime(),
+                auction.getCloseDateTime(), auction.getAuctionStatus(), bidRuleResponses
+        );
+    }
 
 }

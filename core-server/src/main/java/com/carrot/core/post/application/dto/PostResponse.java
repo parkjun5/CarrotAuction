@@ -2,6 +2,7 @@ package com.carrot.core.post.application.dto;
 
 import com.carrot.core.item.domain.Category;
 import com.carrot.core.item.domain.Item;
+import com.carrot.core.post.domain.Post;
 import com.carrot.core.post.domain.PostStatus;
 import com.carrot.core.user.application.dto.UserResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,4 +26,9 @@ public record PostResponse(
         int amountOfInterest,
         @Schema(description = "상태", example = "IN_SALE")
         @Enumerated(EnumType.STRING) PostStatus postStatus) {
+    public static PostResponse from(Post post) {
+        UserResponse userResponse = UserResponse.from(post.getUser());
+        return new PostResponse(userResponse, post.getPostTitle(), post.getPostContent(),
+                post.getItem(), post.getCategory(), post.getViews(), post.getAmountOfInterest(), post.getPostStatus());
+    }
 }

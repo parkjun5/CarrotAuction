@@ -2,6 +2,7 @@ package com.carrot.core.post.domain;
 
 import com.carrot.core.item.domain.Category;
 import com.carrot.core.item.domain.Item;
+import com.carrot.core.post.application.dto.PostRequest;
 import com.carrot.core.user.domain.User;
 import com.carrot.core.common.domain.BaseEntity;
 import jakarta.persistence.*;
@@ -30,6 +31,16 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING) private PostStatus postStatus = PostStatus.IN_SALE;
     @Builder.Default
     private boolean isDeleted = false;
+
+    public static Post of(User writer, PostRequest request) {
+        Post post = new Post();
+        post.postTitle = request.postTitle();
+        post.postContent = request.postContent();
+        post.item = request.item();
+        post.category = request.category();
+        post.user = writer;
+        return post;
+    }
 
     public void changeContent(String postTitle, String postContent) {
         this.postTitle = postTitle;

@@ -57,7 +57,7 @@ public class AuctionFixture {
             BEGIN_TIME
     );
     public static final AuctionRoomResponse TEST_AUCTION_ROOM_RESPONSE = new AuctionRoomResponse(
-            99_999,
+            99_999L,
             TEST_USER_RESPONSE,
             new HashSet<>(),
             "성공적인 테스트 기원",

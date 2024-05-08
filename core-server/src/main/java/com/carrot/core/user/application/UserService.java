@@ -1,10 +1,9 @@
 package com.carrot.core.user.application;
 
-import com.carrot.core.user.domain.User;
-import com.carrot.core.user.domain.repository.UserRepository;
-import com.carrot.core.user.application.dto.UserMapper;
 import com.carrot.core.user.application.dto.UserRequest;
 import com.carrot.core.user.application.dto.UserResponse;
+import com.carrot.core.user.domain.User;
+import com.carrot.core.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,30 +19,29 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
 
     @Transactional
     public User createUser(UserRequest userRequest) {
-        User user = userMapper.toEntityByRequest(userRequest);
+        User user = User.of(userRequest);
         return userRepository.save(user);
     }
 
     public Page<UserResponse> getUsersByPageable(Pageable pageable) {
         Page<User> users = userRepository.findAllByDeletedIsFalse(pageable);
-        List<UserResponse> userResponseList = users.stream().map(userMapper::toResponseByEntity).toList();
+        List<UserResponse> userResponseList = users.stream().map(UserResponse::from).toList();
         return new PageImpl<>(userResponseList);
     }
 
     public UserResponse getUserById(final Long userId) {
         User user = findUserById(userId);
-        return userMapper.toResponseByEntity(user);
+        return UserResponse.from(user);
     }
 
     @Transactional
     public UserResponse updateUser(final Long userId, UserRequest request) {
         User user = findUserById(userId);
         user.changeInfo(request.email(), request.nickname(), request.password());
-        return userMapper.toResponseByEntity(user);
+        return UserResponse.from(user);
     }
 
     @Transactional

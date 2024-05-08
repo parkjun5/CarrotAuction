@@ -1,12 +1,12 @@
 package com.carrot.core.chat.domain;
 
+import com.carrot.core.chat.application.dto.ChatRoomRequest;
 import com.carrot.core.common.domain.BaseEntity;
-import com.carrot.core.user.domain.User;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.*;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Entity
@@ -18,12 +18,10 @@ public class ChatRoom extends BaseEntity {
     @Column(name = "chat_room_id")
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "chatRoom",cascade = CascadeType.ALL)
-    @Builder.Default
-    private Set<ChatRoomParticipation> chatRoomParticipation = new HashSet<>();
-
-    public void setChatRoomParticipation(User user) {
-        this.chatRoomParticipation.add(ChatRoomParticipation.createChatRoomParticipation(user, this));
+    public static ChatRoom of(ChatRoomRequest request) {
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.name = request.name();
+        return chatRoom;
     }
 
     public void changeName(String name) {

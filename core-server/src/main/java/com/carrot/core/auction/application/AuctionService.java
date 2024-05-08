@@ -1,6 +1,5 @@
 package com.carrot.core.auction.application;
 
-import com.carrot.core.auction.application.dto.AuctionMapper;
 import com.carrot.core.auction.application.dto.AuctionRequest;
 import com.carrot.core.auction.application.dto.AuctionResponse;
 import com.carrot.core.auction.domain.Auction;
@@ -9,7 +8,6 @@ import com.carrot.core.auction.exception.IllegalAuctionTimeException;
 import com.carrot.core.auctionroom.application.AuctionRoomService;
 import com.carrot.core.auctionroom.domain.AuctionRoom;
 import com.carrot.core.bidrule.application.BidRuleService;
-import com.carrot.core.bidrule.application.dto.BidRuleMapper;
 import com.carrot.core.bidrule.application.dto.BidRuleResponse;
 import com.carrot.core.bidrule.domain.BidRule;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -28,14 +24,12 @@ public class AuctionService {
 
     private final AuctionRepository auctionRepository;
     private final AuctionRoomService auctionRoomService;
-    private final AuctionMapper auctionMapper;
-    private final BidRuleMapper bidRuleMapper;
     private final BidRuleService bidRuleService;
 
     @Transactional
     public AuctionResponse createAuctionToRoom(final Long auctionRoomId, AuctionRequest request) {
         AuctionRoom auctionRoom = auctionRoomService.findAuctionRoomById(auctionRoomId);
-        Auction auction = auctionMapper.toEntityByRequest(request);
+        Auction auction = Auction.of(request);
         auctionRoom.addAuction(auction);
         bidRuleService.setAuctionBidRules(auction, request.selectedBidRules());
         return getAuctionResponse(auction);
@@ -113,10 +107,10 @@ public class AuctionService {
     }
 
     private AuctionResponse getAuctionResponse(Auction auction) {
-        Set<BidRuleResponse> bidRuleResponses = auction.getBidRules().stream()
-                .map(bidRuleMapper::toResponseByEntity)
-                .collect(Collectors.toSet());
+        List<BidRuleResponse> bidRuleResponses = auction.getBidRules().stream()
+                .map(BidRuleResponse::from)
+                .toList();
 
-        return auctionMapper.toResponseByEntities(auction, bidRuleResponses);
+        return AuctionResponse.from(auction, bidRuleResponses);
     }
 }

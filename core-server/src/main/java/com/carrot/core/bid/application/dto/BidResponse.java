@@ -1,6 +1,7 @@
 package com.carrot.core.bid.application.dto;
 
 
+import com.carrot.core.bid.domain.Bid;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -15,6 +16,9 @@ public record BidResponse(
         @Schema(description = "입찰 가격", example = "50000")
         int biddingPrice,
         @Schema(description = "경매 종료 일자", type = "string", example = "2024-03-08T00:00:00+0900")
-        @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ssZ")
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
         ZonedDateTime biddingTime) {
+    public static BidResponse from(Bid bid, String auctionName, String bidderName) {
+        return new BidResponse(auctionName, bidderName, bid.getBiddingPrice(), bid.getBiddingTime());
+    }
 }

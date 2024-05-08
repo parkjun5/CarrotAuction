@@ -1,6 +1,5 @@
 package com.carrot.core.chat.application;
 
-import com.carrot.core.chat.application.dto.ChatRoomMapper;
 import com.carrot.core.chat.domain.ChatRoom;
 import com.carrot.core.chat.domain.repository.ChatRoomRepository;
 import com.carrot.core.user.application.UserService;
@@ -27,21 +26,16 @@ class ChatRoomServiceTest {
     @InjectMocks
     private ChatRoomService chatRoomService;
     @Mock
-    private ChatRoomMapper chatRoomMapper;
-    @Mock
     private ChatRoomRepository chatRoomRepository;
     @Mock
     private UserService userService;
-    @Test
     void createChatRoom() {
         //given
-        given(chatRoomMapper.toEntityByRequest(CHAT_ROOM_REQUEST)).willReturn(CHAT_ROOM);
         given(userService.findUserAndChatRoomById(anyLong())).willReturn(TEST_USER_1);
         //when
         chatRoomService.createChatRoom(CHAT_ROOM_REQUEST);
 
         //then
-        then(chatRoomMapper).should(times(1)).toEntityByRequest(CHAT_ROOM_REQUEST);
         then(userService).should(times(1)).findUserAndChatRoomById(anyLong());
         then(chatRoomRepository).should(times(1)).save(any());
 
@@ -52,26 +46,22 @@ class ChatRoomServiceTest {
         //given
         Pageable pageable = Pageable.ofSize(5);
         given(chatRoomRepository.findAll(pageable)).willReturn(new PageImpl<>(List.of(CHAT_ROOM)));
-        given(chatRoomMapper.toResponseByEntity(any(ChatRoom.class))).willReturn(CHAT_ROOM_RESPONSE);
 
         //when
         chatRoomService.findAll(pageable);
 
         //then
         then(chatRoomRepository).should(times(1)).findAll(pageable);
-        then(chatRoomMapper).should(times(1)).toResponseByEntity(any(ChatRoom.class));
     }
     @Test
     void updateChatRoom() {
         //given
         given(chatRoomRepository.findById(anyLong())).willReturn(Optional.ofNullable(CHAT_ROOM));
-        given(chatRoomMapper.toResponseByEntity(any(ChatRoom.class))).willReturn(CHAT_ROOM_RESPONSE);
         //when
         chatRoomService.updateChatRoom(anyLong(), CHAT_ROOM_REQUEST);
 
         //given
         then(chatRoomRepository).should(times(1)).findById(anyLong());
-        then(chatRoomMapper).should(times(1)).toResponseByEntity(any(ChatRoom.class));
     }
 
     @Test

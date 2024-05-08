@@ -1,6 +1,7 @@
 package com.carrot.core.bid.domain;
 
 import com.carrot.core.auction.domain.Auction;
+import com.carrot.core.bid.application.dto.BidRequest;
 import com.carrot.core.common.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,6 +33,15 @@ public class Bid extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     @Schema(description = "입찰 시간" ,type = "string", example = "2023-03-08T00:00:00+0900")
     private ZonedDateTime biddingTime;
+
+    public static Bid of(BidRequest request, Auction auction) {
+        Bid bid = new Bid();
+        bid.auction = auction;
+        bid.biddingPrice = request.biddingPrice();
+        bid.biddingTime = request.biddingTime();
+        bid.bidderId = request.bidderId();
+        return null;
+    }
 
     public void setAuction(Auction auction) {
         this.auction = auction;

@@ -1,12 +1,9 @@
 package com.carrot.core.chat.application;
 
-import com.carrot.core.chat.application.dto.ChatRoomMapper;
 import com.carrot.core.chat.application.dto.ChatRoomRequest;
 import com.carrot.core.chat.application.dto.ChatRoomResponse;
 import com.carrot.core.chat.domain.ChatRoom;
 import com.carrot.core.chat.domain.repository.ChatRoomRepository;
-import com.carrot.core.user.application.UserService;
-import com.carrot.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,21 +17,17 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class ChatRoomService {
 
-    private final ChatRoomMapper chatRoomMapper;
     private final ChatRoomRepository chatRoomRepository;
-    private final UserService userService;
 
     public ChatRoomResponse createChatRoom(ChatRoomRequest request) {
-        ChatRoom chatRoom = chatRoomMapper.toEntityByRequest(request);
-        User user = userService.findUserAndChatRoomById(request.userId());
-        chatRoom.setChatRoomParticipation(user);
-        return chatRoomMapper.toResponseByEntity(chatRoomRepository.save(chatRoom));
+        ChatRoom chatRoom = ChatRoom.of(request);
+        return ChatRoomResponse.from(chatRoomRepository.save(chatRoom));
     }
 
     public Page<ChatRoomResponse> findAll(Pageable pageable) {
         Page<ChatRoom> chatRooms = chatRoomRepository.findAll(pageable);
         List<ChatRoomResponse> chatRoomResponses = chatRooms.stream()
-                .map(chatRoomMapper::toResponseByEntity)
+                .map(ChatRoomResponse::from)
                 .toList();
         return new PageImpl<>(chatRoomResponses);
     }
@@ -42,7 +35,7 @@ public class ChatRoomService {
     public ChatRoomResponse updateChatRoom(Long chatRoomId, ChatRoomRequest chatRoomRequest) {
         ChatRoom chatRoom = findChatRoomById(chatRoomId);
         chatRoom.changeName(chatRoomRequest.name());
-        return chatRoomMapper.toResponseByEntity(chatRoom);
+        return ChatRoomResponse.from(chatRoom);
     }
 
     public String deleteChatRoom(Long chatRoomId) {
@@ -51,7 +44,7 @@ public class ChatRoomService {
         return chatRoomId + "정상 삭체되었습니다.";
     }
 
-    private ChatRoom findChatRoomById(Long chatRoomId) {
+    public ChatRoom findChatRoomById(Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new NoSuchElementException(chatRoomId + " 아이디가 존재하지 않습니다."));
     }
 }

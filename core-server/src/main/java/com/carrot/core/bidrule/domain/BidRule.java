@@ -1,6 +1,7 @@
 package com.carrot.core.bidrule.domain;
 
 import com.carrot.core.auction.domain.Auction;
+import com.carrot.core.bidrule.application.dto.BidRuleRequest;
 import com.carrot.core.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,5 +24,13 @@ public class BidRule extends BaseEntity {
     private Auction auction;
     public void setAuction(Auction auction) {
         this.auction = auction;
+    }
+
+    public static BidRule of(BidRuleRequest request) {
+        BidRule bidRule = new BidRule();
+        bidRule.name = request.name();
+        bidRule.ruleValue = request.ruleValue();
+        bidRule.description = request.description();
+        return bidRule;
     }
 }

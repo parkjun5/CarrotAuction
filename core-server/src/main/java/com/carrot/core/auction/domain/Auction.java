@@ -4,15 +4,19 @@ import com.carrot.core.auction.application.dto.AuctionRequest;
 import com.carrot.core.auctionroom.domain.AuctionRoom;
 import com.carrot.core.bid.domain.Bid;
 import com.carrot.core.bidrule.domain.BidRule;
+import com.carrot.core.common.domain.BaseEntity;
 import com.carrot.core.item.domain.Category;
 import com.carrot.core.item.domain.Item;
-import com.carrot.core.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -47,6 +51,20 @@ public class Auction extends BaseEntity {
     public void addBid(Bid bid) {
         this.bids.add(bid);
         bid.setAuction(this);
+    }
+
+    public static Auction of(AuctionRequest request) {
+        Auction auction = new Auction();
+        auction.bidStartPrice = request.bidStartPrice();
+        auction.item = request.item();
+        auction.category = request.category();
+        auction.beginDateTime = request.beginDateTime();
+        auction.closeDateTime = request.closeDateTime();
+        auction.bidRules = request.selectedBidRules()
+                                  .stream()
+                                  .map(BidRule::of)
+                                  .collect(Collectors.toSet());
+        return auction;
     }
 
     public static int getMinimumPrice(int existingPrice, BigDecimal minBiddingPercent) {

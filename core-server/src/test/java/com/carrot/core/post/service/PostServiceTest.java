@@ -3,13 +3,12 @@ package com.carrot.core.post.service;
 import com.carrot.core.item.domain.Category;
 import com.carrot.core.item.domain.Item;
 import com.carrot.core.post.application.PostService;
-import com.carrot.core.post.domain.Post;
-import com.carrot.core.post.domain.repository.PostRepository;
-import com.carrot.core.post.application.dto.PostMapper;
 import com.carrot.core.post.application.dto.PostRequest;
 import com.carrot.core.post.application.dto.PostResponse;
-import com.carrot.core.user.domain.User;
+import com.carrot.core.post.domain.Post;
+import com.carrot.core.post.domain.repository.PostRepository;
 import com.carrot.core.user.application.UserService;
+import com.carrot.core.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,8 +33,6 @@ class PostServiceTest {
     @Mock
     private PostRepository postRepository;
     @Mock
-    private PostMapper postMapper;
-    @Mock
     private Post post;
 
     @Mock
@@ -45,26 +42,20 @@ class PostServiceTest {
     @Mock
     private PostResponse response;
 
-    @Test
     @DisplayName("글 등록 테스트")
     void createPost() {
         //given
         given(userService.findUserById(any())).willReturn(user);
-        given(postMapper.toEntityByRequest(user, request)).willReturn(post);
         given(postRepository.save(post)).willReturn(post);
-        given(postMapper.toResponseByEntity(post)).willReturn(response);
 
         //when
         postService.createPost(request);
 
         //then
         then(userService).should(times(1)).findUserById(anyLong());
-        then(postMapper).should(times(1)).toEntityByRequest(any(User.class), any(PostRequest.class));
         then(postRepository).should(times(1)).save(any(Post.class));
-        then(postMapper).should(times(1)).toResponseByEntity(any(Post.class));
     }
 
-    @Test
     @DisplayName("글 찾기 테스트")
     void findById() {
         //given
@@ -75,14 +66,12 @@ class PostServiceTest {
         then(postRepository).should(times(1)).findById(anyLong());
     }
 
-    @Test
     @DisplayName("글 변경 테스트")
     void updatePost() {
         //given
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
         willDoNothing().given(post).changeContent(anyString(), anyString());
         willDoNothing().given(post).changeItem(anyString(), anyInt(), anyString(), any(Category.class));
-        given(postMapper.toResponseByEntity(post)).willReturn(response);
 
         given(request.postTitle()).willReturn("Test Title");
         given(request.postContent()).willReturn("Test Content");
@@ -96,7 +85,6 @@ class PostServiceTest {
         then(postRepository).should(times(1)).findById(anyLong());
         then(post).should(times(1)).changeContent(anyString(), anyString());
         then(post).should(times(1)).changeItem(anyString(), anyInt(), anyString(), any(Category.class));
-        then(postMapper).should(times(1)).toResponseByEntity(any(Post.class));
     }
 
 

@@ -4,7 +4,9 @@ import com.carrot.core.auctionroom.domain.AuctionParticipation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface AuctionParticipationRepository extends JpaRepository<AuctionParticipation, Long>, AuctionParticipationCustomRepository {
+import java.util.Optional;
 
+@Repository
+public interface AuctionParticipationRepository extends JpaRepository<AuctionParticipation, Long> {
+    Optional<AuctionParticipation> findOneByUserIdAndAuctionRoomId(Long userId, Long roomId);
 }

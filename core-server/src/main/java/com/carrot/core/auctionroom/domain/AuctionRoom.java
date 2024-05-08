@@ -1,6 +1,7 @@
 package com.carrot.core.auctionroom.domain;
 
 import com.carrot.core.auction.domain.Auction;
+import com.carrot.core.auctionroom.application.dto.AuctionRoomRequest;
 import com.carrot.core.user.domain.User;
 import com.carrot.core.common.domain.BaseEntity;
 import jakarta.persistence.*;
@@ -35,6 +36,15 @@ public class AuctionRoom extends BaseEntity {
     @OneToMany(mappedBy = "auctionRoom")
     @Builder.Default
     private List<Auction> auctions = new ArrayList<>();
+
+    public static AuctionRoom of(User hostUser, AuctionRoomRequest request) {
+        AuctionRoom auctionRoom = new AuctionRoom();
+        auctionRoom.hostUser = hostUser;
+        auctionRoom.name = request.name();
+        auctionRoom.limitOfEnrollment = request.limitOfEnrollment();
+        auctionRoom.password = request.password();
+        return auctionRoom;
+    }
 
     public void addAuction(Auction auction) {
         auction.setAuctionRoom(this);
