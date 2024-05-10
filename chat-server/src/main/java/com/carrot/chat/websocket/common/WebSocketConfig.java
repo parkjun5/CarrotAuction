@@ -1,6 +1,6 @@
 package com.carrot.chat.websocket.common;
 
-import com.carrot.chat.websocket.chatmessage.application.ChatWebSocketHandler;
+import com.carrot.chat.websocket.chatmessage.ui.ChatWebSocketHandler;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;

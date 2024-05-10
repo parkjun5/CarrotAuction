@@ -1,5 +1,6 @@
-package com.carrot.chat.websocket.chatmessage.application;
+package com.carrot.chat.websocket.chatmessage.ui;
 
+import com.carrot.chat.websocket.chatmessage.application.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
