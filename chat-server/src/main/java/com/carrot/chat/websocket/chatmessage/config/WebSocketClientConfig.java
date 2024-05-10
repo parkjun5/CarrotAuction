@@ -32,12 +32,12 @@ public class WebSocketClientConfig {
 
     @Bean
     public Sinks.Many<Object> sinks() {
-        return Sinks.many().multicast().onBackpressureBuffer();
+        return Sinks.many().multicast().onBackpressureBuffer(1000);
     }
 
     @Bean
     public Flux<Object> messageContainer(Sinks.Many<Object> sinks) {
-        return sinks.asFlux().onBackpressureBuffer(3, BufferOverflowStrategy.DROP_OLDEST);
+        return sinks.asFlux().onBackpressureBuffer(1000, BufferOverflowStrategy.DROP_OLDEST);
     }
 
 }

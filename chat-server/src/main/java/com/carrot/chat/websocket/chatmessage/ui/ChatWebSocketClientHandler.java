@@ -1,5 +1,6 @@
 package com.carrot.chat.websocket.chatmessage.ui;
 
+import com.carrot.chat.queue.application.RedisContainerManager;
 import com.carrot.chat.queue.application.RedisPubService;
 import com.carrot.chat.queue.ui.MessageObject;
 import com.carrot.chat.websocket.common.exception.ChatConvertException;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -25,12 +27,15 @@ public class ChatWebSocketClientHandler implements WebSocketHandler {
     private final Sinks.Many<Object> sinks;
     private final ObjectMapper objectMapper;
     private final RedisPubService redisPubService;
+    private final RedisContainerManager redisContainerManager;
+
 
     public ChatWebSocketClientHandler(Flux<Object> chatMessagesSink, Sinks.Many<Object> sinks,
-                                      RedisPubService redisPubService) {
+                                      RedisPubService redisPubService, RedisContainerManager redisContainerManager) {
         this.chatMessagesSink = chatMessagesSink;
         this.sinks = sinks;
         this.redisPubService = redisPubService;
+        this.redisContainerManager = redisContainerManager;
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -47,15 +52,19 @@ public class ChatWebSocketClientHandler implements WebSocketHandler {
      */
     @Override
     public Mono<Void> handle(WebSocketSession session) {
-        log.info(String.valueOf(session));
         if (session.isOpen()) {
-            sinks.emitNext(serializeChatMessage("새로운 사용자", "님이 채팅방에 입장하였습니다."), Sinks.EmitFailureHandler.FAIL_FAST);
+            URI uri = session.getHandshakeInfo().getUri();
+            String newUser = redisContainerManager.addSubscriber(uri);
+            sinks.emitNext(serializeChatMessage(newUser, "님이 채팅방에 입장하였습니다."), Sinks.EmitFailureHandler.FAIL_FAST);
         }
 
         Flux<WebSocketMessage> outgoingMessages = chatMessagesSink
                 .map(it -> toMessageObject(it.toString()))
                 .filter(it -> !it.sessionId().equals(session.getId()))
-                .map(it -> serializeAndConvert(it, session));
+                .map(it -> serializeAndConvert(it, session))
+                .doOnNext(message -> log.info("Message Received: {}", message.getPayloadAsText()))
+                .doOnError(error -> log.error("Error in receiving messages: ", error));
+
 
         Flux<WebSocketMessage> incomingMessages = session.receive()
                 .map(socketMessage -> {
@@ -67,15 +76,16 @@ public class ChatWebSocketClientHandler implements WebSocketHandler {
                     sendChatMessage(it);
                     redisPubService.sendMessage(it);
                 })
-                .map(it -> serializeAndConvert(it, session));
+                .map(it -> serializeAndConvert(it, session))
+                .doOnNext(message -> log.info("Message Received: {}", message.getPayloadAsText()))
+                .doOnError(error -> log.error("Error in receiving messages: ", error));
 
         Flux<WebSocketMessage> combinedMessages = Flux.merge(outgoingMessages, incomingMessages);
 
         return session.send(combinedMessages)
-                .doOnTerminate(this::afterConnectionTerminate)
+                .doOnTerminate(() -> afterConnectionTerminate(session))
                 .doOnError(error -> log.error("WebSocket error: ", error));
     }
-
 
     public MessageObject toMessageObject(String payloadAsText) {
         try {
@@ -94,8 +104,10 @@ public class ChatWebSocketClientHandler implements WebSocketHandler {
         }
     }
 
-    public void afterConnectionTerminate() {
-        sinks.emitNext(serializeChatMessage("누군가가", "님이 채팅방에서 나갔습니다!"), Sinks.EmitFailureHandler.FAIL_FAST);
+    public void afterConnectionTerminate(WebSocketSession session) {
+        URI uri = session.getHandshakeInfo().getUri();
+        String newUser = redisContainerManager.removeSubscriber(uri);
+        sinks.emitNext(serializeChatMessage(newUser, "님이 채팅방에서 나갔습니다!"), Sinks.EmitFailureHandler.FAIL_FAST);
     }
 
 
