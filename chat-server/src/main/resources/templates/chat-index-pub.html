@@ -8,12 +8,14 @@
 <body>
 <span>Welcome to Free Chat</span>
 <ul id="message-list">
-    <li th:each="messageObject : ${messageObjects}" th:text="'[' + ${#temporals.format(messageObject.timestamp, 'HH:mm')} + '] ' + ${messageObject.writer} + ': ' + ${messageObject.message}"></li>
+    <li th:each="messageObject : ${messageObjects}"
+        th:text="'[' + ${#temporals.format(messageObject.timestamp, 'HH:mm')} + '] ' + ${messageObject.writer} + ': ' + ${messageObject.message}"></li>
 </ul>
 <!--<ul id="message-list"></ul>-->
 <form id="message-form">
-    <label for="writer-input">ID : </label><input type="text" id="writer-input" placeholder="Type your name..." />
-    <label for="message-input">Message : </label><input type="text" id="message-input" placeholder="Type your message..." />
+    <label for="writer-input">ID : </label><input type="text" id="writer-input" placeholder="Type your name..."/>
+    <label for="message-input">Message : </label><input type="text" id="message-input"
+                                                        placeholder="Type your message..."/>
     <button type="submit">Send</button>
 </form>
 
@@ -83,7 +85,11 @@
         const listItem = document.createElement("li");
         let writer = message.writer && message.writer.length > 0 ? message.writer : "관리자";
         const timestamp = new Date(message.timestamp);
-        const formattedTime = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+        const formattedTime = timestamp.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
         listItem.textContent = "[" + formattedTime + "]" + writer + ": " + message.message;
         messageList.appendChild(listItem);
     }

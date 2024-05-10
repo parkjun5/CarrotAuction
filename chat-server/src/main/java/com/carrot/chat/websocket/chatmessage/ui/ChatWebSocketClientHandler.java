@@ -21,14 +21,14 @@ import java.time.LocalDateTime;
 @Slf4j
 @Component
 public class ChatWebSocketClientHandler implements WebSocketHandler {
-    private final Flux<Object> chatMessagesSink;
+    private final Flux<Object> messageContainer;
     private final Sinks.Many<Object> sinks;
     private final ObjectMapper objectMapper;
     private final RedisPubService redisPubService;
 
-    public ChatWebSocketClientHandler(Flux<Object> chatMessagesSink, Sinks.Many<Object> sinks,
+    public ChatWebSocketClientHandler(Flux<Object> messageContainer, Sinks.Many<Object> sinks,
                                       RedisPubService redisPubService) {
-        this.chatMessagesSink = chatMessagesSink;
+        this.messageContainer = messageContainer;
         this.sinks = sinks;
         this.redisPubService = redisPubService;
         ObjectMapper mapper = new ObjectMapper();
@@ -52,7 +52,7 @@ public class ChatWebSocketClientHandler implements WebSocketHandler {
             sinks.emitNext(serializeChatMessage("새로운 사용자", "님이 채팅방에 입장하였습니다."), Sinks.EmitFailureHandler.FAIL_FAST);
         }
 
-        Flux<WebSocketMessage> outgoingMessages = chatMessagesSink
+        Flux<WebSocketMessage> outgoingMessages = messageContainer
                 .map(it -> toMessageObject(it.toString()))
                 .filter(it -> !it.sessionId().equals(session.getId()))
                 .map(it -> serializeAndConvert(it, session));
@@ -64,7 +64,7 @@ public class ChatWebSocketClientHandler implements WebSocketHandler {
                     return messageObject.changeWriteInfo(writerName, session.getId());
                 })
                 .doOnNext(it -> {
-                    sendChatMessage(it);
+                    sendMessageObject(it);
                     redisPubService.sendMessage(it);
                 })
                 .map(it -> serializeAndConvert(it, session));
@@ -86,7 +86,7 @@ public class ChatWebSocketClientHandler implements WebSocketHandler {
         }
     }
 
-    public void sendChatMessage(MessageObject messageObject) {
+    public void sendMessageObject(MessageObject messageObject) {
         try {
             sinks.tryEmitNext(objectMapper.writeValueAsString(messageObject));
         } catch (JsonProcessingException e) {
