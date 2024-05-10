@@ -17,10 +17,15 @@ public class ChatController {
         this.chatGrpcClient = chatGrpcClient;
     }
 
-    @GetMapping("/chat/{chatRoomId}")
-    public String getChatRoom(@PathVariable Long chatRoomId, Model model) {
+    @GetMapping("/chat/{chatRoomId}/userId/{userId}")
+    public String getChatRoom(@PathVariable Long chatRoomId,
+                              @PathVariable Long userId,
+                              Model model
+    ) {
         List<MessageObject> messageObjects = chatGrpcClient.findChatRoomHistoriesById(chatRoomId);
         model.addAttribute("messageObjects", messageObjects);
+        model.addAttribute("chatRoomId", chatRoomId);
+        model.addAttribute("userId", userId);
         return "chat-index-pub";
     }
 

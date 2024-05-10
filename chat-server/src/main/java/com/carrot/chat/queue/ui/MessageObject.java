@@ -26,7 +26,17 @@ public record MessageObject(
         );
     }
 
-    public MessageObject changeWriteInfo(String writerName, String sessionId) {
+    public MessageObject changeInfo(String writerName, String sessionId) {
+        return new MessageObject(
+                this.message,
+                LocalDateTime.now(),
+                this.chatRoomId,
+                writerName,
+                sessionId,
+                this.userId
+        );
+    }
+    public MessageObject changeWriter(String writerName) {
         return new MessageObject(
                 this.message,
                 LocalDateTime.now(),
