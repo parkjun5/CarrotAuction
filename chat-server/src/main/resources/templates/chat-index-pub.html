@@ -1,22 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<meta charset="UTF-8">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <title>WebSocket Chat Client</title>
+    <title>Chat Room</title>
+
 </head>
 <body>
-<div id="chat">
-    <ul id="message-list"></ul>
-    <form id="message-form">
-        <label for="message-input">메시지 : </label><input type="text" id="message-input" placeholder="Type your message..." />
-        <label for="chat-room-input">채팅방 : </label><input type="text" id="chat-room-input" placeholder="Type your chat room Id..." />
-        <button type="submit">Send</button>
-    </form>
-</div>
-<script>
+<span>Welcome to Free Chat</span>
+<ul id="message-list">
+    <li th:each="messageObject : ${messageObjects}" th:text="'[' + ${#temporals.format(messageObject.timestamp, 'HH:mm')} + '] ' + ${messageObject.writer} + ': ' + ${messageObject.message}"></li>
+</ul>
+<!--<ul id="message-list"></ul>-->
+<form id="message-form">
+    <label for="writer-input">ID : </label><input type="text" id="writer-input" placeholder="Type your name..." />
+    <label for="message-input">Message : </label><input type="text" id="message-input" placeholder="Type your message..." />
+    <button type="submit">Send</button>
+</form>
 
+<script>
+    const messageList = document.getElementById("message-list");
+    const messageForm = document.getElementById("message-form");
+    const messageInput = document.getElementById("message-input");
+    const writerInput = document.getElementById("writer-input");
+
+    let socket;
+    let retryCount = 0;
+    const maxRetries = 2; // 최대 재연결 시도 횟수
+
+    function connectWebSocket() {
+        socket = new WebSocket("ws://localhost:8001/chat/message");
+
+        socket.onopen = () => {
+            console.log("Connected to WebSocket server");
+        };
+
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            showMessage(message);
+        };
+
+        socket.onclose = () => {
+            console.log("Disconnected from WebSocket server");
+            console.log(retryCount);
+            if (retryCount < maxRetries) {
+                setTimeout(connectWebSocket, 5000); // 3초 후 재연결 시도
+                retryCount++; // 재시도 횟수 증가
+            }
+        };
+
+        socket.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+    }
+
+    connectWebSocket(); // WebSocket 연결 시작
+
+    messageForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const messageVal = messageInput.value.trim();
+        const writerVal = writerInput.value.trim();
+        if (!messageVal) {
+            return;
+        }
+
+        const messageObject = {
+            writer: "",
+            timestamp: null,
+            chatRoomId: 1,
+            message: messageVal,
+            sessionId: "",
+            userId: writerVal
+        };
+
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify(messageObject));
+        }
+        messageInput.value = "";
+    });
+
+    function showMessage(message) {
+        const listItem = document.createElement("li");
+        let writer = message.writer && message.writer.length > 0 ? message.writer : "관리자";
+        const timestamp = new Date(message.timestamp);
+        const formattedTime = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+        listItem.textContent = "[" + formattedTime + "]" + writer + ": " + message.message;
+        messageList.appendChild(listItem);
+    }
 </script>
+
+
 </body>
 </html>

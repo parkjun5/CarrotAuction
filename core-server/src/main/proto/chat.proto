@@ -5,16 +5,32 @@ import "google/protobuf/timestamp.proto";
 package chat;
 
 service ChatHistoryRecorder {
-  rpc RecordHistory (ChatHistoryRecord) returns (RecordHistoryResponse);
+  rpc RecordHistory (ChatHistoryRecordRequest) returns (RecordHistoryResponse);
+  rpc FindChatRecordByChatRoomId (ChatRecordRequest) returns (ChatRecordResponse);
+}
+
+message ChatHistoryRecordRequest {
+  string message = 1;
+  google.protobuf.Timestamp sendAt = 2;
+  int64 writerId = 3;
+  int64 chatRoomId = 4;
 }
 
 message RecordHistoryResponse {
   int64 historyId = 1;
 }
 
-message ChatHistoryRecord {
+message ChatRecordRequest {
+  int64 chatRoomId = 1;
+}
+
+message ChatRecordResponse {
+  repeated ChatRecord records = 1;
+}
+
+message ChatRecord {
   string message = 1;
   google.protobuf.Timestamp sendAt = 2;
-  int64 writerId = 3;
-  int64 chatRoomId = 4;
+  string writer = 3;
+  int64 writerId = 4;
 }

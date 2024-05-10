@@ -2,6 +2,7 @@ package com.carrot.chat.queue.application;
 
 import com.carrot.chat.queue.ui.MessageObject;
 import com.carrot.chat.support.config.ValueObject;
+import com.carrot.chat.support.converter.MessageConverter;
 import jakarta.annotation.Nonnull;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;

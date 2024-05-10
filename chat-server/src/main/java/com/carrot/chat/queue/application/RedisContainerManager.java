@@ -1,6 +1,7 @@
 package com.carrot.chat.queue.application;
 
 import com.carrot.chat.queue.config.CustomMessageListenerAdapter;
+import com.carrot.chat.support.converter.ChannelConverter;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,7 @@
 package com.carrot.core.common.config;
 
 import com.carrot.core.chat.application.ChatHistoryRecorderImpl;
+import com.carrot.core.user.application.UserFinderImpl;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,9 +16,12 @@ import java.io.IOException;
 public class GrpcServerConfig {
 
     @Bean(name = "grpcServer")
-    public Server grpcServer(ChatHistoryRecorderImpl chatHistoryRecorder) throws IOException {
+    public Server grpcServer(ChatHistoryRecorderImpl chatHistoryRecorder,
+                             UserFinderImpl userFinder
+    ) throws IOException {
         Server server = ServerBuilder.forPort(50001)
             .addService(chatHistoryRecorder)
+            .addService(userFinder)
             .build();
         server.start();
         return server;

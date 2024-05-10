@@ -1,11 +1,14 @@
-package com.carrot.chat.queue.ui;
+package com.carrot.chat.queue.application;
 
 import chat.Chat;
 import chat.ChatHistoryRecorderGrpc;
+import com.carrot.chat.queue.ui.MessageObject;
 import com.google.protobuf.Timestamp;
 import io.grpc.StatusRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Slf4j
 @Component
@@ -18,21 +21,38 @@ public class ChatGrpcClient {
 
     public void recordChatHistory(MessageObject messageObject) {
         long currentTimeMillis = System.currentTimeMillis();
+
         Timestamp now = Timestamp.newBuilder()
-                .setSeconds(currentTimeMillis / 1000)  // 밀리초를 초로 변환
-                .setNanos((int) (currentTimeMillis % 1000) * 1_000_000)  // 남은 밀리초를 나노초로 변환
+                .setSeconds(currentTimeMillis / 1000)
+                .setNanos((int) (currentTimeMillis % 1000) * 1_000_000)
                 .build();
-        Chat.ChatHistoryRecord chatHistoryRecord = Chat.ChatHistoryRecord.newBuilder()
+
+        var chatHistoryRecord = Chat.ChatHistoryRecordRequest.newBuilder()
                 .setMessage(messageObject.message())
                 .setSendAt(now)
                 .setWriterId(messageObject.userId())
                 .setChatRoomId(messageObject.chatRoomId())
                 .build();
+
         try {
-            Chat.RecordHistoryResponse recordHistoryResponse = blockingStub.recordHistory(chatHistoryRecord);
+            var recordHistoryResponse = blockingStub.recordHistory(chatHistoryRecord);
             log.info("recordHistoryResponse.getHistoryId() = " + recordHistoryResponse.getHistoryId());
         } catch (StatusRuntimeException e) {
             throw new IllegalArgumentException("RPC failed: " + e.getStatus());
         }
+
+    }
+
+    public List<MessageObject> findChatRoomHistoriesById(Long chatRoomId) {
+        var chatRecordRequest = Chat.ChatRecordRequest.newBuilder()
+                .setChatRoomId(chatRoomId)
+                .build();
+
+        var recordResponse = blockingStub.findChatRecordByChatRoomId(chatRecordRequest);
+
+        return recordResponse.getRecordsList()
+                .stream()
+                .map(it -> MessageObject.from(it, chatRoomId))
+                .toList();
     }
 }

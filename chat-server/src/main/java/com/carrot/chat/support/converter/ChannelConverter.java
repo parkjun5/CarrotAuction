@@ -1,4 +1,4 @@
-package com.carrot.chat.queue.application;
+package com.carrot.chat.support.converter;
 
 
 import java.nio.ByteBuffer;

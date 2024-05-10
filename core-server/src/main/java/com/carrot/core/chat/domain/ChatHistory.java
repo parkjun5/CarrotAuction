@@ -21,17 +21,19 @@ public class ChatHistory extends BaseEntity {
     private String message;
     private LocalDateTime sendAt;
     private Long writerId;
+    private String writer;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
     public static ChatHistory of(String message, LocalDateTime sendAt,
-                                 long writerId, ChatRoom chatRoom
+                                 long writerId, String writer, ChatRoom chatRoom
     ) {
         ChatHistory chatHistory = new ChatHistory();
         chatHistory.message = message;
         chatHistory.sendAt = sendAt;
         chatHistory.writerId = writerId;
+        chatHistory.writer = writer;
         chatHistory.chatRoom = chatRoom;
         return chatHistory;
     }

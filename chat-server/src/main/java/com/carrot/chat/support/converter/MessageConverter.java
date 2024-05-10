@@ -1,4 +1,4 @@
-package com.carrot.chat.queue.application;
+package com.carrot.chat.support.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.connection.Message;

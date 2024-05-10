@@ -55,11 +55,6 @@ dependencies {
     implementation 'io.grpc:grpc-protobuf:1.62.2'
     implementation 'io.grpc:grpc-stub:1.62.2'
 
-//    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-//    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-//    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-//    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
 

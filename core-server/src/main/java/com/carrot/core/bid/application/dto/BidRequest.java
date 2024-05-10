@@ -18,6 +18,6 @@ public record BidRequest(
         @Schema(description = "입찰 가격", example = "50000")
         int biddingPrice,
         @Schema(description = "경매 종료 일자", type = "string", example = "2024-03-08T00:00:00+0900")
-        @NotNull @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ssZ")
+        @NotNull @JsonFormat(pattern="MM-dd'T'HH:mm")
         ZonedDateTime biddingTime) {
 }
