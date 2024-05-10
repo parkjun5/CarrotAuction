@@ -2,6 +2,7 @@ package com.carrot.chat.queue.application;
 
 import com.carrot.chat.queue.config.CustomMessageListenerAdapter;
 import com.carrot.chat.support.converter.ChannelConverter;
+import com.carrot.chat.websocket.chatmessage.application.MessageListenerFactory;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -17,17 +18,20 @@ public class RedisContainerManager {
 
     private final RedisMessageListenerContainer redisContainer;
     private final UsersGrpcClient usersGrpcClient;
+    private final MessageListenerFactory messageListenerFactory;
 
-    public RedisContainerManager(RedisMessageListenerContainer redisContainer, UsersGrpcClient usersGrpcClient) {
+    public RedisContainerManager(RedisMessageListenerContainer redisContainer, UsersGrpcClient usersGrpcClient,
+                                 MessageListenerFactory subscriberFactory) {
         this.redisContainer = redisContainer;
         this.usersGrpcClient = usersGrpcClient;
+        this.messageListenerFactory = subscriberFactory;
     }
 
     public void addSub(Long chatRoomId, String name) {
         if ("관리자".equals(name)) {
             return;
         }
-        CustomMessageListenerAdapter messageListenerAdapter = makeSubscriberMessageListenerAdapter(name);
+        CustomMessageListenerAdapter messageListenerAdapter = messageListenerFactory.create(name);
         String channel = ChannelConverter.channelOf(chatRoomId);
         redisContainer.addMessageListener(messageListenerAdapter, new ChannelTopic(channel));
     }
@@ -44,14 +48,14 @@ public class RedisContainerManager {
             return name;
         }
 
-        CustomMessageListenerAdapter messageListenerAdapter = makeSubscriberMessageListenerAdapter(name);
+        CustomMessageListenerAdapter messageListenerAdapter = messageListenerFactory.create(name);
         String channel = ChannelConverter.channelOf(sessionParams.chatRoomId());
         redisContainer.addMessageListener(messageListenerAdapter, new ChannelTopic(channel));
         return name;
     }
 
     public void removeSub(Long chatRoomId, String name) {
-        CustomMessageListenerAdapter messageListenerAdapter = makeSubscriberMessageListenerAdapter(name);
+        CustomMessageListenerAdapter messageListenerAdapter = messageListenerFactory.create(name);
         String channel = ChannelConverter.channelOf(chatRoomId);
         redisContainer.removeMessageListener(messageListenerAdapter, new ChannelTopic(channel));
     }
@@ -68,16 +72,11 @@ public class RedisContainerManager {
             return name;
         }
 
-        CustomMessageListenerAdapter messageListenerAdapter = makeSubscriberMessageListenerAdapter(name);
+        CustomMessageListenerAdapter messageListenerAdapter = messageListenerFactory.create(name);
         String channel = ChannelConverter.channelOf(sessionParams.chatRoomId());
         redisContainer.removeMessageListener(messageListenerAdapter, new ChannelTopic(channel));
         return name;
     }
-
-    private CustomMessageListenerAdapter makeSubscriberMessageListenerAdapter(String name) {
-        return new CustomMessageListenerAdapter(new Subscriber(name));
-    }
-
 
     private SessionParams getSessionParamsBy(URI uri) {
         List<NameValuePair> pairs = URLEncodedUtils.parse(uri, StandardCharsets.UTF_8);
