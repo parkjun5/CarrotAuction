@@ -21,6 +21,7 @@ public class ChatWebSocketClientHandler implements WebSocketHandler {
         this.messageContainer = messageContainer;
         this.messagePublisher = messagePublisher;
         this.chatMessageMapper = chatMessageMapper;
+
     }
 
     /**
@@ -39,6 +40,7 @@ public class ChatWebSocketClientHandler implements WebSocketHandler {
         var otherUserMessage = messageContainer.map(it -> chatMessageMapper.toMessage(it.toString()))
                 .filter(it -> !it.sessionId().equals(sessionId))
                 .map(it -> chatMessageMapper.serializeAndAddTo(it, session));
+
 
         var writtenMessage = session.receive()
                 .map(socketMessage -> {
