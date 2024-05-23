@@ -17,8 +17,9 @@ public record BidResponse(
         int biddingPrice,
         @Schema(description = "경매 종료 일자", type = "string", example = "2024-03-08T00:00:00+0900")
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
-        ZonedDateTime biddingTime) {
-    public static BidResponse from(Bid bid, String auctionName, String bidderName) {
-        return new BidResponse(auctionName, bidderName, bid.getBiddingPrice(), bid.getBiddingTime());
+        ZonedDateTime biddingTime,
+        long bidderId) {
+    public static BidResponse from(Bid bid, String auctionName, String bidderName, Long bidderId) {
+        return new BidResponse(auctionName, bidderName, bid.getBiddingPrice(), bid.getBiddingTime(), bidderId);
     }
 }

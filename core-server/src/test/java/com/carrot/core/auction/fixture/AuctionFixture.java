@@ -104,6 +104,7 @@ public class AuctionFixture {
             .build();
 
     public static final AuctionRequest TEST_AUCTION_REQUEST = AuctionRequest.builder()
+            .item(TEST_ITEM)
             .bidStartPrice(5_000)
             .category(Category.DIGITAL)
             .beginDateTime(BEGIN_TIME)

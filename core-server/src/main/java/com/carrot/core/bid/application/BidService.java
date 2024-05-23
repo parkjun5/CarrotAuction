@@ -25,19 +25,20 @@ public class BidService {
 
     public BidResponse findBidById(Long bidId) {
         Bid bid = bidRepository.findById(bidId).orElseThrow(() -> new NoSuchElementException("입찰이 존재하지 않습니다."));
-        String bidderName = getBidderNameInParticipant(bid.getBidderId(), bid.getAuction().getAuctionRoom());
-        return BidResponse.from(bid,bid.getAuction().getAuctionRoom().getName(), bidderName);
+//        String bidderName = getBidderNameInParticipant(bid.getBidderId(), bid.getAuction().getAuctionRoom());
+//        return BidResponse.from(bid,bid.getAuction().getAuctionRoom().getName(), bidderName, bid.getBidderId());
+        return null;
     }
 
     @Transactional
     public BidResponse bidding(BidRequest request) {
         Auction auction = auctionService.findAuctionById(request.auctionId());
 
-        Bid bid = Bid.of(request, auction);
-        auction.addBid(bid);
+        Bid bid = Bid.of(request, request.auctionId());
+        bidRepository.save(bid);
 
         String bidderName = getBidderNameInParticipant(request.bidderId(), auction.getAuctionRoom());
-        return BidResponse.from(bid,auction.getItem().getTitle(), bidderName);
+        return BidResponse.from(bid, auction.getItem().getTitle(), bidderName, bid.getBidderId());
     }
 
     private String getBidderNameInParticipant(Long bidderId, AuctionRoom auctionRoom) {

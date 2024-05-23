@@ -1,6 +1,7 @@
 package com.carrot.chat.queue.config;
 
 
+import auctions.AuctionItemServiceGrpc;
 import chat.ChatHistoryRecorderGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -25,6 +26,11 @@ public class GrpcConfig {
     @Bean
     public UserFinderGrpc.UserFinderBlockingStub userStub(ManagedChannel managedChannel) {
         return UserFinderGrpc.newBlockingStub(managedChannel);
+    }
+
+    @Bean
+    public AuctionItemServiceGrpc.AuctionItemServiceBlockingStub auctionBlockingStub(ManagedChannel managedChannel) {
+        return AuctionItemServiceGrpc.newBlockingStub(managedChannel);
     }
 
 }

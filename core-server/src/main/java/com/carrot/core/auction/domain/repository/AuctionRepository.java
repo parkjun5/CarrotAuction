@@ -6,12 +6,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
 
-    @Query("select MAX(bids.biddingPrice) from Auction ac JOIN ac.bids bids where ac.id = :auctionId")
-    Integer findMaxBiddingPriceById(@Param("auctionId") Long auctionId);
+//    @Query("select MAX(bids.biddingPrice) from Auction ac JOIN ac.bids bids where ac.id = :auctionId")
+//    Integer findMaxBiddingPriceById(@Param("auctionId") Long auctionId);
 
-    @Query("select count(bids.bidderId)  from Auction ac JOIN ac.bids bids where ac.id = :auctionId and bids.bidderId = :bidderId")
-    int countBidByIdAndBidderId(@Param("auctionId") Long auctionId, @Param("bidderId")  Long bidderId);
+//    @Query("select count(bids.bidderId)  from Auction ac where ac.id = :auctionId")
+//    int countBidByIdAndBidderId(@Param("auctionId") Long auctionId, @Param("bidderId")  Long bidderId);
+
+    @Query("select ac from Auction ac where ac.id = :auctionId")
+    Optional<Auction> findAuctionByAuctionIdFetchBidRules(@Param("auctionId") Long auctionId);
 }

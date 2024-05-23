@@ -1,12 +1,11 @@
 package com.carrot.core.bid.application.dto;
 
 import com.carrot.core.bid.application.annotation.BidRequestCheck;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @BidRequestCheck
 public record BidRequest(
@@ -18,6 +17,5 @@ public record BidRequest(
         @Schema(description = "입찰 가격", example = "50000")
         int biddingPrice,
         @Schema(description = "경매 종료 일자", type = "string", example = "2024-03-08T00:00:00+0900")
-        @NotNull @JsonFormat(pattern="MM-dd'T'HH:mm")
-        ZonedDateTime biddingTime) {
+        LocalDateTime biddingTime) {
 }

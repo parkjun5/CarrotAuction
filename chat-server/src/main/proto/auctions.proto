@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package auctions;
+
+service AuctionItemService {
+  rpc getAuctionInfo (AuctionRequest) returns (AuctionResponse);
+}
+
+message AuctionRequest {
+  int64 auctionRoomId = 1;
+}
+
+message AuctionResponse {
+  int32 bidStartPrice = 1;
+  ItemResponse itemResponses = 2;
+  repeated BidRuleResponse bidRuleResponses = 3;
+  google.protobuf.Timestamp beginDateTime = 4;
+  google.protobuf.Timestamp closeDateTime = 5;
+}
+
+message ItemResponse {
+  string title = 1;
+  int32 price = 2;
+  string content = 3;
+}
+
+message BidRuleResponse {
+  string name = 1;
+  string description = 2;
+  string ruleValue = 3;
+}

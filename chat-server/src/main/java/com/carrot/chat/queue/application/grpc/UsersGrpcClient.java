@@ -1,4 +1,4 @@
-package com.carrot.chat.queue.application;
+package com.carrot.chat.queue.application.grpc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

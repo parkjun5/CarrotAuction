@@ -1,5 +1,6 @@
 package com.carrot.core.common.config;
 
+import com.carrot.core.auction.application.AuctionServiceImpl;
 import com.carrot.core.chat.application.ChatHistoryRecorderImpl;
 import com.carrot.core.user.application.UserFinderImpl;
 import io.grpc.Server;
@@ -17,11 +18,13 @@ public class GrpcServerConfig {
 
     @Bean(name = "grpcServer")
     public Server grpcServer(ChatHistoryRecorderImpl chatHistoryRecorder,
-                             UserFinderImpl userFinder
+                             UserFinderImpl userFinder,
+                             AuctionServiceImpl auctionService
     ) throws IOException {
         Server server = ServerBuilder.forPort(50001)
             .addService(chatHistoryRecorder)
-            .addService(userFinder)
+                .addService(userFinder)
+                .addService(auctionService)
             .build();
         server.start();
         return server;

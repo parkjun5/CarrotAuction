@@ -33,7 +33,7 @@ public class ChatMessageMapper {
 
     public String serialize(String value, String alertMessage) {
         String message = value + alertMessage;
-        MessageObject messageObject = new MessageObject(message, LocalDateTime.now(), 1L,
+        MessageObject messageObject = new MessageObject("CHAT", message, LocalDateTime.now(), 1L,
                 "관리자", "", 777L);
 
         try {

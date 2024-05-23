@@ -12,7 +12,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 
 @RequiredArgsConstructor
@@ -31,16 +31,16 @@ public class BidValidator implements ConstraintValidator<BidRequestCheck, BidReq
     public boolean isValid(BidRequest request, ConstraintValidatorContext context) {
         Long auctionId = request.auctionId();
         Auction auction = auctionService.findAuctionById(auctionId);
-        ZonedDateTime biddingTime = request.biddingTime();
+        LocalDateTime biddingTime = request.biddingTime();
 
-        if (biddingTime.isAfter(auction.getCloseDateTime())) {
+        if (biddingTime.isAfter(auction.getCloseDateTime().toLocalDateTime())) {
             auctionService.closeAuction(auctionId);
             throw new AlreadyEndAuctionException(ALREADY_CLOSE_MESSAGE);
         }
 
         AuctionStatus auctionStatus = auction.getAuctionStatus();
 
-        if (biddingTime.isBefore(auction.getBeginDateTime())) {
+        if (biddingTime.isBefore(auction.getBeginDateTime().toLocalDateTime())) {
             throw new IllegalAuctionTimeException("아직 시작하지 않은 경매입니다.");
         }
 

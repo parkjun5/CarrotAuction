@@ -23,9 +23,8 @@ public class Bid extends BaseEntity {
     private Long id;
     @Schema(description = "입찰자 명", example = "1")
     private long bidderId;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "auction_id")
-    private Auction auction;
+    @Column(name = "auction_id")
+    private Long auctionId;
     @Min(value=1_000, message = "천원보다는 비싼 금액을 입력하세요." )
     @Schema(description = "경매가격", example = "5000")
     private int biddingPrice;
@@ -34,17 +33,17 @@ public class Bid extends BaseEntity {
     @Schema(description = "입찰 시간" ,type = "string", example = "2023-03-08T00:00:00+0900")
     private ZonedDateTime biddingTime;
 
-    public static Bid of(BidRequest request, Auction auction) {
+    public static Bid of(BidRequest request, Long auctionId) {
         Bid bid = new Bid();
-        bid.auction = auction;
+        bid.auctionId = auctionId;
         bid.biddingPrice = request.biddingPrice();
-        bid.biddingTime = request.biddingTime();
+        bid.biddingTime = ZonedDateTime.now();
         bid.bidderId = request.bidderId();
-        return null;
+        return bid;
     }
 
     public void setAuction(Auction auction) {
-        this.auction = auction;
+        this.auctionId = auction.getId();
     }
 
     public void changeBid(long bidderId, int biddingPrice, ZonedDateTime biddingTime) {

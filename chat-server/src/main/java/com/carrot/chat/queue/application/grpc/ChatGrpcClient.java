@@ -1,4 +1,4 @@
-package com.carrot.chat.queue.application;
+package com.carrot.chat.queue.application.grpc;
 
 import chat.Chat;
 import chat.ChatHistoryRecorderGrpc;

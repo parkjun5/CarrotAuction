@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 public record MessageObject(
+        String type,
         String message,
         LocalDateTime timestamp,
         Long chatRoomId,
@@ -17,6 +18,7 @@ public record MessageObject(
     public static MessageObject from(Chat.ChatRecord chatRecord, long chatRoomId) {
         Instant instant = Instant.ofEpochSecond(chatRecord.getSendAt().getSeconds(), chatRecord.getSendAt().getNanos());
         return new MessageObject(
+                "CHAT",
                 chatRecord.getMessage(),
                 LocalDateTime.ofInstant(instant, ZoneId.systemDefault()),
                 chatRoomId,
@@ -28,6 +30,7 @@ public record MessageObject(
 
     public MessageObject changeInfo(String writerName, String sessionId) {
         return new MessageObject(
+                this.type,
                 this.message,
                 LocalDateTime.now(),
                 this.chatRoomId,
@@ -38,6 +41,7 @@ public record MessageObject(
     }
     public MessageObject changeWriter(String writerName) {
         return new MessageObject(
+                this.type,
                 this.message,
                 LocalDateTime.now(),
                 this.chatRoomId,

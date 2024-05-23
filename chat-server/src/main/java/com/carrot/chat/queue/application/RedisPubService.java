@@ -1,5 +1,7 @@
 package com.carrot.chat.queue.application;
 
+import com.carrot.chat.queue.application.grpc.ChatGrpcClient;
+import com.carrot.chat.queue.application.grpc.UsersGrpcClient;
 import com.carrot.chat.queue.ui.MessageObject;
 import com.carrot.chat.support.converter.ChannelConverter;
 import org.springframework.data.redis.core.RedisTemplate;

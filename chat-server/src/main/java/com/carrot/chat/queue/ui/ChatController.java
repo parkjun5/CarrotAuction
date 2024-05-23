@@ -1,6 +1,6 @@
 package com.carrot.chat.queue.ui;
 
-import com.carrot.chat.queue.application.ChatGrpcClient;
+import com.carrot.chat.queue.application.grpc.ChatGrpcClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
