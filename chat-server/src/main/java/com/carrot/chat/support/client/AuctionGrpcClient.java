@@ -23,4 +23,14 @@ public class AuctionGrpcClient {
         return blockingStub.getAuctionInfo(auctionRequest);
     }
 
+    public Auctions.ParticipationResponse findAllNotActiveUserInChatRoom(long roomId, long senderId) {
+
+        var request = Auctions.ParticipationRequest.newBuilder()
+                .setRoomId(roomId)
+                .setSenderId(senderId)
+                .build();
+
+        return blockingStub.findAllNotActiveUserInChatRoom(request);
+    }
+
 }

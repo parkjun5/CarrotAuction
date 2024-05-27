@@ -3,6 +3,7 @@ package com.carrot.core.auction.application;
 import auctions.AuctionItemServiceGrpc;
 import auctions.Auctions;
 import com.carrot.core.auction.domain.Auction;
+import com.carrot.core.auctionroom.application.AuctionRoomService;
 import com.carrot.core.bidrule.domain.BidRule;
 import com.carrot.core.item.domain.Item;
 import com.google.protobuf.Timestamp;
@@ -17,9 +18,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AuctionServiceImpl extends AuctionItemServiceGrpc.AuctionItemServiceImplBase {
 
     private final AuctionService auctionService;
+    private final AuctionRoomService auctionRoomService;
 
-    public AuctionServiceImpl(AuctionService auctionService) {
+    public AuctionServiceImpl(AuctionService auctionService, AuctionRoomService auctionRoomService) {
         this.auctionService = auctionService;
+        this.auctionRoomService = auctionRoomService;
     }
 
     @Override
@@ -54,6 +57,18 @@ public class AuctionServiceImpl extends AuctionItemServiceGrpc.AuctionItemServic
         });
 
         responseObserver.onNext(responseBuilder.build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void findAllNotActiveUserInChatRoom(Auctions.ParticipationRequest request, StreamObserver<Auctions.ParticipationResponse> responseObserver) {
+        Set<Long> userIds = auctionRoomService.findAuctionParticipationByAuctionId(request.getRoomId(), request.getSenderId());
+
+        var response = Auctions.ParticipationResponse.newBuilder()
+                .addAllWriterId(userIds)
+                .build();
+
+        responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 

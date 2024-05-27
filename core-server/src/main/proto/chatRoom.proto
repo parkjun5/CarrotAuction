@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package chatRoom;
+
+service ChatRoomUserFinder {
+  rpc FindAllNotActiveUserInChatRoom (ChatRoomRequest) returns (ChatRoomUsersResponse);
+}
+
+message ChatRoomRequest {
+  int64 chatRoomId = 1;
+  int64 senderId = 2;
+}
+
+message ChatRoomUsersResponse {
+  repeated int64 writerId = 1;
+}

@@ -56,9 +56,7 @@ public class AuctionRoomService {
     @Transactional
     public Long deleteAuctionRoom(final Long roomId) {
         AuctionRoom auctionRoom = findAuctionRoomById(roomId);
-        AuctionParticipation auctionParticipation = auctionParticipationRepository
-                .findOneByUserIdAndAuctionRoomId(auctionRoom.getHostUser().getId(), roomId)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 경매장입니다."));
+        AuctionParticipation auctionParticipation = auctionParticipationRepository.findOneByUserIdAndAuctionRoomId(auctionRoom.getHostUser().getId(), roomId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 경매장입니다."));
 
         auctionParticipationRepository.delete(auctionParticipation);
         auctionRepository.delete(auctionRoom);
@@ -78,10 +76,7 @@ public class AuctionRoomService {
     }
 
     public Page<AuctionRoomResponse> getAuctionRoomsByPageable(Pageable pageable) {
-        List<AuctionRoomResponse> auctionRoomResponseList = auctionRepository.findAll(pageable)
-                .stream()
-                .map(this::toResponseByAuctionRoom)
-                .toList();
+        List<AuctionRoomResponse> auctionRoomResponseList = auctionRepository.findAll(pageable).stream().map(this::toResponseByAuctionRoom).toList();
         return new PageImpl<>(auctionRoomResponseList);
     }
 
@@ -101,4 +96,7 @@ public class AuctionRoomService {
         return AuctionRoomResponse.from(auctionRoom, userResponse, nameOfParticipants);
     }
 
+    public Set<Long> findAuctionParticipationByAuctionId(long chatRoomId, long senderId) {
+        return auctionParticipationRepository.findAuctionParticipationByAuctionId(chatRoomId, senderId);
+    }
 }
