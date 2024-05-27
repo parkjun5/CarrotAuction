@@ -1,9 +1,11 @@
-package com.carrot.chat.queue.config;
+package com.carrot.chat.redis.config;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 import java.util.Objects;
 
+@Profile("redis-pub-sub")
 public class CustomMessageListenerAdapter extends MessageListenerAdapter {
 
     public CustomMessageListenerAdapter(Object delegate) {

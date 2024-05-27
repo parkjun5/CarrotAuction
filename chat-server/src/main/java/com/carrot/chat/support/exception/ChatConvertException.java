@@ -1,4 +1,4 @@
-package com.carrot.chat.websocket.common.exception;
+package com.carrot.chat.support.exception;
 
 
 public class ChatConvertException extends RuntimeException {

@@ -2,7 +2,7 @@ package com.carrot.chat.websocket.chatmessage.application;
 
 import com.carrot.chat.websocket.chatmessage.domain.ChatMessage;
 import com.carrot.chat.websocket.chatmessage.domain.ChatMessageRepository;
-import com.carrot.chat.websocket.common.exception.ChatConvertException;
+import com.carrot.chat.support.exception.ChatConvertException;
 import com.carrot.chat.websocket.chatmessage.application.sequence.SequenceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

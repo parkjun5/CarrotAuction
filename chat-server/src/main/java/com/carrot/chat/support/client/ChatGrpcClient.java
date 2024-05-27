@@ -1,8 +1,8 @@
-package com.carrot.chat.queue.application.grpc;
+package com.carrot.chat.support.client;
 
 import chat.Chat;
 import chat.ChatHistoryRecorderGrpc;
-import com.carrot.chat.queue.ui.MessageObject;
+import com.carrot.chat.redis.ui.MessageObject;
 import com.google.protobuf.Timestamp;
 import io.grpc.StatusRuntimeException;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ public class ChatGrpcClient {
         this.blockingStub = blockingStub;
     }
 
-    public void recordChatHistory(MessageObject messageObject) {
+    public void recordChatHistory(String message, Long writerId, Long chatRoomId) {
         long currentTimeMillis = System.currentTimeMillis();
 
         Timestamp now = Timestamp.newBuilder()
@@ -28,10 +28,10 @@ public class ChatGrpcClient {
                 .build();
 
         var chatHistoryRecord = Chat.ChatHistoryRecordRequest.newBuilder()
-                .setMessage(messageObject.message())
+                .setMessage(message)
                 .setSendAt(now)
-                .setWriterId(messageObject.userId())
-                .setChatRoomId(messageObject.chatRoomId())
+                .setWriterId(writerId)
+                .setChatRoomId(chatRoomId)
                 .build();
 
         try {

@@ -1,14 +1,16 @@
-package com.carrot.chat.queue.application;
+package com.carrot.chat.redis.application;
 
-import com.carrot.chat.queue.application.grpc.ChatGrpcClient;
-import com.carrot.chat.queue.application.grpc.UsersGrpcClient;
-import com.carrot.chat.queue.ui.MessageObject;
-import com.carrot.chat.support.converter.ChannelConverter;
+import com.carrot.chat.support.client.ChatGrpcClient;
+import com.carrot.chat.support.client.UsersGrpcClient;
+import com.carrot.chat.redis.ui.MessageObject;
+import com.carrot.chat.redis.application.converter.ChannelConverter;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import users.Users;
 
 @Service
+@Profile("redis-pub-sub")
 public class RedisPubService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final ChatGrpcClient chatGrpcClient;
@@ -23,7 +25,7 @@ public class RedisPubService {
     }
 
     public void sendMessage(MessageObject messageObject) {
-        chatGrpcClient.recordChatHistory(messageObject);
+        chatGrpcClient.recordChatHistory(messageObject.message(), messageObject.userId(), messageObject.chatRoomId());
         String channel = ChannelConverter.channelOf(messageObject.chatRoomId());
         redisTemplate.convertAndSend(channel, messageObject);
     }

@@ -1,4 +1,4 @@
-package com.carrot.chat.websocket.common;
+package com.carrot.chat.websocket.config;
 
 import com.carrot.chat.websocket.chatmessage.ui.ChatWebSocketHandler;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

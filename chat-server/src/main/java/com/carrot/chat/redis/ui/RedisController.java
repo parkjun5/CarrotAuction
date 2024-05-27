@@ -1,10 +1,12 @@
-package com.carrot.chat.queue.ui;
+package com.carrot.chat.redis.ui;
 
-import com.carrot.chat.queue.application.RedisContainerManager;
-import com.carrot.chat.queue.application.RedisPubService;
+import com.carrot.chat.redis.application.RedisContainerManager;
+import com.carrot.chat.redis.application.RedisPubService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@RestController("/redis")
+@Profile("redis-pub-sub")
 public class RedisController {
 
     private final RedisPubService redisPubService;

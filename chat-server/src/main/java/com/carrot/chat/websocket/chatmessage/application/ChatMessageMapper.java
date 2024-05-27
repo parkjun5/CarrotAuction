@@ -1,11 +1,12 @@
 package com.carrot.chat.websocket.chatmessage.application;
 
-import com.carrot.chat.queue.application.RedisPubService;
-import com.carrot.chat.queue.ui.MessageObject;
-import com.carrot.chat.websocket.common.exception.ChatConvertException;
+import com.carrot.chat.redis.application.RedisPubService;
+import com.carrot.chat.redis.ui.MessageObject;
+import com.carrot.chat.support.exception.ChatConvertException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.WebSocketSession;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Component
+@Profile("redis-pub-sub")
 public class ChatMessageMapper {
 
     private final ObjectMapper objectMapper;

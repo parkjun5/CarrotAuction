@@ -1,4 +1,4 @@
-package com.carrot.chat.queue.config;
+package com.carrot.chat.support.config;
 
 
 import auctions.AuctionItemServiceGrpc;

@@ -3,6 +3,7 @@ package com.carrot.chat.websocket.chatmessage.config;
 import com.carrot.chat.websocket.chatmessage.ui.ChatWebSocketClientHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.reactive.HandlerMapping;
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.reactive.socket.WebSocketHandler;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 @Configuration
 @EnableWebSocket
+@Profile("redis-pub-sub")
 public class WebSocketClientConfig {
     @Bean
     public HandlerMapping handlerMapping(ChatWebSocketClientHandler handler) {

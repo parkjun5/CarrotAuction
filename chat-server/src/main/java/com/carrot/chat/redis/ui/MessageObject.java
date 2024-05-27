@@ -1,4 +1,4 @@
-package com.carrot.chat.queue.ui;
+package com.carrot.chat.redis.ui;
 
 import chat.Chat;
 

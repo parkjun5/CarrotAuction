@@ -1,9 +1,12 @@
-package com.carrot.chat.support.converter;
+package com.carrot.chat.redis.application.converter;
 
+
+import org.springframework.context.annotation.Profile;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
+@Profile("redis-pub-sub")
 public class ChannelConverter {
 
     private ChannelConverter() {

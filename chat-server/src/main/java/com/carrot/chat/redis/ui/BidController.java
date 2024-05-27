@@ -1,16 +1,17 @@
-package com.carrot.chat.queue.ui;
+package com.carrot.chat.redis.ui;
 
 import auctions.Auctions;
-import com.carrot.chat.queue.application.grpc.AuctionGrpcClient;
-import com.carrot.chat.queue.application.grpc.ChatGrpcClient;
-import org.springframework.http.ResponseEntity;
+import com.carrot.chat.support.client.AuctionGrpcClient;
+import com.carrot.chat.support.client.ChatGrpcClient;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@Controller("/redis")
+@Profile("redis-pub-sub")
 public class BidController {
     private final ChatGrpcClient chatGrpcClient;
     private final AuctionGrpcClient auctionGrpcClient;

@@ -1,11 +1,12 @@
-package com.carrot.chat.queue.application;
+package com.carrot.chat.redis.application;
 
-import com.carrot.chat.queue.application.grpc.UsersGrpcClient;
-import com.carrot.chat.queue.config.CustomMessageListenerAdapter;
-import com.carrot.chat.support.converter.ChannelConverter;
+import com.carrot.chat.support.client.UsersGrpcClient;
+import com.carrot.chat.redis.config.CustomMessageListenerAdapter;
+import com.carrot.chat.redis.application.converter.ChannelConverter;
 import com.carrot.chat.websocket.chatmessage.application.MessageListenerFactory;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
+@Profile("redis-pub-sub")
 public class RedisContainerManager {
 
     private final RedisMessageListenerContainer redisContainer;
