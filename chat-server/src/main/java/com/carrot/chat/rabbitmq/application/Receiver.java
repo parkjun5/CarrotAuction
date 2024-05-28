@@ -32,11 +32,11 @@ public class Receiver {
     private void handleNotification(String message, String[] messageValues) {
         String chatRoomId = messageValues[0];
         String userId = messageValues[1];
-        log.info("Notification received: " + message + ", chatRoomId: " + chatRoomId + "userId: " + userId);
+        System.out.println("Notification received: " + message + ", chatRoomId: " + chatRoomId + "userId: " + userId);
     }
 
     private void handleChat(String message) {
-        log.info("Chat message received: " + message);
+        System.out.println("Chat message received: " + message);
     }
 
 }

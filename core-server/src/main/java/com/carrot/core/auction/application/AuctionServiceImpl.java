@@ -4,12 +4,17 @@ import auctions.AuctionItemServiceGrpc;
 import auctions.Auctions;
 import com.carrot.core.auction.domain.Auction;
 import com.carrot.core.auctionroom.application.AuctionRoomService;
+import com.carrot.core.bid.application.BidService;
 import com.carrot.core.bidrule.domain.BidRule;
 import com.carrot.core.item.domain.Item;
 import com.google.protobuf.Timestamp;
 import io.grpc.stub.StreamObserver;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,10 +24,12 @@ public class AuctionServiceImpl extends AuctionItemServiceGrpc.AuctionItemServic
 
     private final AuctionService auctionService;
     private final AuctionRoomService auctionRoomService;
+    private final BidService bidService;
 
-    public AuctionServiceImpl(AuctionService auctionService, AuctionRoomService auctionRoomService) {
+    public AuctionServiceImpl(AuctionService auctionService, AuctionRoomService auctionRoomService, BidService bidService) {
         this.auctionService = auctionService;
         this.auctionRoomService = auctionRoomService;
+        this.bidService = bidService;
     }
 
     @Override
@@ -36,10 +43,11 @@ public class AuctionServiceImpl extends AuctionItemServiceGrpc.AuctionItemServic
                 .setPrice(item.getPrice())
                 .setContent(item.getContent())
                 .build();
-
+        int bidPrice = bidService.findLatestBidPrice(auction.getId(), auction.getBidStartPrice());
         var responseBuilder = Auctions.AuctionResponse.newBuilder()
-                .setBidStartPrice(auction.getBidStartPrice())
+                .setBidStartPrice(bidPrice)
                 .setItemResponses(itemResponse)
+                .setAuctionId(auction.getId())
                 .setBeginDateTime(convertLocalDateTimeToProtoTimestamp(auction.getBeginDateTime()))
                 .setCloseDateTime(convertLocalDateTimeToProtoTimestamp(auction.getCloseDateTime()));
 
@@ -72,6 +80,18 @@ public class AuctionServiceImpl extends AuctionItemServiceGrpc.AuctionItemServic
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void bidAuction(Auctions.BiddingRequest request, StreamObserver<Auctions.BiddingResponse> responseObserver) {
+        ZonedDateTime biddingTime = getLocalDateTime(request.getBiddingTime()).atZone(ZoneId.systemDefault());
+        int bidAmount = new BigDecimal(request.getBidAmount()).intValue();
+        Long bidId = bidService.newBidding(request.getAuctionId(), bidAmount, biddingTime, request.getBidderId());
+
+        var response = Auctions.BiddingResponse.newBuilder().setBiddingId(bidId).build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
     private Timestamp convertLocalDateTimeToProtoTimestamp(ZonedDateTime localDateTime) {
         long seconds = localDateTime.toEpochSecond();
         int nanos = localDateTime.getNano();
@@ -81,4 +101,10 @@ public class AuctionServiceImpl extends AuctionItemServiceGrpc.AuctionItemServic
                 .setNanos(nanos)
                 .build();
     }
+
+    private LocalDateTime getLocalDateTime(Timestamp sendAt) {
+        Instant instant = Instant.ofEpochSecond(sendAt.getSeconds(), sendAt.getNanos());
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+    }
+
 }

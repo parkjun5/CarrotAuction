@@ -56,8 +56,8 @@ public class Auction extends BaseEntity {
         return auction;
     }
 
-    public static int getMinimumPrice(int existingPrice, BigDecimal minBiddingPercent) {
-        return existingPrice + minBiddingPercent.multiply(BigDecimal.valueOf(existingPrice)).intValue();
+    public static BigDecimal getMinimumPrice(int existingPrice, BigDecimal minBiddingPercent) {
+        return minBiddingPercent.multiply(BigDecimal.valueOf(existingPrice)).add(new BigDecimal(existingPrice));
     }
 
     public void changeAuctionInfo(AuctionRequest auctionRequest) {

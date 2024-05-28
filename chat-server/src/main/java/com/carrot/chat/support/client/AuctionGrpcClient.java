@@ -5,6 +5,8 @@ import auctions.Auctions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Slf4j
 @Component
 public class AuctionGrpcClient {
@@ -31,6 +33,20 @@ public class AuctionGrpcClient {
                 .build();
 
         return blockingStub.findAllNotActiveUserInChatRoom(request);
+    }
+
+    public void bidAuction(long auctionItemId,
+                                               BigDecimal bidAmount, long bidderId
+    ) {
+        var request = Auctions.BiddingRequest.newBuilder()
+                .setAuctionId(auctionItemId)
+                .setBidAmount(bidAmount.toString())
+                .setBidderId(bidderId)
+                .build();
+
+        var response = blockingStub.bidAuction(request);
+
+        log.info("bid success " + response.getBiddingId());
     }
 
 }

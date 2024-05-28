@@ -66,8 +66,8 @@ public class BiddingRuleValidator {
                 return;
             }
             int nowBidPrice = auctionService.findLastBiddingPrice(auction);
-            int minimumPrice = Auction.getMinimumPrice(nowBidPrice, BigDecimal.valueOf(tickInterval / 100));
-            if (minimumPrice >= req.biddingPrice()) {
+            BigDecimal minimumPrice = Auction.getMinimumPrice(nowBidPrice, BigDecimal.valueOf(tickInterval / 100));
+            if (minimumPrice.compareTo(req.biddingPrice()) >= 0) {
                 throw new NotEnoughBiddingPriceException("최소금액 " + minimumPrice + "보다 제시하신 금액보다 낮습니다.");
             }
         });

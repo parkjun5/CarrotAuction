@@ -36,12 +36,20 @@ public class Bid extends BaseEntity {
     public static Bid of(BidRequest request, Long auctionId) {
         Bid bid = new Bid();
         bid.auctionId = auctionId;
-        bid.biddingPrice = request.biddingPrice();
+        bid.biddingPrice = request.biddingPrice().intValue();
         bid.biddingTime = ZonedDateTime.now();
         bid.bidderId = request.bidderId();
         return bid;
     }
 
+    public static Bid of(Long auctionId, int biddingPrice, ZonedDateTime biddingTime, @NotNull Long bidderId) {
+        Bid bid = new Bid();
+        bid.auctionId = auctionId;
+        bid.biddingPrice = biddingPrice;
+        bid.biddingTime = biddingTime;
+        bid.bidderId = bidderId;
+        return bid;
+    }
     public void setAuction(Auction auction) {
         this.auctionId = auction.getId();
     }

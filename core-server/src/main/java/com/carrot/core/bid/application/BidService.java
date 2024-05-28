@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.NoSuchElementException;
 
 @Service
@@ -41,6 +42,13 @@ public class BidService {
         return BidResponse.from(bid, auction.getItem().getTitle(), bidderName, bid.getBidderId());
     }
 
+    @Transactional
+    public Long newBidding(long auctionId, int biddingPrice, ZonedDateTime biddingTime, long bidderId) {
+        Bid bid = Bid.of(auctionId, biddingPrice, biddingTime, bidderId);
+        bidRepository.save(bid);
+        return bid.getId();
+    }
+
     private String getBidderNameInParticipant(Long bidderId, AuctionRoom auctionRoom) {
         return auctionRoom.getAuctionParticipation()
                 .stream()
@@ -51,4 +59,8 @@ public class BidService {
                 .orElseThrow(() -> new NoSuchElementException("참가자 중 없는 계정입니다."));
     }
 
+    public int findLatestBidPrice(Long auctionId, int defaultBidPrice) {
+        return bidRepository.findLatestBidPriceByAuctionId(auctionId)
+                .orElse(defaultBidPrice);
+    }
 }

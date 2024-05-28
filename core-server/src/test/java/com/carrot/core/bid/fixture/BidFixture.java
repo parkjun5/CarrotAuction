@@ -6,6 +6,7 @@ import com.carrot.core.bidrule.application.dto.BidRuleRequest;
 import com.carrot.core.bidrule.application.dto.BidRuleResponse;
 import com.carrot.core.bidrule.domain.BidRule;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
@@ -31,6 +32,6 @@ public class BidFixture {
             "한번만 입찰 할 수 있음",
             "1"
     );
-    public static final BidRequest TEST_BID_REQUEST = new BidRequest(2L, 1L, 50000, LocalDateTime.now());
+    public static final BidRequest TEST_BID_REQUEST = new BidRequest(2L, 1L, new BigDecimal(50000), LocalDateTime.now());
 
 }
