@@ -30,8 +30,8 @@ public class AuctionService {
     public AuctionResponse createAuctionToRoom(final Long auctionRoomId, AuctionRequest request) {
         AuctionRoom auctionRoom = auctionRoomService.findAuctionRoomById(auctionRoomId);
         Auction auction = Auction.of(request);
+        auctionRepository.save(auction);
         auctionRoom.addAuction(auction);
-        bidRuleService.setAuctionBidRules(auction, request.selectedBidRules());
         return getAuctionResponse(auction);
     }
 
@@ -67,6 +67,12 @@ public class AuctionService {
                 .orElseThrow(() -> new NoSuchElementException(auctionId + ": 존재하지 않는 경매번호 입니다."));
     }
 
+    public Auction findAuctionByIdFetchBidRules(Long auctionId) {
+        return auctionRepository.findAuctionByAuctionIdFetchBidRules(auctionId)
+                .orElseThrow(() -> new NoSuchElementException(auctionId + ": 존재하지 않는 경매번호 입니다."));
+    }
+
+
     @Transactional
     public void closeAuction(Long auctionId) {
         Auction auction = findAuctionById(auctionId);
@@ -80,7 +86,8 @@ public class AuctionService {
     }
 
     public int findLastBiddingPrice(Auction auction) {
-        Integer maxBiddingPriceById = auctionRepository.findMaxBiddingPriceById(auction.getId());
+//        Integer maxBiddingPriceById = auctionRepository.findMaxBiddingPriceById(auction.getId());
+        Integer maxBiddingPriceById = null;
         if (maxBiddingPriceById == null) {
             maxBiddingPriceById = auction.getBidStartPrice();
         }
@@ -88,7 +95,7 @@ public class AuctionService {
     }
 
     public int getNumberOfBiddersBid(final Long auctionId, final Long bidderId) {
-        return auctionRepository.countBidByIdAndBidderId(auctionId, bidderId);
+        return 0;
     }
 
     private void changeAuctionTime(Auction auction, AuctionRequest request) {

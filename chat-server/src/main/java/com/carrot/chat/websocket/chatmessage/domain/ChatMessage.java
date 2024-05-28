@@ -3,6 +3,7 @@ package com.carrot.chat.websocket.chatmessage.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serial;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 
 @Getter @Setter
 @Document(collection = "chat_message")
+@Profile("redis-pub-sub")
 public class ChatMessage implements Serializable {
 
     @Serial

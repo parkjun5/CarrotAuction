@@ -2,7 +2,6 @@ package com.carrot.core.auction.domain;
 
 import com.carrot.core.auction.application.dto.AuctionRequest;
 import com.carrot.core.auctionroom.domain.AuctionRoom;
-import com.carrot.core.bid.domain.Bid;
 import com.carrot.core.bidrule.domain.BidRule;
 import com.carrot.core.common.domain.BaseEntity;
 import com.carrot.core.item.domain.Category;
@@ -12,12 +11,11 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -32,14 +30,10 @@ public class Auction extends BaseEntity {
     private int bidStartPrice;
     @Enumerated(EnumType.STRING) private Category category;
     @Embedded private Item item;
-    @OneToMany(fetch = LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "bid_rule_id")
     @Builder.Default
     private Set<BidRule> bidRules = new HashSet<>();
-    @OneToMany(fetch = LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "bid_id")
-    @Builder.Default
-    private List<Bid> bids = new ArrayList<>();
     @Builder.Default
     @Enumerated(EnumType.STRING) private AuctionStatus auctionStatus = AuctionStatus.DRAFT;
     @ManyToOne(fetch = LAZY)
@@ -47,11 +41,6 @@ public class Auction extends BaseEntity {
     private AuctionRoom auctionRoom;
     private ZonedDateTime beginDateTime;
     private ZonedDateTime closeDateTime;
-
-    public void addBid(Bid bid) {
-        this.bids.add(bid);
-        bid.setAuction(this);
-    }
 
     public static Auction of(AuctionRequest request) {
         Auction auction = new Auction();
@@ -67,8 +56,8 @@ public class Auction extends BaseEntity {
         return auction;
     }
 
-    public static int getMinimumPrice(int existingPrice, BigDecimal minBiddingPercent) {
-        return existingPrice + minBiddingPercent.multiply(BigDecimal.valueOf(existingPrice)).intValue();
+    public static BigDecimal getMinimumPrice(int existingPrice, BigDecimal minBiddingPercent) {
+        return minBiddingPercent.multiply(BigDecimal.valueOf(existingPrice)).add(new BigDecimal(existingPrice));
     }
 
     public void changeAuctionInfo(AuctionRequest auctionRequest) {
@@ -89,7 +78,6 @@ public class Auction extends BaseEntity {
     }
 
     public void setBidRuleBook(BidRule bidRule) {
-        bidRule.setAuction(this);
         this.bidRules.add(bidRule);
     }
 

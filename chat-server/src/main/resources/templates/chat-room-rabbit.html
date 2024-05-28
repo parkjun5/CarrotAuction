@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chat Room</title>
+    <style>
+        #auction-item {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        #auction-details {
+            display: flex;
+            align-items: center;
+        }
+        #auction-details img {
+            max-width: 100px;
+            margin-right: 10px;
+        }
+        #auction-controls {
+            display: flex;
+            align-items: center;
+        }
+        #message-list {
+            margin-top: 150px; /* Adjust according to the auction item section height */
+        }
+        .my-bid {
+            color: green;
+        }
+        .other-bid {
+            color: orange;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+
+    <span>Welcome to Free Chat</span>
+
+    <div id="auction-item" th:if="${auctionItem}">
+        <div id="auction-details">
+            <!--        <img th:src="@{${auctionItem.imageUrl}}" alt="Auction Item">-->
+            <div>
+                <h2 th:text="${auctionItem.itemResponses.title}"></h2>
+                <span th:text="${auctionItem.itemResponses.content}"></span>
+                <p>Current Bid: $
+                    <span id="current-bid" th:text="'현재가 $' + ${auctionItem.bidStartPrice}"></span>
+                    <label>
+                        <input type="hidden" id="bid-amount" th:value="${auctionItem.bidStartPrice}" />
+                        <input type="hidden" id="bidderId" th:value="${bidderId}" />
+                        <input type="hidden" id="auctionId" th:value="${auctionItem.auctionId}" />
+                    </label>
+                </p>
+            </div>
+        </div>
+        <div id="auction-controls">
+            <label for="bid-button">Bid Amount: </label>
+            <button id="bid-button">Bid</button>
+        </div>
+    </div>
+
+    <ul id="message-list">
+        <li th:each="messageObject : ${messageObjects}"
+            th:text="'[' + ${#temporals.format(messageObject.timestamp, 'HH:mm')} + '] ' + ${messageObject.writer} + ': ' + ${messageObject.message}"></li>
+    </ul>
+    <form id="message-form">
+        <label for="writer-input">ID : </label>
+        <input type="text" id="writer-input" placeholder="Type your name..." th:value="${userId}" readonly/>
+        <label for="message-input">Message : </label>
+        <input type="text" id="message-input" placeholder="Type your message..." />
+        <button type="submit">Send</button>
+    </form>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const chatRoomId = [[${chatRoomId}]]; // thymeleaf 변수
+        const userId = [[${userId}]]; // thymeleaf 변수
+        /*]]>*/
+
+        const messageList = document.getElementById("message-list");
+        const messageForm = document.getElementById("message-form");
+        const messageInput = document.getElementById("message-input");
+        const bidButton = document.getElementById("bid-button");
+        const bidAmountInput = document.getElementById("bid-amount");
+        const currentBidElement = document.getElementById("current-bid");
+        const auctionId = document.getElementById("auctionId");
+
+        let stompClient = null;
+
+        function connect() {
+            const socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe(`/topic/chatRoom/${chatRoomId}`, function (message) {
+                    const parsedMessage = JSON.parse(message.body);
+                    showMessage(parsedMessage);
+                });
+
+                stompClient.subscribe(`/topic/bid/${chatRoomId}`, function (message) {
+                    const parsedMessage = JSON.parse(message.body);
+                    showBidMessage(parsedMessage);
+                    updateCurrentBid(parsedMessage);
+                });
+            });
+        }
+
+        connect();
+
+        messageForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const messageVal = messageInput.value.trim();
+            if (!messageVal) {
+                return;
+            }
+
+            const chatPayload = {
+                type: "CHAT",
+                writer: "",
+                timestamp: null,
+                chatRoomId: chatRoomId,
+                message: messageVal,
+                userId: userId
+            };
+
+            if (stompClient && stompClient.connected) {
+                stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatPayload));
+            }
+            messageInput.value = "";
+        });
+
+        bidButton.addEventListener("click", () => {
+            const bidAmount = bidAmountInput.value.trim();
+            if (!bidAmount) {
+                return;
+            }
+            if (document.getElementById("bidderId").value === String(userId)) {
+                alert("이미 내가 입찰중인 상품입니다.");
+                return;
+            }
+
+            const roundedBidAmount = Math.round(bidAmount * 1.1 / 100) * 100;
+
+            const bidRequest = {
+                type: "BID",
+                bidderId: userId,
+                chatRoomId: chatRoomId,
+                bidAmount: roundedBidAmount,
+                auctionId: auctionId.value
+            };
+
+            if (stompClient && stompClient.connected) {
+                stompClient.send("/app/bid.placeBid", {}, JSON.stringify(bidRequest));
+            }
+        });
+
+        function showMessage(message) {
+            const listItem = document.createElement("li");
+            let writer = message.writer && message.writer.length > 0 ? message.writer : "관리자";
+            const timestamp = new Date(message.timestamp);
+            const formattedTime = timestamp.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+            listItem.textContent = "[" + formattedTime + "] " + writer + ": " + message.message;
+            messageList.appendChild(listItem);
+        }
+
+        function showBidMessage(message) {
+            const listItem = document.createElement("li");
+            let writer = message.bidderName && message.bidderName.length > 0 ? message.bidderName : "관리자";
+            const timestamp = new Date(message.timestamp);
+            const formattedTime = timestamp.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+            listItem.textContent = "[" + formattedTime + "] " + writer + "님이 " + message.bidAmount.toLocaleString() + " 금액으로 입찰하였습니다.";
+
+            listItem.classList.add(message.bidderId === userId ? 'my-bid' : 'other-bid');
+
+            messageList.appendChild(listItem);
+        }
+
+        function updateCurrentBid(message) {
+            if (!message || !message.bidAmount) {
+                return;
+            }
+
+            document.getElementById("bid-amount").value = message.bidAmount;
+            document.getElementById("bidderId").value = message.bidderId;
+            currentBidElement.textContent = '현재가 $ ' + message.bidAmount.toLocaleString();
+        }
+
+    </script>
+    </body>
+</html>

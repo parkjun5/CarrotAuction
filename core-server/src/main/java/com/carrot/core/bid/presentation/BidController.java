@@ -26,7 +26,7 @@ public class BidController {
         return ResponseEntity.ok(ApiCommonResponse.success("bid", response));
     }
 
-    @PutMapping
+    @PostMapping
     @Operation(summary = "가격 입찰", description = "가격을 입찰한다.")
     public ResponseEntity<ApiCommonResponse<BidResponse>> updateBid(
             @RequestBody @Valid BidRequest bidRequest

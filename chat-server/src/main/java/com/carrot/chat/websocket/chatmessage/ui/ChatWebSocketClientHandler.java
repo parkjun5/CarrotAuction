@@ -3,6 +3,7 @@ package com.carrot.chat.websocket.chatmessage.ui;
 import com.carrot.chat.websocket.chatmessage.application.ChatMessageMapper;
 import com.carrot.chat.websocket.chatmessage.application.MessagePublisher;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketSession;
@@ -11,6 +12,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
+@Profile("redis-pub-sub")
 public class ChatWebSocketClientHandler implements WebSocketHandler {
     private final Flux<Object> messageContainer;
     private final MessagePublisher messagePublisher;

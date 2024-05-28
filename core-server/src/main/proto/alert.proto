@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package alert;
+
+service AlertSaver {
+  rpc RecordHistory (AlertRequest) returns (AlertResponse);
+}
+
+message AlertRequest {
+  int64 chatRoomId = 1;
+}
+
+message AlertResponse {
+  string alertId = 1;
+  string writer = 2;
+  string sessionId = 3;
+  int64 userId = 4;
+}

@@ -17,6 +17,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface BidRequestCheck {
     Class<?>[] groups() default {};
-
+    String message() default "Invalid bid request";
     Class<? extends Payload>[] payload() default {};
 }

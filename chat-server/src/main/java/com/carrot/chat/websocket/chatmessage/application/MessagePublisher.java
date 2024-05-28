@@ -1,8 +1,9 @@
 package com.carrot.chat.websocket.chatmessage.application;
 
-import com.carrot.chat.queue.application.RedisContainerManager;
-import com.carrot.chat.queue.application.RedisPubService;
-import com.carrot.chat.queue.ui.MessageObject;
+import com.carrot.chat.redis.application.RedisContainerManager;
+import com.carrot.chat.redis.application.RedisPubService;
+import com.carrot.chat.redis.ui.MessageObject;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Sinks;
@@ -10,6 +11,7 @@ import reactor.core.publisher.Sinks;
 import java.net.URI;
 
 @Service
+@Profile("redis-pub-sub")
 public class MessagePublisher {
 
     public static final String WELCOME_MESSAGE = "님이 채팅방에 입장하였습니다.";
